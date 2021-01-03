@@ -3,11 +3,19 @@ import VueRouter from "vue-router";
 Vue.use(VueRouter);
 
 import Main from './components/Index';
+import Home from './components/Home/Home';
 
 const routes = [
     {
         path: "/",
         component: Main,
+        children:[
+            {
+                path:'',
+                name:'Home',
+                component:Home
+            }
+        ]
     },
 ];
 const userRoutes = [];

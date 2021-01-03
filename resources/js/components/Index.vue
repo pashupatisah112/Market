@@ -2,19 +2,21 @@
 <div>
     <v-app>
         <appbar app></appbar>
-        <carousel app></carousel>
-        <latest></latest>
+        <v-main>
+            <router-view></router-view>
+        </v-main>
+        <productFooter app></productFooter>
     </v-app>
 </div>
 </template>
 
 <script>
 import Appbar from './Home/Appbar';
-import Carousel from './Home/Carousel';
-import Latest from './Home/LatestProducts';
+import ProductFooter from './Home/Footer';
 export default {
     components: {
-        Appbar,Carousel,Latest
+        Appbar,
+        ProductFooter
     },
     data() {
         return {

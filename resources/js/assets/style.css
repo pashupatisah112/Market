@@ -1,4 +1,19 @@
 .border{
     border: 1px solid gray;
 }
-.hover-img{ transition: width 1s;}
+.footer-color{
+    color: rgba(255,255,255,0.5);
+}
+.v-card--reveal {
+    align-items: center;
+    bottom: 0;
+    justify-content: center;
+    opacity: .9;
+    position: absolute;
+    width: 100%;
+}
+
+.on-hover {
+    transform: scale(1.1);
+    transform-origin: 50% 50%;
+}

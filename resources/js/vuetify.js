@@ -19,6 +19,8 @@ export default new Vuetify({
                 icon:"#2E1F54",
                 background:"#f5f7f8",
                 main:"#8757df",
+                footer:"rgba(255,255,255,0.5)",
+                blackTheme:"#333333",
                 secondary:"#777777",
                 paragraph:"#777777",
                 paragraph2:"#BFBFBF",

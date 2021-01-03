@@ -2,10 +2,13 @@
 <div>
     <v-container fluid>
         <v-row justify="center">
-            <h2 class="mt-5">LATEST PRODUCTS</h2>
+            <h2 class="mt-5">TOP SELLING PRODUCTS</h2>
+        </v-row>
+        <v-row justify="center" class="px-10 mt-5">
+            <v-chip v-for="item in chips" :key="item.title" class="mx-2">{{item.title}}</v-chip>
         </v-row>
         <v-row class=" mt-5">
-            <v-col cols="12" lg="3" md="3" v-for="i in 4" :key="i">
+            <v-col cols="12" lg="3" md="3" v-for="i in 8" :key="i">
                  <v-card max-width="220" class="mx-auto" tile flat >
                 <v-hover v-slot="{ hover }">
                     <div style="width:220px;height:250px;overflow: hidden;">
@@ -47,7 +50,16 @@
 export default {
     data() {
         return {
-
+            chips:[
+                {title:'Coat'},
+                {title:'Sarees'},
+                {title:'Jeans'},
+                {title:'Shirt'},
+                {title:'Hoodies'},
+                {title:'Lehenga'},
+                {title:'Jumpsuit'},
+                {title:'Jacket'},
+                ]
         }
     },
     methods: {

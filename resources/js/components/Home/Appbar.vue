@@ -1,7 +1,7 @@
 <template>
 <div>
     <v-container fluid>
-        <v-row class="px-10" style="background-color:#333333">
+        <v-row class="px-10" style="background-color:rgba(0, 0, 0, 0.87)">
             <v-icon dense class="pr-1" color="white">mdi-email</v-icon>
             <p class="caption mt-4 white--text">info@onlinemarket.com</p>
 
