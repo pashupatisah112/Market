@@ -71,7 +71,7 @@
                         <v-row>
                             <v-col>
                                 <p class="font-weight-bold">Men's Fashion</p>
-                                <v-btn text small class="text-capitalize" @click="goToCategories">Jackets</v-btn><br>
+                                <v-btn text small class="text-capitalize" @click="goToList">Jackets</v-btn><br>
                                 <v-btn text small class="text-capitalize">Hoodies</v-btn><br>
                                 <v-btn text small class="text-capitalize">Sweater</v-btn><br>
                                 <v-btn text small class="text-capitalize">Trousers</v-btn><br>
@@ -156,7 +156,7 @@ export default {
     },
     methods:{
         goToList(){
-
+            this.$router.push({name:'Category'});
         }
     }
 }
