@@ -4,6 +4,7 @@ Vue.use(VueRouter);
 
 import Main from './components/Index';
 import Home from './components/Home/Home';
+import Category from './components/List/Home';
 
 const routes = [
     {
@@ -14,6 +15,11 @@ const routes = [
                 path:'',
                 name:'Home',
                 component:Home
+            },
+            {
+                path:'/category_name',
+                name:'Category',
+                component:Category
             }
         ]
     },

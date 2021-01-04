@@ -51,46 +51,72 @@
 
         <v-divider class="mx-0 mt-3"></v-divider>
 
-         <v-toolbar extended dense short max-height="50" elevation="0">
-             <v-toolbar-title class="mr-12">
-                 <span class="heading-3 font-weight-bold">COZA</span> Store
-             </v-toolbar-title>
+        <v-toolbar extended dense short max-height="50" elevation="0">
+            <v-toolbar-title class="mr-12">
+                <span class="heading-3 font-weight-bold">COZA</span> Store
+            </v-toolbar-title>
 
-                <v-btn text class="text-capitalize">
-                    Home
-                </v-btn>
+            <v-btn text class="text-capitalize">
+                Home
+            </v-btn>
 
-                <v-btn text class="text-capitalize">
-                    Categories
-                </v-btn>
+            <v-menu open-on-hover bottom offset-y>
+                <template v-slot:activator="{ on, attrs }">
+                    <v-btn text v-bind="attrs" v-on="on" class="text-capitalize">
+                        Categories
+                    </v-btn>
+                </template>
+                <v-card>
+                    <v-container fluid>
+                        <v-row>
+                            <v-col>
+                                <p class="font-weight-bold">Men's Fashion</p>
+                                <v-btn text small class="text-capitalize" @click="goToCategories">Jackets</v-btn><br>
+                                <v-btn text small class="text-capitalize">Hoodies</v-btn><br>
+                                <v-btn text small class="text-capitalize">Sweater</v-btn><br>
+                                <v-btn text small class="text-capitalize">Trousers</v-btn><br>
+                                <v-btn text small class="text-capitalize">Accessories</v-btn>
+                            </v-col>
+                            <v-col>
+                                <p class="font-weight-bold">Women's Fashion</p>
+                                <v-btn text small class="text-capitalize">Jackets</v-btn><br>
+                                <v-btn text small class="text-capitalize">Sarees</v-btn><br>
+                                <v-btn text small class="text-capitalize">Kurta</v-btn><br>
+                                <v-btn text small class="text-capitalize">Lehenga</v-btn><br>
+                                <v-btn text small class="text-capitalize">Jumsuit</v-btn>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                </v-card>
+            </v-menu>
 
-                <v-btn text class="text-capitalize">
-                    Collections
-                </v-btn>
+            <v-btn text class="text-capitalize">
+                Collections
+            </v-btn>
 
-                <v-btn text class="text-capitalize">
-                    About
-                </v-btn>
+            <v-btn text class="text-capitalize">
+                About
+            </v-btn>
 
-                <v-btn text class="text-capitalize">
-                    Contact
-                </v-btn>
+            <v-btn text class="text-capitalize">
+                Contact
+            </v-btn>
 
-                <v-spacer></v-spacer>
+            <v-spacer></v-spacer>
 
-                 <v-btn icon>
-                    <v-icon>mdi-account-search</v-icon>
-                </v-btn>
+            <v-btn icon>
+                <v-icon>mdi-account-search</v-icon>
+            </v-btn>
 
-                <v-btn icon>
-                    <v-icon>mdi-cards-heart</v-icon>
-                </v-btn>
+            <v-btn icon>
+                <v-icon>mdi-cards-heart</v-icon>
+            </v-btn>
 
-                <v-btn icon>
-                    <v-icon>mdi-cart</v-icon>
-                </v-btn>
+            <v-btn icon>
+                <v-icon>mdi-cart</v-icon>
+            </v-btn>
 
-            </v-toolbar>           
+        </v-toolbar>
     </v-container>
 </div>
 </template>
@@ -100,18 +126,37 @@ export default {
     data() {
         return {
             items: [{
-                title: 'English'
+                title: "Men's Fashion"
             }, {
-                title: 'Nepali'
+                title: "Women's Fashion"
             }],
-            menus:[
-                {title:'Home',link:''},
-                {title:'Categories',link:''},
-                {title:'Collections',link:''},
-                {title:'About Us',link:''},
-                {title:'Contact',link:''},
+            menus: [{
+                    title: 'Home',
+                    link: ''
+                },
+                {
+                    title: 'Categories',
+                    link: ''
+                },
+                {
+                    title: 'Collections',
+                    link: ''
+                },
+                {
+                    title: 'About Us',
+                    link: ''
+                },
+                {
+                    title: 'Contact',
+                    link: ''
+                },
 
             ]
+        }
+    },
+    methods:{
+        goToList(){
+
         }
     }
 }

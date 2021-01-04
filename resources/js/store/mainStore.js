@@ -8,16 +8,8 @@ Vue.use(vuex);
 import advertisementModule from './advertisementModule';
 import analyticsModule from './analyticsModule';
 import authenticationModule from './authenticationModule';
-import basicContentModule from './basicContentModule';
-import communityModule from './communityModule';
-import complainModule from './complainModule';
-import courseModule from './courseModule';
-import examSetModule from './examAndSetModule';
-import noticeModule from './noticeModule';
-import profileModule from './profileModule';
-import requestModule from './requestModule';
-import resultModule from './resultModule';
-import roleModule from './roleModule';
+import productModule from './productModule';
+import profileModule from './profileModule'
 import validationModule from './validationModule';
 
 
@@ -28,40 +20,22 @@ const store=new vuex.Store({
         advertisement:advertisementModule,
         analytics:analyticsModule,
         authentication:authenticationModule,
-        basicContent:basicContentModule,
-        community:communityModule,
-        complain:complainModule,
-        course:courseModule,
-        examSet:examSetModule,
-        notice:noticeModule,
+        product:productModule,
         profile:profileModule,
-        request:requestModule,
-        result:resultModule,
-        role:roleModule,
         validation:validationModule
     },
 
     state:{
-        adminPanel:'Welcome to Admin Panel',
-        staffPanel:'Welcome to Staff Panel',
-        snackbar:false,
-        snackMessage:'',
+        
     },
     actions:{
         
     },
     mutations:{
-        updateField,
-        getUpdateMessage(state,payload){
-            state.snackMessage=payload;
-            state.snackbar=true;
-        }
+        updateField //using mutation by vuex-map-fields
     },
     getters:{
-        welcomeAdmin(state){
-            return state.adminPanel;
-        },
-        getField
+        getField //using getters by vuex-map-fields
     },
 });
 export default store;

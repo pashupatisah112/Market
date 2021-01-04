@@ -6,6 +6,8 @@
             <router-view></router-view>
         </v-main>
         <productFooter app></productFooter>
+
+        <quickView></quickView>
     </v-app>
 </div>
 </template>
@@ -13,10 +15,12 @@
 <script>
 import Appbar from './Home/Appbar';
 import ProductFooter from './Home/Footer';
+import QuickView from './Common/QuickView';
 export default {
     components: {
         Appbar,
-        ProductFooter
+        ProductFooter,
+        QuickView
     },
     data() {
         return {

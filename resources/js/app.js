@@ -5,6 +5,7 @@ window.Vue = require('vue');
 import App from './components/App'
 import vuetify from "./vuetify";
 import router from "./router";
+import store from "./store/mainStore";
 import style from "./assets/style.css";
 
 new Vue({
@@ -12,7 +13,7 @@ new Vue({
     router,
     vuetify,
     style,
-    //store,
+    store,
     components: {
         app: App
     }
