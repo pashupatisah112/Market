@@ -5,7 +5,7 @@
             <v-col cols="12" lg="8" md="8">
                 <v-card flat>
                     <v-container fluid>
-                        <v-row>
+                        <v-row class="px-10">
                             <v-col cols="1">
                                 <div style="width:50px; height:75px;margin-bottom:10px">
                                     <v-img src="../images/sample.png"></v-img>
@@ -59,7 +59,12 @@
                                 </v-row>
 
                                 <v-row justify="center" class="mt-8">
-                                    <v-btn class="text-capitalize white--text" color="blackTheme" rounded>Add to Cart</v-btn>
+                                    <v-btn class="text-capitalize white--text mx-2" color="blackTheme" rounded>Add to Cart</v-btn>
+                                    <v-btn class="text-capitalize white--text mx-2" color="blackTheme" rounded>Buy Now</v-btn>
+
+                                </v-row>
+                                <v-row>
+                                    <p class="caption">Rate it: </p>
                                 </v-row>
 
                                 <v-row justify="center" class="mt-5">
@@ -78,7 +83,26 @@
                                         </v-btn>
                                     </v-col>
                                 </v-row>
+                                <v-divider></v-divider>
+
                             </v-col>
+                        </v-row>
+                        <v-row class="px-10">
+                            <v-card flat>
+                                <v-tabs v-model="tab" background-color="transparent" color="basil" grow>
+                                    <v-tab v-for="item in details" :key="item">
+                                        {{ item }}
+                                    </v-tab>
+                                </v-tabs>
+
+                                <v-tabs-items v-model="tab">
+                                    <v-tab-item v-for="item in details" :key="item">
+                                        <v-card color="basil" flat>
+                                            <v-card-text>{{ text }}</v-card-text>
+                                        </v-card>
+                                    </v-tab-item>
+                                </v-tabs-items>
+                            </v-card>
                         </v-row>
                     </v-container>
                 </v-card>
@@ -99,7 +123,12 @@ export default {
     data() {
         return {
             count: 1,
-            items: ['Blue', 'Green', 'Black', 'Yellow']
+            items: ['Blue', 'Green', 'Black', 'Yellow'],
+            tab: null,
+            details: [
+                'More Details', 'Questions and Comments', 'Deliver Options', 'Guarantees and Refunds',
+            ],
+            text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
         }
     },
     computed: {

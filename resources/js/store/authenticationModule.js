@@ -1,25 +1,10 @@
 import router from "../router";
 export default {
     state: {
-        //Admin Login
-        auth:'',
-        profile_id:null,//for dynamic profile visiting
-        loading: false,
-        adminLoginEmail: "",
-        adminLoginPassword: "",
-        show1: false,
-        codeResetUser:'',
+       
     },
     mutations: {
-        changeAuthInfo(state,payload){
-            this.state.auth.profile=payload
-        },
-        setCodeResetUser(state,payload){
-            this.state.codeResetUser=payload
-        },
-        setAuth(state,payload){
-            this.state.auth=payload
-        }
+        
     },
     actions: {
         adminLogin() {
