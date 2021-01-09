@@ -1,26 +1,27 @@
 <template>
-    <div>
-        <v-navigation-drawer app id="core-navigation-drawer" color="background" :expand-on-hover="expandOnHover" :mini-variant="miniVariant" :right="right" absolute dark width="240px">
-            <v-list dense nav class="py-0">
-                <v-list-item two-line :class="miniVariant && 'px-0'">
-                        <v-img src="../images/assets/logo.png"></v-img>
-                </v-list-item>
+<div>
+    <v-navigation-drawer app id="core-navigation-drawer" permanent absolute dark width="240px" src="https://cdn.vuetifyjs.com/images/backgrounds/bg-2.jpg">
+        <v-list dense nav class="py-0">
+            <v-list-item two-line :class="miniVariant && 'px-0'">
+                <v-img src="../images/assets/logo.png"></v-img>
+            </v-list-item>
 
-                <v-divider></v-divider>
+            <v-divider></v-divider>
 
-                <v-list-item v-for="item in items" :key="item.title" :to="item.to" link>
-                    <v-list-item-icon>
-                        <v-icon style="color:#777777">{{ item.icon }}</v-icon>
-                    </v-list-item-icon>
+            <v-list-item v-for="item in items" :key="item.title" :to="item.to" link>
+                <v-list-item-icon>
+                    <v-icon style="color:#777777">{{ item.icon }}</v-icon>
+                </v-list-item-icon>
 
-                    <v-list-item-content>
-                        <v-list-item-title style="color:#777777">{{ item.title }}</v-list-item-title>
-                    </v-list-item-content>
-                </v-list-item>
-            </v-list>
-        </v-navigation-drawer>
-    </div>
+                <v-list-item-content>
+                    <v-list-item-title style="color:#777777">{{ item.title }}</v-list-item-title>
+                </v-list-item-content>
+            </v-list-item>
+        </v-list>
+    </v-navigation-drawer>
+</div>
 </template>
+
 <script>
 export default {
     data() {
@@ -29,76 +30,52 @@ export default {
             items: [{
                     title: 'Dashboard',
                     icon: 'mdi-view-dashboard',
-                    to: '/admin/dashboard',
+                    to: '/admin',
                 },
                 {
-                    title: 'Roles',
+                    title: 'Customers',
                     icon: 'mdi-account-star',
-                    to: '/admin/roles'
+                    to: '/admin/customers'
                 },
                 {
-                    title: 'Content',
-                    icon: 'mdi-folder',
-                    to: '/admin/content'
+                    title: 'Product',
+                    icon: 'mdi-car-lifted-pickup',
+                    to: '/admin/products'
                 },
                 {
-                    title: 'Courses',
-                    icon: 'mdi-table-of-contents',
-                    to: '/admin/courses'
+                    title: 'Product sup',
+                    icon: 'mdi-gamepad-round',
+                    to: '/admin/products-sup'
                 },
                 {
-                    title: 'Exams and Sets',
+                    title: 'Promo',
                     icon: 'mdi-file-question',
-                    to: '/admin/exams-and-sets'
+                    to: '/admin/carousel'
                 },
                 {
-                    title: 'Staffs',
+                    title: 'Carts',
+                    icon: 'mdi-file-question',
+                    to: '/admin/cart-list'
+                },
+                {
+                    title: 'Wishlist',
+                    icon: 'mdi-file-question',
+                    to: '/admin/wishlist'
+                },
+                {
+                    title: 'Sales',
+                    icon: 'mdi-file-question',
+                    to: '/admin/sales'
+                },
+                {
+                    title: 'Comments',
                     icon: 'mdi-account-group',
-                    to: '/admin/staffs'
+                    to: '/admin/comments'
                 },
-                {
-                    title: 'Tutors',
-                    icon: 'mdi-teach',
-                    to: '/admin/tutors'
-                },
-                {
-                    title: 'Students',
-                    icon: 'mdi-school',
-                    to: '/admin/students'
-                },
-                {
-                    title: 'Organization',
-                    icon: 'mdi-office-building',
-                    to: '/admin/organizations'
-                },
-                {
-                    title: 'Notices',
-                    icon: 'mdi-note',
-                    to: '/admin/notices'
-                },
-                {
-                    title: 'Results',
-                    icon: 'mdi-publish',
-                    to: '/admin/results'
-                },
-                {
-                    title: 'Advertisements',
-                    icon: 'mdi-google-ads',
-                    to: '/admin/ads'
-                },
-                {
-                    title: 'Requests',
-                    icon: 'mdi-frequently-asked-questions',
-                    to: '/admin/requests'
-                },
-                {
-                    title: 'Complaints',
-                    icon: 'mdi-emoticon-angry',
-                    to: '/admin/complaints'
-                },
+
             ],
             color: 'primary',
-            right:false,
+            right: false,
             miniVariant: false,
             expandOnHover: false,
         }

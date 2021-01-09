@@ -3,7 +3,17 @@ import VueRouter from "vue-router";
 Vue.use(VueRouter);
 
 //ADMIN
-import AdminLogin from './components/AdminComponents/AdminLogin';
+import AdminLogin from "./components/AdminComponents/AdminLogin";
+import Admin from "./components/AdminComponents/Home";
+import Dashboard from "./components/AdminComponents/Dashboard";
+import Customer from "./components/AdminComponents/CustomerComponent/Customers";
+import Product from "./components/AdminComponents/ProductComponent/Product";
+import ProductSup from "./components/AdminComponents/ProductComponent/ProductSup";
+import Carousel from "./components/AdminComponents/PromoComponent/Carousel";
+import CartList from "./components/AdminComponents/ProductComponent/Carts";
+import WishList from "./components/AdminComponents/ProductComponent/WishList";
+import Sales from "./components/AdminComponents/SalesComponent/Sales";
+import Comment from "./components/AdminComponents/CommentComponent/Comment";
 
 import Main from "./components/Index";
 import Home from "./components/Home/Home";
@@ -12,40 +22,66 @@ import Detail from "./components/Details/Home";
 import Cart from "./components/Account/CartView";
 
 const routes = [
-    {
-        path: "/admin",
-        redirect: "/adminLogin"
-    },
-    {
-        path: "/adminLogin",
-        name:"AdminLogin",
-        component:AdminLogin
-    },
     // {
     //     path: "/admin",
-    //     component: AdminHome,
-    //     children: [
-    //         {
-    //             path: "dashboard",
-    //             name: "AdminDashboard",
-    //             component: Dashboard
-    //         },
-
-    //     ],
-    //     beforeEnter: (to, from, next) => {
-    //         //AUTHORIZATION FOR A SINGLE ROUTE
-    //         axios
-    //             .get("api/verify")
-    //             .then(res => {
-    //                 if (res.data.role_id == 1) {
-    //                     next();
-    //                 } else {
-    //                     next("/administration");
-    //                 }
-    //             })
-    //             .catch(err => next("/administration"));
-    //     }
+    //     redirect: "/adminLogin"
     // },
+    {
+        path: "/adminLogin",
+        name: "AdminLogin",
+        component: AdminLogin
+    },
+    {
+        path: "/admin",
+        component: Admin,
+        children: [
+            {
+                path: "",
+                name: "AdminDashboard",
+                component: Dashboard
+            },
+            {
+                path: "customers",
+                name: "CustomersList",
+                component: Customer
+            },
+            {
+                path: "products",
+                name: "ProductList",
+                component: Product
+            },
+            {
+                path: "products-sup",
+                name: "ProductSup",
+                component: ProductSup
+            },
+            {
+                path: "carousel",
+                name: "Carousel",
+                component: Carousel
+            },
+            {
+                path: "cart-list",
+                name: "CartList",
+                component: CartList
+            },
+            {
+                path: "wishlist",
+                name: "WishList",
+                component: WishList
+            },
+            {
+                path: "sales",
+                name: "Sales",
+                component: Sales
+            },
+            {
+                path: "comments",
+                name: "Comments",
+                component: Comment
+            }
+        ],
+    },
     {
         path: "/",
         component: Main,

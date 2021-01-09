@@ -14,6 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['middleware'=>['auth:api'],'namespace'=>'Admin'],function(){
+    Route::resource('categories', 'CategoryController');
+    Route::resource('subcategories', 'SubController');
+    
+
+
 });
+Route::post('admin-login', 'AuthController@adminLogin');
+Route::get('verify', 'AuthController@verify');
