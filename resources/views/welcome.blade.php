@@ -5,9 +5,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         
         <title>Online Market</title>
-
+  
         <!-- Fonts -->
         <link rel="stylesheet" href="{{asset('css/app.css')}}">
+
     </head>
     <body>
         <div id="app">

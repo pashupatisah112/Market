@@ -17,6 +17,18 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware'=>['auth:api'],'namespace'=>'Admin'],function(){
     Route::resource('categories', 'CategoryController');
     Route::resource('subcategories', 'SubController');
+    Route::resource('size', 'SizeController');
+    Route::resource('color', 'ColorController');
+    Route::resource('company', 'CompanyController');
+    Route::resource('types', 'TypeController');
+    Route::resource('tags', 'TagController');
+
+
+    Route::get('customers','CustomerController@getCustomers');
+    Route::get('getProductSup','ProductController@productSup');
+    Route::get('products','ProductController@getProducts');
+    Route::post('products','ProductController@store');
+
     
 
 

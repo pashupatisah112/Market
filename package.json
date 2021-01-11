@@ -22,11 +22,18 @@
         "resolve-url-loader": "^2.3.1",
         "sass": "^1.20.1",
         "sass-loader": "^8.0.0",
+        "summernote": "^0.8.18",
         "vue": "^2.5.17",
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "tinymce": "^5.6.2",
+        "tiptap": "^1.31.0",
+        "tiptap-vuetify": "^2.24.0",
+        "vue-froala-wysiwyg": "^3.2.5-1",
+        "vue-html-editor": "^0.2.1",
         "vue-router": "^3.4.9",
+        "vue-wysiwyg": "^1.7.2",
         "vuetify": "^2.4.0",
         "vuex": "^3.6.0",
         "vuex-map-fields": "^1.4.1",

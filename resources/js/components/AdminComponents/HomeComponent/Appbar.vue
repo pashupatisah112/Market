@@ -23,10 +23,26 @@
                 </template>
             </v-menu>
 
-            <v-btn text >
+            <v-btn text @click="logout">
                 <v-icon>mdi-logout</v-icon>
             </v-btn>
         </div>
     </v-app-bar>
 </div>
 </template>
+<script>
+import { mapMutations, mapActions } from 'vuex'
+export default {
+    data(){
+        return{
+
+        }
+    },
+    computed:{
+        ...mapActions(['logout'])
+    },
+    methods:{
+
+    }
+}
+</script>

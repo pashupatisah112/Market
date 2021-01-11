@@ -1,0 +1,54 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Category;
+use App\Color;
+use App\Company;
+use App\Http\Controllers\Controller;
+use App\ProductType;
+use App\Subcategory;
+use App\Product;
+use App\Size;
+use App\Tag;
+use Illuminate\Http\Request;
+
+class ProductController extends Controller
+{
+    public function getProducts(){
+        $products=Product::all();
+        return response()->json($products);
+    }
+    public function productSup()
+    {
+        $category=Category::all();
+        $subCategory=Subcategory::all();
+        $productType=ProductType::all();
+        $company=Company::all();
+        $size=Size::all();
+        $color=Color::all();
+        $tag=Tag::all();
+        return response()->json(['category'=>$category,'subCategory'=>$subCategory,'productType'=>$productType,'company'=>$company,'size'=>$size,'color'=>$color,'tag'=>$tag]);
+    }
+    public function store(Request $request)
+    {
+        $product=new Product;
+        $product->title=$request->title;
+        $product->price=$request->price;
+        $product->product_type_id=$request->product_type_id;
+        $product->category_id=$request->category_id;
+        $product->subCategory_id=$request->subCategory_id;
+        $product->company_id=$request->company_id;
+        $product->description=$request->description;
+        
+        $product->save();
+        
+        $product->color()->sync($request->color_name);
+        $product->size()->sync($request->size);
+        $product->tag()->sync($request->tag_name);
+        return response()->json($product);
+        
+
+        
+    }
+}

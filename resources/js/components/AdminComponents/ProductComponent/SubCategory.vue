@@ -1,12 +1,6 @@
 <template>
 <v-container fluid>
 
-    <!--heading-->
-    <v-row class="mt-5" justify="center">
-        <p class="headline text-lg-center font-weight-bold"></p>
-    </v-row>
-    <!--end heading-->
-
     <!--course list-->
     <v-data-table :headers="headers" :items="subcategories" class="elevation-1">
         <template v-slot:top>

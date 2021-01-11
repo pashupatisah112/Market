@@ -1,0 +1,240 @@
+<template>
+<v-container fluid>
+
+    <!--course list-->
+    <v-data-table :headers="headers" :items="size" class="elevation-1">
+        <template v-slot:top>
+            <v-toolbar flat color="white">
+                <v-card class="px-3 py-3 mb-2 mr-2" color="success">
+                    <v-card-actions>
+                        <v-icon x-large color="white">mdi-account-star</v-icon>
+                    </v-card-actions>
+                </v-card>
+                <v-toolbar-title>Product size</v-toolbar-title>
+                <v-divider class="mx-4" inset vertical></v-divider>
+                <v-spacer></v-spacer>
+                <!--add new category-->
+                <v-dialog v-model="dialog" max-width="500px">
+                    <template v-slot:activator="{ on:dialog,attrs }">
+                        <v-tooltip top>
+                            <template v-slot:activator="{ on:tooltip }">
+                                <v-btn class="mr-2 float-right" fab dark color="success" v-bind="attrs" v-on="{...dialog,...tooltip}">
+                                    <v-icon dark>mdi-plus</v-icon>
+                                </v-btn>
+                            </template>
+                            <span>Add New</span>
+                        </v-tooltip>
+                    </template>
+                    <v-card>
+                        <v-card-title>
+                            <span class="headline">{{
+                                        formTitle
+                                    }}</span>
+                        </v-card-title>
+
+                        <v-card-text>
+                            <v-container>
+                                <v-row>
+                                    <v-col cols="12">
+                                        <v-text-field v-model="editedItem.size" label="Category Name"></v-text-field>
+                                    </v-col>
+                                </v-row>
+                            </v-container>
+                        </v-card-text>
+
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
+                            <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+                <!--end add new-->
+            </v-toolbar>
+        </template>
+        <!--course item actions-->
+        <template v-slot:item.actions="{ item }">
+
+            <!--edit button-->
+            <v-tooltip top>
+                <template v-slot:activator="{ on, attrs }">
+                    <v-icon small class="mr-2" @click="editItem(item)" v-bind="attrs" v-on="on">
+                        mdi-pencil
+                    </v-icon>
+                </template>
+                <span>Edit</span>
+            </v-tooltip>
+            <!--end edit button-->
+
+            <!--delete section-->
+            <v-dialog v-model="deleteDialog" persistent max-width="400" :retain-focus="false">
+                <!--retain-focus helps prevent from maximum exceeding error caused when two items are deleted continuously. this is a bug so add this props compulsarily-->
+                <template v-slot:activator="{ on:dialog, attrs }">
+                    <v-tooltip top>
+                        <template v-slot:activator="{ on:tooltip }">
+                            <v-icon small @click="deleteDialog = true" v-bind="attrs" v-on="{...dialog,...tooltip}">
+                                mdi-delete
+                            </v-icon>
+                        </template>
+                        <span>Delete</span>
+                    </v-tooltip>
+                </template>
+                <v-card>
+                    <v-card-title class="headline">Delete Confirmation</v-card-title>
+                    <v-card-text>Are you sure you want to delete this Course?</v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="green darken-1" text @click="deleteDialog = false">Cancel</v-btn>
+                        <v-btn color="green darken-1" text @click="deleteItem(item)">Confirm</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+            <!--end delete section-->
+
+        </template>
+        <!--end action-->
+        <template v-slot:no-data>
+            <v-btn color="primary" @click="initialize">Reset</v-btn>
+        </template>
+    </v-data-table>
+    <!--end course list-->
+
+    <!--snackbar for data update message-->
+    <v-snackbar v-model="dataUpdateAlert" :color="alertColor" :timeout="timeout">
+        <v-icon color="white" style="margin-right:10px">mdi-checkbox-marked-circle</v-icon>
+        {{dataUpdateMsg}}
+        <v-btn color="white" text @click="snackbar = false">Close</v-btn>
+    </v-snackbar>
+    <!--end snackbar-->
+
+</v-container>
+</template>
+
+<script>
+import {mapState} from 'vuex';
+import {mapFields} from 'vuex-map-fields';
+export default {
+
+    data() {
+        return {
+            alertColor: 'success',
+            timeout: 2000,
+            dataUpdateMsg: '',
+            dataUpdateAlert: false,
+            deleteDialog: false,
+            details: [],
+            size:[],
+            dialog: false,
+            headers: [{
+                    text: '#',
+                    align: 'start',
+                    sortable: false,
+                    value: 'id',
+                },
+                {
+                    text: 'Size',
+                    value: 'size'
+                },
+                {
+                    text: 'Actions',
+                    value: 'actions',
+                    sortable: false
+                },
+            ],
+            editedIndex: -1,
+            editedItem: {
+                id: '',
+                size: '',
+            },
+            defaultItem: {
+                id: '',
+                size: '',
+            },
+        }
+    },
+
+    computed: {
+        formTitle() {
+            return this.editedIndex === -1 ? 'New Size' : 'Edit Size'
+        },
+
+    },
+    watch: {
+        dialog(val) {
+            val || this.close()
+        },
+    },
+
+    created() {
+        this.initialize()
+    },
+    mounted() {
+
+    },
+    methods: {
+        initialize() {
+            axios.get('/api/size', {}).
+            then(res => this.size = res.data)
+                .catch(err => console.log(err.response))
+
+        },
+
+        editItem(item) {
+            this.editedIndex = this.size.indexOf(item)
+            this.editedItem = Object.assign({}, item)
+            this.dialog = true
+        },
+
+        deleteItem(item) {
+            const index = this.size.indexOf(item)
+            this.size.splice(index, 1)
+            axios.delete('/api/size/' + item.id)
+                .then(this.deleteDialog = false,
+                    this.dataUpdateMsg = 'Course item deleted successfully',
+                    this.dataUpdateAlert = true
+                )
+        },
+
+        focusMessage() {
+            this.errors = []
+        },
+        close() {
+            this.dialog = false
+            this.$nextTick(() => {
+                this.editedItem = Object.assign({}, this.defaultItem)
+                this.editedIndex = -1
+            })
+        },
+
+        save() {
+            if (this.editedIndex > -1) {
+                axios.put('/api/size/' + this.editedItem.id, {
+                        'size': this.editedItem.size,
+                    })
+                    .then(res => {
+                        if (Object.assign(this.size[this.editedIndex], res.data.size)) {
+                            this.close()
+                            this.dataUpdateMsg = 'Size item updated successfully'
+                            this.dataUpdateAlert = true
+                        }
+                    })
+                    .catch(err => console.log(err.response))
+                Object.assign(this.size[this.editedIndex], this.editedItem)
+            } else {
+
+                axios.post('/api/size', {
+                        'size': this.editedItem.size,
+                    })
+                    .then(res => {
+                        if (this.size.push(res.data)) {
+                            this.close()
+                            this.dataUpdateMsg = 'New Size Added successfully',
+                                this.dataUpdateAlert = true
+                        }
+                    }).catch(err => console.log(err.response))
+            }
+        },
+    },
+
+}
+</script>

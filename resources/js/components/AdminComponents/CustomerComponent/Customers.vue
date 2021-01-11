@@ -58,10 +58,10 @@ export default {
     },
     methods: {
         initialize() {
-            // this.customers = []
-            // axios.get('/api/customers', {}).
-            // then(res => this.customers = res.data.customers)
-            //     .catch(err => console.log(err.response))
+            this.customers = []
+            axios.get('/api/customers', {}).
+            then(res => this.customers = res.data.customers)
+                .catch(err => console.log(err.response))
 
         },
     },

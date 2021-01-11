@@ -9,10 +9,19 @@
                     <subCategory></subCategory>
                 </v-col>
                 <v-col cols="6">
-                    <!-- <cart></cart> -->
+                    <size></size>
                 </v-col>
                 <v-col cols="6">
-                    <!-- <wishlist></wishlist> -->
+                    <company></company>
+                </v-col>
+                <v-col cols="6">
+                    <color></color>
+                </v-col>
+                <v-col cols="6">
+                    <type></type>
+                </v-col>
+                <v-col cols="6">
+                    <tag></tag>
                 </v-col>
             </v-row>
         </v-container>
@@ -22,10 +31,13 @@
 <script>
 import Category from './Category';
 import SubCategory from './SubCategory';
-import Wishlist from './Wishlist';
-import Cart from './Carts';
+import Size from './Size';
+import Color from './Color';
+import Company from './Company';
+import Tag from './Tags';
+import Type from './ProductType';
 export default {
-    components:{Category,SubCategory,Wishlist,Cart},
+    components:{Category,SubCategory,Size,Color,Company,Tag,Type},
     data(){
         return{
             
