@@ -25,13 +25,18 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'Admin'],function(){
 
 
     Route::get('customers','CustomerController@getCustomers');
+
     Route::get('getProductSup','ProductController@productSup');
     Route::get('products','ProductController@getProducts');
     Route::post('products','ProductController@store');
 
-    
-
-
 });
+Route::get('latestProducts','User\ProductController@getLatestProducts');
+
+
+
+//Auth
+Route::post('register', 'AuthController@register');
+Route::post('customer-login', 'AuthController@customerLogin');
 Route::post('admin-login', 'AuthController@adminLogin');
 Route::get('verify', 'AuthController@verify');

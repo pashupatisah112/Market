@@ -17,3 +17,9 @@
     transform: scale(1.1);
     transform-origin: 50% 50%;
 }
+.link{
+    
+}
+.link:hover{cursor: pointer;}
+.line-hover{cursor: pointer;}
+.line-hover:hover{text-decoration-line: underline;}

@@ -48,7 +48,6 @@ class ProductController extends Controller
         $product->tag()->sync($request->tag_name);
         return response()->json($product);
         
-
-        
     }
+    
 }

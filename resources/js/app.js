@@ -7,6 +7,20 @@ import vuetify from "./vuetify";
 import router from "./router";
 import store from "./store/mainStore";
 import style from "./assets/style.css";
+import Vue from 'vue'
+import VueInternationalization from 'vue-i18n';
+import Locale from './vue-i18n-locales.generated';
+ 
+Vue.use(VueInternationalization);
+const lang = localStorage.getItem('locale') || 'en'; 
+ 
+const i18n = new VueInternationalization({
+    locale: lang,
+    messages: Locale
+ });
+
+const selectedLang=localStorage.getItem('lang') || 'English'
+
 
 import "froala-editor/css/froala_editor.pkgd.min.css"; // all styles (also for buttons)
 import "froala-editor/js/plugins.pkgd.min"; // all plugins (you can add plugins by one too)
@@ -16,6 +30,7 @@ Vue.use(VueFroala);
 
 new Vue({
     el: "#app",
+    i18n,
     router,
     vuetify,
     style,

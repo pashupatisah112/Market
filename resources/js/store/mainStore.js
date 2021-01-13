@@ -11,6 +11,8 @@ import authenticationModule from './authenticationModule';
 import productModule from './productModule';
 import profileModule from './profileModule'
 import validationModule from './validationModule';
+import localeModule from "./localeModule";
+
 
 
 
@@ -22,7 +24,8 @@ const store=new vuex.Store({
         authentication:authenticationModule,
         product:productModule,
         profile:profileModule,
-        validation:validationModule
+        validation:validationModule,
+        locale:localeModule
     },
 
     state:{

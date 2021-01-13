@@ -9,10 +9,10 @@
         </v-row>
         <v-row class=" mt-5">
             <v-col cols="12" lg="3" md="3" v-for="i in 8" :key="i">
-                 <v-card max-width="220" class="mx-auto" tile flat >
+                 <v-card max-width="300" class="mx-auto" tile flat >
                 <v-hover v-slot="{ hover }">
-                    <div style="width:220px;height:250px;overflow: hidden;">
-                        <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg" width="220" height="250" style="transition: transform .4s;" :class="{ 'on-hover': hover }">
+                    <div style="overflow: hidden;">
+                        <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg" width="300" height="350" style="transition: transform .4s;" :class="{ 'on-hover': hover }">
                             <v-slide-y-reverse-transition hide-on-leave>
                                 <div v-if="hover" class="d-flex transition-fast-in-fast-out v-card--reveal" style="height: 30%;">
                                     <v-btn rounded color="white" class="text-capitalize" small>Quick View</v-btn>
@@ -31,7 +31,7 @@
                     <v-spacer></v-spacer>
 
                     <v-btn icon>
-                        <v-icon>mdi-cards-heart</v-icon>
+                        <v-icon color="red">mdi-cards-heart</v-icon>
                     </v-btn>
                 </v-card-actions>
                 <v-card-title class="pa-0">

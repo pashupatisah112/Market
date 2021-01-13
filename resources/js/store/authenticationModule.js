@@ -1,7 +1,7 @@
 import router from "../router";
 export default {
     state: {
-       
+       auth:null
     },
     mutations: {
         
@@ -11,9 +11,6 @@ export default {
             localStorage.removeItem('token');
             router.push('/adminLogin').then(res => console.log('Logged out')).catch(err => console.log(err));
         },
-        getMateRequest(){
-
-        }
     },
     getters: {
         get_auth(state){

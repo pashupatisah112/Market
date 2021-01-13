@@ -7,10 +7,10 @@
         <v-row class=" mt-5">
             <v-slide-group v-model="model" class="pa-4" center-active show-arrows>
                 <v-slide-item v-for="n in 15" :key="n" v-slot="{ toggle }">
-                    <v-card max-width="220" class="ma-4" tile flat @click="toggle">
+                    <v-card max-width="300" class="ma-4" tile flat @click="toggle">
                         <v-hover v-slot="{ hover }">
-                            <div style="width:220px;height:250px;overflow: hidden;">
-                                <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg" width="220" height="250" style="transition: transform .4s;" :class="{ 'on-hover': hover }">
+                            <div style="overflow: hidden;">
+                                <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg" width="300" height="350" style="transition: transform .4s;" :class="{ 'on-hover': hover }">
                                     <v-slide-y-reverse-transition hide-on-leave>
                                         <div v-if="hover" class="d-flex transition-fast-in-fast-out v-card--reveal" style="height: 30%;">
                                             <v-btn rounded color="white" class="text-capitalize" small>Quick View</v-btn>
