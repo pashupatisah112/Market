@@ -436,8 +436,8 @@ export default {
             if (this.$refs.form.validate()) {
                 axios
                     .post("/api/customer-login", {
-                        email: this.adminEmail,
-                        password: this.adminPassword,
+                        email: this.email,
+                        password: this.password,
                         remember_me:this.remember_me
                     })
                     .then(res => {
