@@ -5,7 +5,7 @@
     </div>
 </template>
 <script>
-import FilterProduct from './filter';
+import FilterProduct from '../Common/filter';
 import List from './List';
 export default {
     components:{

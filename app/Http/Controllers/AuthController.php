@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use App\User;
 
 
+
 class AuthController extends Controller
 {
     public function verify(Request $request)

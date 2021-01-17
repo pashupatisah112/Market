@@ -222,21 +222,6 @@ export default {
     methods: {
         initialize() {
             this.courses = []
-            axios.interceptors.request.use((config) => {
-                this.loading = true;
-                return config;
-            }, (error) => {
-                this.loading = false;
-                return Promise.reject(error);
-            });
-
-            axios.interceptors.response.use((response) => {
-                this.loading = false;
-                return response;
-            }, (error) => {
-                this.loading = false;
-                return Promise.reject(error);
-            });
             axios.get('/api/courses', {}).
             then(res => this.courses = res.data.courses)
                 .catch(err => console.log(err.response))

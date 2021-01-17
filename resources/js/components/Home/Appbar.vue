@@ -98,116 +98,104 @@
             </v-menu>
         </v-row>
 
-        <v-divider class="mx-0 mt-3"></v-divider>
+        <v-row>
+            <v-toolbar extended dense short max-height="50" elevation="0" class="mb-1">
+                <v-toolbar-title class="mr-12">
+                    <span class="heading-3 font-weight-bold">COZA</span> Store
+                </v-toolbar-title>
 
-        <v-toolbar extended dense short max-height="50" elevation="0">
-            <v-toolbar-title class="mr-12">
-                <span class="heading-3 font-weight-bold">COZA</span> Store
-            </v-toolbar-title>
+                <v-btn text class="text-capitalize" @click="goHome">
+                    {{ $t('words.header.home') }}
+                </v-btn>
 
-            <v-btn text class="text-capitalize">
-                {{ $t('words.header.home') }}
-            </v-btn>
+                <v-menu open-on-hover bottom offset-y>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn text v-bind="attrs" v-on="on" class="text-capitalize">
+                            {{ $t('words.header.categories') }}
+                        </v-btn>
+                    </template>
+                    <v-card max-width="1200">
+                        <v-container fluid>
+                            <v-row>
+                                <v-col co v-for="item in categories" :key="item.id"> 
+                                    <p class="font-weight-bold">{{item.category_name}}</p>
+                                    <v-btn text small class="text-capitalize" v-for="sub in item.subcategory" :key="sub.id"  @click="goToList(item,sub)">{{sub.subCategory_name}}</v-btn><br>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-card>
+                </v-menu>
 
-            <v-menu open-on-hover bottom offset-y>
-                <template v-slot:activator="{ on, attrs }">
-                    <v-btn text v-bind="attrs" v-on="on" class="text-capitalize">
-                        {{ $t('words.header.categories') }}
-                    </v-btn>
-                </template>
-                <v-card>
-                    <v-container fluid>
-                        <v-row>
-                            <v-col>
-                                <p class="font-weight-bold">Men's Fashion</p>
-                                <v-btn text small class="text-capitalize" @click="goToList">Jackets</v-btn><br>
-                                <v-btn text small class="text-capitalize">Hoodies</v-btn><br>
-                                <v-btn text small class="text-capitalize">Sweater</v-btn><br>
-                                <v-btn text small class="text-capitalize">Trousers</v-btn><br>
-                                <v-btn text small class="text-capitalize">Accessories</v-btn>
-                            </v-col>
-                            <v-col>
-                                <p class="font-weight-bold">Women's Fashion</p>
-                                <v-btn text small class="text-capitalize">Jackets</v-btn><br>
-                                <v-btn text small class="text-capitalize">Sarees</v-btn><br>
-                                <v-btn text small class="text-capitalize">Kurta</v-btn><br>
-                                <v-btn text small class="text-capitalize">Lehenga</v-btn><br>
-                                <v-btn text small class="text-capitalize">Jumsuit</v-btn>
-                            </v-col>
-                        </v-row>
-                    </v-container>
-                </v-card>
-            </v-menu>
+                <v-btn text class="text-capitalize" to="/collections">
+                    {{ $t('words.header.collections') }}
+                </v-btn>
 
-            <v-btn text class="text-capitalize">
-                {{ $t('words.header.collections') }}
-            </v-btn>
+                <v-btn text class="text-capitalize" to="/about">
+                    {{ $t('words.header.about') }}
+                </v-btn>
 
-            <v-btn text class="text-capitalize">
-                {{ $t('words.header.about') }}
-            </v-btn>
+                <v-btn text class="text-capitalize" to="/contact">
+                    {{ $t('words.header.contact') }}
+                </v-btn>
 
-            <v-btn text class="text-capitalize">
-                {{ $t('words.header.contact') }}
-            </v-btn>
+                <v-spacer></v-spacer>
+                <v-expand-x-transition>
+                    <v-text-field rounded filled dense placeholder="Search items here..." v-show="search" v-model="searchItem" class="mt-7 mr-2"></v-text-field>
+                </v-expand-x-transition>
 
-            <v-spacer></v-spacer>
-            <v-expand-x-transition>
-                <v-text-field rounded filled dense placeholder="Search items here..." v-show="search" v-model="searchItem" class="mt-7 mr-2"></v-text-field>
-            </v-expand-x-transition>
+                <v-btn icon @click="searchOptions">
+                    <v-icon>mdi-account-search</v-icon>
+                </v-btn>
 
-            <v-btn icon @click="searchOptions">
-                <v-icon>mdi-account-search</v-icon>
-            </v-btn>
+                <v-btn icon>
+                    <v-icon>mdi-cards-heart</v-icon>
+                </v-btn>
 
-            <v-btn icon>
-                <v-icon>mdi-cards-heart</v-icon>
-            </v-btn>
+                <v-menu bottom open-on-hover offset-y transition="expand-transition">
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn icon v-bind="attrs" v-on="on">
+                            <v-icon>mdi-cart</v-icon>
+                        </v-btn>
+                    </template>
+                    <v-card width="300">
+                        <v-card-title>Your Cart</v-card-title>
+                        <v-container fluid>
+                            <v-row>
+                                <v-col cols="12">
+                                    <v-list two-line dense>
+                                        <v-list-item v-for="chat in items" :key="chat.title" dense class="mt-n4">
+                                            <v-list-item-avatar tile size="60">
+                                                <v-img :alt="`${chat.title} avatar`" :src="chat.avatar"></v-img>
+                                            </v-list-item-avatar>
 
-            <v-menu bottom open-on-hover offset-y transition="expand-transition">
-                <template v-slot:activator="{ on, attrs }">
-                    <v-btn icon v-bind="attrs" v-on="on">
-                        <v-icon>mdi-cart</v-icon>
-                    </v-btn>
-                </template>
-                <v-card width="300">
-                    <v-card-title>Your Cart</v-card-title>
-                    <v-container fluid>
-                        <v-row>
-                            <v-col cols="12">
-                                <v-list two-line dense>
-                                    <v-list-item v-for="chat in items" :key="chat.title" dense class="mt-n4">
-                                        <v-list-item-avatar tile size="60">
-                                            <v-img :alt="`${chat.title} avatar`" :src="chat.avatar"></v-img>
-                                        </v-list-item-avatar>
+                                            <v-list-item-content>
+                                                <v-list-item-title v-text="chat.title"></v-list-item-title>
+                                                <v-list-item-subtitle>1 x Rs.500</v-list-item-subtitle>
+                                            </v-list-item-content>
 
-                                        <v-list-item-content>
-                                            <v-list-item-title v-text="chat.title"></v-list-item-title>
-                                            <v-list-item-subtitle>1 x Rs.500</v-list-item-subtitle>
-                                        </v-list-item-content>
+                                            <v-list-item-action>
+                                                <v-icon>
+                                                    mdi-cancel
+                                                </v-icon>
+                                            </v-list-item-action>
+                                        </v-list-item>
+                                    </v-list>
 
-                                        <v-list-item-action>
-                                            <v-icon>
-                                                mdi-cancel
-                                            </v-icon>
-                                        </v-list-item-action>
-                                    </v-list-item>
-                                </v-list>
-
-                                <v-divider></v-divider>
-                                <v-row class="mt-2 px-5">
-                                    <P class="text-h6">TOTAL:</P>
-                                    <v-spacer></v-spacer>
-                                    <p class="text-h6">Rs.2000</p>
-                                </v-row>
-                                <v-btn rounded block color="blackTheme" class="text-capitalize white--text" @click="viewCart">View Cart</v-btn>
-                                <v-btn rounded block color="blackTheme" class="text-capitalize white--text my-3">Checkout</v-btn>
-                            </v-col>
-                        </v-row>
-                    </v-container>
-                </v-card>
-            </v-menu>
-        </v-toolbar>
+                                    <v-divider></v-divider>
+                                    <v-row class="mt-2 px-5">
+                                        <P class="text-h6">TOTAL:</P>
+                                        <v-spacer></v-spacer>
+                                        <p class="text-h6">Rs.2000</p>
+                                    </v-row>
+                                    <v-btn rounded block color="blackTheme" class="text-capitalize white--text" @click="viewCart">View Cart</v-btn>
+                                    <v-btn rounded block color="blackTheme" class="text-capitalize white--text my-3">Checkout</v-btn>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-card>
+                </v-menu>
+            </v-toolbar>
+        </v-row>
 
         <v-dialog max-width="600" v-model="loginDialog">
             <v-card>
@@ -315,7 +303,6 @@ import {
     mapFields
 } from 'vuex-map-fields';
 export default {
-
     data() {
         return {
             termsDialog: '',
@@ -325,21 +312,17 @@ export default {
             registerMode: false,
             emailMode: true,
             valid: true,
-            remember_me:false,
+            remember_me: false,
             email: null,
-            loginError:'',
-            emailError:'',
+            loginError: '',
+            emailError: '',
             password: '',
             name: '',
             phone: null,
             search: false,
             searchItem: null,
             selectedLang: '',
-            categories: [{
-                title: "Men's Fashion"
-            }, {
-                title: "Women's Fashion"
-            }],
+            categories: [],
             menus: [{
                     title: 'Home',
                     link: ''
@@ -397,16 +380,18 @@ export default {
     },
     created() {
         this.checkUser()
+        this.getCategories()
     },
     methods: {
         checkUser() {
-            if(localStorage.getItem('customer-token')){
-                this.customerToken=true
+            if (localStorage.getItem('customer-token')) {
+                this.customerToken = true
             }
         },
-        goToList() {
+        goToList(item,sub) {
             this.$router.push({
-                name: 'Category'
+                name: 'Category',
+                params:{category:item.category_name,subCategory:sub.subCategory_name}
             });
         },
         searchOptions() {
@@ -438,7 +423,7 @@ export default {
                     .post("/api/customer-login", {
                         email: this.email,
                         password: this.password,
-                        remember_me:this.remember_me
+                        remember_me: this.remember_me
                     })
                     .then(res => {
                         localStorage.setItem("customer-token", res.data.token);
@@ -447,7 +432,7 @@ export default {
                             .catch(err => console.log(err));
                     })
                     .catch(err => {
-                        this.loginError=err.response.data.status
+                        this.loginError = err.response.data.status
                     });
             }
         },
@@ -466,7 +451,7 @@ export default {
                         window.location.reload()
                             .catch(err => console.log(err));
                     }).catch(err => {
-                        this.emailError=err.response.data.errors.email[0]
+                        this.emailError = err.response.data.errors.email[0]
                     })
             }
         },
@@ -475,6 +460,18 @@ export default {
             localStorage.clear()
             window.location.reload()
         },
+        goHome() {
+            this.$router.push({
+                name: 'Home',
+            })
+        },
+        getCategories() {
+            axios.get('api/getCategories')
+                .then(res => {
+                    this.categories=res.data
+                })
+                .catch(err => console.log(err.response))
+        }
     }
 }
 </script>

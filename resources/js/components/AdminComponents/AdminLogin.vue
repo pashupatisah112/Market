@@ -45,9 +45,8 @@ export default {
                         role_id:1
                     })
                     .then(res => {
-                        console.log(res.data)
                         localStorage.setItem("token", res.data.token);
-                        this.$router.push('/admin')
+                        this.$router.push({name:'AdminDashboard'})
                             .catch(err => console.log(err));
                     })
                     .catch(err => {

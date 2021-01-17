@@ -15,11 +15,15 @@ import WishList from "./components/AdminComponents/ProductComponent/WishList";
 import Sales from "./components/AdminComponents/SalesComponent/Sales";
 import Comment from "./components/AdminComponents/CommentComponent/Comment";
 
+//User
 import Main from "./components/Index";
 import Home from "./components/Home/Home";
 import Category from "./components/List/Home";
+import Collection from "./components/Collections/Home";
 import Detail from "./components/Details/Home";
 import Cart from "./components/Account/CartView";
+import About from "./components/Other/About";
+import Contact from "./components/Other/Contact";
 
 const routes = [
     // {
@@ -31,6 +35,7 @@ const routes = [
         name: "AdminLogin",
         component: AdminLogin
     },
+
     {
         path: "/admin",
         component: Admin,
@@ -81,6 +86,7 @@ const routes = [
                 component: Comment
             }
         ],
+        
     },
     {
         path: "/",
@@ -92,7 +98,7 @@ const routes = [
                 component: Home
             },
             {
-                path: "/category_name",
+                path: "/:category/:subCategory",
                 name: "Category",
                 component: Category
             },
@@ -102,9 +108,24 @@ const routes = [
                 component: Detail
             },
             {
+                path: "/collections",
+                name: "Collection",
+                component: Collection
+            },
+            {
                 path: "/cart",
                 name: "Cart",
                 component: Cart
+            },
+            {
+                path: "/about",
+                name: "About",
+                component: About
+            },
+            {
+                path: "/contact",
+                name: "Contact",
+                component: Contact
             }
         ]
     }

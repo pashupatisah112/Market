@@ -23,7 +23,7 @@
                 </template>
             </v-menu>
 
-            <v-btn text @click="logout">
+            <v-btn text>
                 <v-icon>mdi-logout</v-icon>
             </v-btn>
         </div>
