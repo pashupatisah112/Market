@@ -1,33 +1,93 @@
 <template>
 <v-container fluid>
 
-    <!--heading-->
-    <v-row justify="center">
-        <p class="headline text-lg-center font-weight-bold">Products</p>
-    </v-row>
-    <!--end heading-->
-
     <!--course list-->
     <v-data-table :headers="headers" :items="products" class="elevation-1">
         <template v-slot:top>
             <v-toolbar flat color="white">
-                <v-card class="px-3 py-3 mb-2 mr-2" color="success">
-                    <v-card-actions>
-                        <v-icon x-large color="white">mdi-account-star</v-icon>
-                    </v-card-actions>
-                </v-card>
                 <v-toolbar-title>Products Management</v-toolbar-title>
                 <v-divider class="mx-4" inset vertical></v-divider>
                 <v-spacer></v-spacer>
                 <!--add new course-->
-                <v-tooltip top>
-                    <template v-slot:activator="{ on:tooltip }">
-                        <v-btn class="mr-2 float-right" fab dark color="success" v-on="{...tooltip}" @click="addDialog">
+                <v-dialog v-model="productDialog" max-width="1200px" persistent>
+                    <template v-slot:activator="{ on,attrs }">
+
+                        <v-btn class="mr-2 float-right" fab dark color="success" v-bind="attrs" v-on="on">
                             <v-icon dark>mdi-plus</v-icon>
                         </v-btn>
                     </template>
-                    <span>Add New</span>
-                </v-tooltip>
+                    <v-card>
+                        <v-card-title>
+                            <span class="headline">{{
+                                        formTitle
+                                    }}</span>
+                        </v-card-title>
+
+                        <v-card-text>
+                            <v-container>
+                                <v-row>
+                                    <v-col cols="6">
+                                        <v-text-field v-model="editedItem.title" label="Product Name" dense></v-text-field>
+                                    </v-col>
+                                    <v-col cols="6">
+                                        <v-text-field v-model="editedItem.price" label="Price" dense></v-text-field>
+                                    </v-col>
+                                </v-row>
+                                <v-row>
+
+                                    <v-col cols="4">
+                                        <v-select v-model="editedItem.category" :items="category" label="Category" item-text="category_name" item-value="id" dense></v-select>
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <v-select v-model="editedItem.subCategory" :items="subCategory" label="Sub-Category" item-text="subCategory_name" item-value="id" dense></v-select>
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <v-select v-model="editedItem.company" :items="company" label="Company" item-text="company_name" item-value="id" dense></v-select>
+
+                                    </v-col>
+                                </v-row>
+                                <v-row>
+                                    <v-col cols="4">
+                                        <v-select v-model="editedItem.selectedSize" :items="size" chips small-chips multiple dense label="Available sizes" item-text="size" item-value="id"></v-select>
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <v-select v-model="editedItem.selectedColor" :items="color" chips small-chips multiple dense label="Available color" item-text="color_name" item-value="id"></v-select>
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <v-select v-model="editedItem.type" :items="productType" label="Product Type" item-text="product_type" item-value="id" dense></v-select>
+                                    </v-col>
+                                </v-row>
+                                <v-row>
+                                    <v-col cols="12">
+                                        <v-file-input v-model="files" label="Upload photos" multiple dense @change="onFileChanged">
+                                            <template v-slot:selection="{ text }">
+                                                <v-chip small label color="primary">
+                                                    {{ text }}
+                                                </v-chip>
+                                            </template>
+                                        </v-file-input>
+                                    </v-col>
+                                </v-row>
+                                <v-row>
+                                    <v-col cols="6">
+                                        <froala id="edit" :tag="'textarea'" :config="config" v-model="editedItem.description"></froala>
+                                    </v-col>
+                                    <v-col cols="6">
+                                        <v-select v-model="editedItem.selectedTag" :items="tag" label="Select Tags" chips small-chips multiple item-text="tag_name" item-value="id" dense></v-select>
+
+                                    </v-col>
+                                </v-row>
+                            </v-container>
+                        </v-card-text>
+
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
+                            <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+                        </v-card-actions>
+                    </v-card>
+
+                </v-dialog>
                 <!--end add new-->
             </v-toolbar>
         </template>
@@ -98,81 +158,6 @@
     </v-snackbar>
     <!--end snackbar-->
 
-    <!-- product add dialog -->
-    <v-dialog v-model="productDialog" max-width="1200px" persistent>
-        <v-card>
-            <v-card-title>
-                <span class="headline">{{
-                                        formTitle
-                                    }}</span>
-            </v-card-title>
-
-            <v-card-text>
-                <v-container>
-                    <v-row>
-                        <v-col cols="6">
-                            <v-text-field v-model="editedItem.title" label="Product Name" dense></v-text-field>
-                        </v-col>
-                        <v-col cols="6">
-                            <v-text-field v-model="editedItem.price" label="Price" dense></v-text-field>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-
-                        <v-col cols="4">
-                            <v-select v-model="editedItem.category" :items="category" label="Category" item-text="category_name" item-value="id" dense></v-select>
-                        </v-col>
-                        <v-col cols="4">
-                            <v-select v-model="editedItem.subCategory" :items="subCategory" label="Sub-Category" item-text="subCategory_name" item-value="id" dense></v-select>
-                        </v-col>
-                        <v-col cols="4">
-                            <v-select v-model="editedItem.company" :items="company" label="Company" item-text="company_name" item-value="id" dense></v-select>
-
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col cols="4">
-                            <v-select v-model="editedItem.selectedSize" :items="size" chips small-chips multiple dense label="Available sizes" item-text="size" item-value="id"></v-select>
-                        </v-col>
-                        <v-col cols="4">
-                            <v-select v-model="editedItem.selectedColor" :items="color" chips small-chips multiple dense label="Available color" item-text="color_name" item-value="id"></v-select>
-                        </v-col>
-                        <v-col cols="4">
-                            <v-select v-model="editedItem.type" :items="productType" label="Product Type" item-text="product_type" item-value="id" dense></v-select>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col cols="12">
-                            <v-file-input v-model="files" label="Upload photos" multiple dense @change="onFileChanged">
-                                <template v-slot:selection="{ text }">
-                                    <v-chip small label color="primary">
-                                        {{ text }}
-                                    </v-chip>
-                                </template>
-                            </v-file-input>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col cols="6">
-                            <froala id="edit" :tag="'textarea'" :config="config" v-model="editedItem.description"></froala>
-                        </v-col>
-                        <v-col cols="6">
-                            <v-select v-model="editedItem.selectedTag" :items="tag" label="Select Tags" chips small-chips multiple item-text="tag_name" item-value="id" dense></v-select>
-
-                        </v-col>
-                    </v-row>
-                </v-container>
-            </v-card-text>
-
-            <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-                <v-btn color="blue darken-1" text @click="save">Save</v-btn>
-            </v-card-actions>
-        </v-card>
-    </v-dialog>
-    <!-- end product add dialog -->
-
 </v-container>
 </template>
 
@@ -207,6 +192,7 @@ export default {
                 },
 
             },
+
             files: [],
 
             selectedFile: null,
@@ -243,11 +229,11 @@ export default {
                 },
                 {
                     text: 'Category',
-                    value: 'title'
+                    value: 'category.category_name'
                 },
                 {
                     text: 'Sub-Category',
-                    value: 'title'
+                    value: 'sub_category.subCategory_name'
                 },
                 {
                     text: 'Actions',
@@ -304,6 +290,7 @@ export default {
 
     created() {
         this.initialize()
+        this.getProductSup()
     },
     mounted() {
 
@@ -329,7 +316,10 @@ export default {
         },
         initialize() {
             axios.get('/api/products', {}).
-            then(res => this.products = res.data)
+            then(res => {
+                    this.products = res.data
+                    console.log(res.data)
+                })
                 .catch(err => console.log(err.response))
 
         },
@@ -337,7 +327,7 @@ export default {
         editItem(item) {
             this.editedIndex = this.products.indexOf(item)
             this.editedItem = Object.assign({}, item)
-            this.dialog = true
+            this.productDialog = true
         },
 
         deleteItem(item) {

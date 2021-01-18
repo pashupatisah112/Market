@@ -36,7 +36,9 @@
                             <v-container>
                                 <v-row>
                                     <v-col cols="12">
-                                        <v-text-field v-model="editedItem.category_name" label="Category Name"></v-text-field>
+                                        <v-form ref="form" v-model="valid">
+                                            <v-text-field v-model="editedItem.category_name" :rules="[validRules.required]" label="Category Name"></v-text-field>
+                                        </v-form>
                                     </v-col>
                                 </v-row>
                             </v-container>
@@ -111,12 +113,17 @@
 </template>
 
 <script>
-import {mapState} from 'vuex';
-import {mapFields} from 'vuex-map-fields';
+import {
+    mapState
+} from 'vuex';
+import {
+    mapFields
+} from 'vuex-map-fields';
 export default {
 
     data() {
         return {
+            valid: true,
             alertColor: 'success',
             timeout: 2000,
             dataUpdateMsg: '',
@@ -157,7 +164,10 @@ export default {
             return this.editedIndex === -1 ? 'New Category' : 'Edit Category'
         },
         ...mapState(['categories']),
-        ...mapFields(['categories'])
+        ...mapFields(['categories']),
+        ...mapState({
+            'validRules': state => state.validation.validRules
+        }),
 
     },
     watch: {
@@ -208,31 +218,33 @@ export default {
         },
 
         save() {
-            if (this.editedIndex > -1) {
-                axios.put('/api/categories/' + this.editedItem.id, {
-                        'category_name': this.editedItem.category_name,
-                    })
-                    .then(res => {
-                        if (Object.assign(this.categories[this.editedIndex], res.data.categories)) {
-                            this.close()
-                            this.dataUpdateMsg = 'Category item updated successfully'
-                            this.dataUpdateAlert = true
-                        }
-                    })
-                    .catch(err => console.log(err.response))
-                Object.assign(this.categories[this.editedIndex], this.editedItem)
-            } else {
-
-                axios.post('/api/categories', {
-                        'category_name': this.editedItem.category_name,
-                    })
-                    .then(res => {
-                        if (this.categories.push(res.data)) {
-                            this.close()
-                            this.dataUpdateMsg = 'New Category Added successfully',
+            if (this.$refs.form.validate()) {
+                if (this.editedIndex > -1) {
+                    axios.put('/api/categories/' + this.editedItem.id, {
+                            'category_name': this.editedItem.category_name,
+                        })
+                        .then(res => {
+                            if (Object.assign(this.categories[this.editedIndex], res.data.categories)) {
+                                this.close()
+                                this.dataUpdateMsg = 'Category item updated successfully'
                                 this.dataUpdateAlert = true
-                        }
-                    }).catch(err => console.log(err.response))
+                            }
+                        })
+                        .catch(err => console.log(err.response))
+                    Object.assign(this.categories[this.editedIndex], this.editedItem)
+                } else {
+
+                    axios.post('/api/categories', {
+                            'category_name': this.editedItem.category_name,
+                        })
+                        .then(res => {
+                            if (this.categories.push(res.data)) {
+                                this.close()
+                                this.dataUpdateMsg = 'New Category Added successfully',
+                                    this.dataUpdateAlert = true
+                            }
+                        }).catch(err => console.log(err.response))
+                }
             }
         },
     },

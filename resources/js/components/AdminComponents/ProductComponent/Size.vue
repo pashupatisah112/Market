@@ -5,11 +5,6 @@
     <v-data-table :headers="headers" :items="size" class="elevation-1">
         <template v-slot:top>
             <v-toolbar flat color="white">
-                <v-card class="px-3 py-3 mb-2 mr-2" color="success">
-                    <v-card-actions>
-                        <v-icon x-large color="white">mdi-account-star</v-icon>
-                    </v-card-actions>
-                </v-card>
                 <v-toolbar-title>Product size</v-toolbar-title>
                 <v-divider class="mx-4" inset vertical></v-divider>
                 <v-spacer></v-spacer>
@@ -36,7 +31,9 @@
                             <v-container>
                                 <v-row>
                                     <v-col cols="12">
-                                        <v-text-field v-model="editedItem.size" label="Category Name"></v-text-field>
+                                        <v-form v-model="valid" ref="form">
+                                            <v-text-field v-model="editedItem.size" :rules="[validRules.required]" label="Category Name"></v-text-field>
+                                        </v-form>
                                     </v-col>
                                 </v-row>
                             </v-container>
@@ -111,19 +108,24 @@
 </template>
 
 <script>
-import {mapState} from 'vuex';
-import {mapFields} from 'vuex-map-fields';
+import {
+    mapState
+} from 'vuex';
+import {
+    mapFields
+} from 'vuex-map-fields';
 export default {
 
     data() {
         return {
+            valid: true,
             alertColor: 'success',
             timeout: 2000,
             dataUpdateMsg: '',
             dataUpdateAlert: false,
             deleteDialog: false,
             details: [],
-            size:[],
+            size: [],
             dialog: false,
             headers: [{
                     text: '#',
@@ -157,6 +159,9 @@ export default {
         formTitle() {
             return this.editedIndex === -1 ? 'New Size' : 'Edit Size'
         },
+        ...mapState({
+            'validRules': state => state.validation.validRules
+        }),
 
     },
     watch: {
@@ -207,31 +212,33 @@ export default {
         },
 
         save() {
-            if (this.editedIndex > -1) {
-                axios.put('/api/size/' + this.editedItem.id, {
-                        'size': this.editedItem.size,
-                    })
-                    .then(res => {
-                        if (Object.assign(this.size[this.editedIndex], res.data.size)) {
-                            this.close()
-                            this.dataUpdateMsg = 'Size item updated successfully'
-                            this.dataUpdateAlert = true
-                        }
-                    })
-                    .catch(err => console.log(err.response))
-                Object.assign(this.size[this.editedIndex], this.editedItem)
-            } else {
-
-                axios.post('/api/size', {
-                        'size': this.editedItem.size,
-                    })
-                    .then(res => {
-                        if (this.size.push(res.data)) {
-                            this.close()
-                            this.dataUpdateMsg = 'New Size Added successfully',
+            if (this.$refs.form.validate) {
+                if (this.editedIndex > -1) {
+                    axios.put('/api/size/' + this.editedItem.id, {
+                            'size': this.editedItem.size,
+                        })
+                        .then(res => {
+                            if (Object.assign(this.size[this.editedIndex], res.data.size)) {
+                                this.close()
+                                this.dataUpdateMsg = 'Size item updated successfully'
                                 this.dataUpdateAlert = true
-                        }
-                    }).catch(err => console.log(err.response))
+                            }
+                        })
+                        .catch(err => console.log(err.response))
+                    Object.assign(this.size[this.editedIndex], this.editedItem)
+                } else {
+
+                    axios.post('/api/size', {
+                            'size': this.editedItem.size,
+                        })
+                        .then(res => {
+                            if (this.size.push(res.data)) {
+                                this.close()
+                                this.dataUpdateMsg = 'New Size Added successfully',
+                                    this.dataUpdateAlert = true
+                            }
+                        }).catch(err => console.log(err.response))
+                }
             }
         },
     },

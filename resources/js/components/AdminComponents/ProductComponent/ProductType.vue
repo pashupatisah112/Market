@@ -5,11 +5,6 @@
     <v-data-table :headers="headers" :items="types" class="elevation-1">
         <template v-slot:top>
             <v-toolbar flat color="white">
-                <v-card class="px-3 py-3 mb-2 mr-2" color="success">
-                    <v-card-actions>
-                        <v-icon x-large color="white">mdi-account-star</v-icon>
-                    </v-card-actions>
-                </v-card>
                 <v-toolbar-title>Product types</v-toolbar-title>
                 <v-divider class="mx-4" inset vertical></v-divider>
                 <v-spacer></v-spacer>
@@ -36,7 +31,9 @@
                             <v-container>
                                 <v-row>
                                     <v-col cols="12">
-                                        <v-text-field v-model="editedItem.product_type" label="Product Type"></v-text-field>
+                                        <v-form v-model="valid" ref="form">
+                                            <v-text-field v-model="editedItem.product_type" :rules="[validRules.required]" label="Product Type"></v-text-field>
+                                        </v-form>
                                     </v-col>
                                 </v-row>
                             </v-container>
@@ -121,6 +118,7 @@ export default {
 
     data() {
         return {
+            valid: true,
             alertColor: 'success',
             timeout: 2000,
             dataUpdateMsg: '',
@@ -160,6 +158,9 @@ export default {
         formTitle() {
             return this.editedIndex === -1 ? 'New Product Type' : 'Edit Product Type'
         },
+        ...mapState({
+            'validRules': state => state.validation.validRules
+        }),
 
     },
     watch: {
@@ -210,31 +211,33 @@ export default {
         },
 
         save() {
-            if (this.editedIndex > -1) {
-                axios.put('/api/types/' + this.editedItem.id, {
-                        'product_type': this.editedItem.product_type,
-                    })
-                    .then(res => {
-                        if (Object.assign(this.types[this.editedIndex], res.data.types)) {
-                            this.close()
-                            this.dataUpdateMsg = 'Product Type updated successfully'
-                            this.dataUpdateAlert = true
-                        }
-                    })
-                    .catch(err => console.log(err.response))
-                Object.assign(this.types[this.editedIndex], this.editedItem)
-            } else {
-
-                axios.post('/api/types', {
-                        'product_type': this.editedItem.product_type,
-                    })
-                    .then(res => {
-                        if (this.types.push(res.data)) {
-                            this.close()
-                            this.dataUpdateMsg = 'Product Type Added successfully',
+            if (this.$refs.form.validate()) {
+                if (this.editedIndex > -1) {
+                    axios.put('/api/types/' + this.editedItem.id, {
+                            'product_type': this.editedItem.product_type,
+                        })
+                        .then(res => {
+                            if (Object.assign(this.types[this.editedIndex], res.data.types)) {
+                                this.close()
+                                this.dataUpdateMsg = 'Product Type updated successfully'
                                 this.dataUpdateAlert = true
-                        }
-                    }).catch(err => console.log(err.response))
+                            }
+                        })
+                        .catch(err => console.log(err.response))
+                    Object.assign(this.types[this.editedIndex], this.editedItem)
+                } else {
+
+                    axios.post('/api/types', {
+                            'product_type': this.editedItem.product_type,
+                        })
+                        .then(res => {
+                            if (this.types.push(res.data)) {
+                                this.close()
+                                this.dataUpdateMsg = 'Product Type Added successfully',
+                                    this.dataUpdateAlert = true
+                            }
+                        }).catch(err => console.log(err.response))
+                }
             }
         },
     },

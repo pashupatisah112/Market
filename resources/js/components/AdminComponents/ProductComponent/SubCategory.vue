@@ -31,8 +31,10 @@
                             <v-container>
                                 <v-row>
                                     <v-col cols="12">
-                                        <v-select v-model="editedItem.category_id" :items="categories" label="Category" item-text="category_name" item-value="id"></v-select>
-                                        <v-text-field v-model="editedItem.subCategory_name" label="Category Name"></v-text-field>
+                                        <v-form v-model="valid" ref="form">
+                                            <v-select v-model="editedItem.category_id" :rules="[validRules.required]" :items="categories" label="Category" item-text="category_name" item-value="id"></v-select>
+                                            <v-text-field v-model="editedItem.subCategory_name" :rules="[validRules.required]" label="Category Name"></v-text-field>
+                                        </v-form>
                                     </v-col>
                                 </v-row>
                             </v-container>
@@ -114,6 +116,7 @@ export default {
 
     data() {
         return {
+            valid: true,
             alertColor: 'success',
             timeout: 2000,
             dataUpdateMsg: '',
@@ -146,12 +149,12 @@ export default {
             editedItem: {
                 id: '',
                 category_id: '',
-                subCategory_name:'',
+                subCategory_name: '',
             },
             defaultItem: {
-                id:'',
+                id: '',
                 category_id: '',
-                subCategory_name:'',
+                subCategory_name: '',
             },
         }
     },
@@ -160,7 +163,10 @@ export default {
         formTitle() {
             return this.editedIndex === -1 ? 'New Category' : 'Edit Category'
         },
-        ...mapState(['categories'])
+        ...mapState(['categories']),
+        ...mapState({
+            'validRules': state => state.validation.validRules
+        }),
 
     },
     watch: {
@@ -178,10 +184,10 @@ export default {
     methods: {
         initialize() {
             axios.get('/api/subcategories', {}).
-            then(res =>{
-                this.subcategories = res.data
-                console.log(this.subcategories)
-            } )
+            then(res => {
+                    this.subcategories = res.data
+                    console.log(this.subcategories)
+                })
                 .catch(err => console.log(err.response))
 
         },
@@ -214,33 +220,35 @@ export default {
         },
 
         save() {
-            if (this.editedIndex > -1) {
-                axios.put('/api/subcategories/' + this.editedItem.id, {
-                        'category_id': this.editedItem.category_id,
-                        'subCategory_name': this.editedItem.subCategory_name
-                    })
-                    .then(res => {
-                        if (Object.assign(this.subcategories[this.editedIndex], res.data.subcategories)) {
-                            this.close()
-                            this.dataUpdateMsg = 'Category item updated successfully'
-                            this.dataUpdateAlert = true
-                        }
-                    })
-                    .catch(err => console.log(err.response))
-                Object.assign(this.subcategories[this.editedIndex], this.editedItem)
-            } else {
-
-                axios.post('/api/subcategories', {
-                        'category_id': this.editedItem.category_id,
-                        'subCategory_name': this.editedItem.subCategory_name
-                    })
-                    .then(res => {
-                        if (this.subcategories.push(res.data)) {
-                            this.close()
-                            this.dataUpdateMsg = 'New Category Added successfully',
+            if (this.$refs.form.validate()) {
+                if (this.editedIndex > -1) {
+                    axios.put('/api/subcategories/' + this.editedItem.id, {
+                            'category_id': this.editedItem.category_id,
+                            'subCategory_name': this.editedItem.subCategory_name
+                        })
+                        .then(res => {
+                            if (Object.assign(this.subcategories[this.editedIndex], res.data.subcategories)) {
+                                this.close()
+                                this.dataUpdateMsg = 'Category item updated successfully'
                                 this.dataUpdateAlert = true
-                        }
-                    }).catch(err => console.log(err.response))
+                            }
+                        })
+                        .catch(err => console.log(err.response))
+                    Object.assign(this.subcategories[this.editedIndex], this.editedItem)
+                } else {
+
+                    axios.post('/api/subcategories', {
+                            'category_id': this.editedItem.category_id,
+                            'subCategory_name': this.editedItem.subCategory_name
+                        })
+                        .then(res => {
+                            if (this.subcategories.push(res.data)) {
+                                this.close()
+                                this.dataUpdateMsg = 'New Category Added successfully',
+                                    this.dataUpdateAlert = true
+                            }
+                        }).catch(err => console.log(err.response))
+                }
             }
         },
     },

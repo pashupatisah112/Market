@@ -10,7 +10,7 @@ class Product extends Model
     {
         return $this->belongsTo('App\Category');
     } 
-    public function subcategory()
+    public function subCategory()
     {
         return $this->belongsTo('App\SubCategory');
     }
@@ -30,7 +30,7 @@ class Product extends Model
     {
         return $this->belongsTo('App\Company');
     }
-    public function producttype()
+    public function productType()
     {
         return $this->belongsTo('App\ProductType');
     }

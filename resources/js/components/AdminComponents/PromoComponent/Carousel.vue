@@ -1,25 +1,13 @@
 <template>
 <v-container fluid>
-
-    <!--heading-->
-    <v-row class="mt-5" justify="center">
-        <p class="headline text-lg-center font-weight-bold">Courses</p>
-    </v-row>
-    <!--end heading-->
-
     <!--course list-->
-    <v-data-table :headers="headers" :items="courses" sort-by="calories" class="elevation-1">
+    <v-data-table :headers="headers" :items="promo" sort-by="calories" class="elevation-1">
         <template v-slot:top>
             <v-toolbar flat color="white">
-                <v-card class="px-3 py-3 mb-2 mr-2" color="success">
-                    <v-card-actions>
-                        <v-icon x-large color="white">mdi-account-star</v-icon>
-                    </v-card-actions>
-                </v-card>
-                <v-toolbar-title>courses Management</v-toolbar-title>
+                <v-toolbar-title>Promo Management</v-toolbar-title>
                 <v-divider class="mx-4" inset vertical></v-divider>
                 <v-spacer></v-spacer>
-                <!--add new course-->
+                <!--add new Promo-->
                 <v-dialog v-model="dialog" max-width="500px">
                     <template v-slot:activator="{ on:dialog,attrs }">
                         <v-tooltip top>
@@ -60,7 +48,7 @@
                 <!--end add new-->
             </v-toolbar>
         </template>
-        <!--course item actions-->
+        <!--promo item actions-->
         <template v-slot:item.actions="{ item }">
             <!--view button-->
             <v-tooltip top>
@@ -179,7 +167,7 @@ export default {
                     sortable: false
                 },
             ],
-            courses: [],
+            promo: [],
             editedIndex: -1,
             editedItem: {
                 id: '',
@@ -221,23 +209,23 @@ export default {
     },
     methods: {
         initialize() {
-            this.courses = []
-            axios.get('/api/courses', {}).
-            then(res => this.courses = res.data.courses)
+            this.promo = []
+            axios.get('/api/promo', {}).
+            then(res => this.promo = res.data.promo)
                 .catch(err => console.log(err.response))
 
         },
 
         editItem(item) {
-            this.editedIndex = this.courses.indexOf(item)
+            this.editedIndex = this.promo.indexOf(item)
             this.editedItem = Object.assign({}, item)
             this.dialog = true
         },
 
         deleteItem(item) {
-            const index = this.courses.indexOf(item)
-            this.courses.splice(index, 1)
-            axios.delete('/api/courses/' + item.id)
+            const index = this.promo.indexOf(item)
+            this.promo.splice(index, 1)
+            axios.delete('/api/promo/' + item.id)
                 .then(this.deleteDialog = false,
                     this.dataUpdateMsg = 'Course item deleted successfully',
                     this.dataUpdateAlert = true
@@ -279,13 +267,13 @@ export default {
 
         save() {
             if (this.editedIndex > -1) {
-                axios.put('/api/courses/' + this.editedItem.id, {
+                axios.put('/api/promo/' + this.editedItem.id, {
                         'course_name': this.editedItem.course_name,
                         'description': this.editedItem.description,
                         'detail': this.editedItem.detail
                     })
                     .then(res => {
-                        if (Object.assign(this.courses[this.editedIndex], res.data.courses)) {
+                        if (Object.assign(this.promo[this.editedIndex], res.data.promo)) {
                             this.close()
                             this.dataUpdateMsg = 'Course item updated successfully'
                             this.dataUpdateAlert = true
@@ -296,16 +284,16 @@ export default {
                             this.errCourse = err.response.data.errors.course_name
                         }
                     })
-                Object.assign(this.courses[this.editedIndex], this.editedItem)
+                Object.assign(this.promo[this.editedIndex], this.editedItem)
             } else {
 
-                axios.post('/api/courses', {
+                axios.post('/api/promo', {
                         'course_name': this.editedItem.course_name,
                         'description': this.editedItem.description,
                         'detail': this.editedItem.detail
                     })
                     .then(res => {
-                        if (this.courses.push(res.data.courses)) {
+                        if (this.promo.push(res.data.promo)) {
                             this.close()
                             this.dataUpdateMsg = 'New Course Added successfully',
                                 this.dataUpdateAlert = true
@@ -347,7 +335,7 @@ export default {
             }
             axios.post('api/updateCourseIcon', data, settings)
                 .then(res => {
-                    this.courses.push(res.data.courses)
+                    this.promo.push(res.data.promo)
                 }).catch(err => {
                     console.log(err.response)
                 });

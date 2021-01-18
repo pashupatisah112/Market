@@ -1,6 +1,6 @@
 <template>
 <div>
-    <v-navigation-drawer app id="core-navigation-drawer" permanent absolute dark width="240px" src="https://cdn.vuetifyjs.com/images/backgrounds/bg-2.jpg">
+    <v-navigation-drawer app permanent absolute dark width="240px" src="https://cdn.vuetifyjs.com/images/backgrounds/bg-2.jpg">
         <v-list dense nav class="py-0">
             <v-list-item two-line :class="miniVariant && 'px-0'">
                 <v-img src="../images/assets/logo.png"></v-img>
@@ -10,11 +10,11 @@
 
             <v-list-item v-for="item in items" :key="item.title" :to="item.to" link>
                 <v-list-item-icon>
-                    <v-icon style="color:#777777">{{ item.icon }}</v-icon>
+                    <v-icon>{{ item.icon }}</v-icon>
                 </v-list-item-icon>
 
                 <v-list-item-content>
-                    <v-list-item-title style="color:#777777">{{ item.title }}</v-list-item-title>
+                    <v-list-item-title>{{ item.title }}</v-list-item-title>
                 </v-list-item-content>
             </v-list-item>
         </v-list>

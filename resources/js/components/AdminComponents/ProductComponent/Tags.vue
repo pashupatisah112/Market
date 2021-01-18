@@ -5,11 +5,6 @@
     <v-data-table :headers="headers" :items="tags" class="elevation-1">
         <template v-slot:top>
             <v-toolbar flat color="white">
-                <v-card class="px-3 py-3 mb-2 mr-2" color="success">
-                    <v-card-actions>
-                        <v-icon x-large color="white">mdi-account-star</v-icon>
-                    </v-card-actions>
-                </v-card>
                 <v-toolbar-title>Product tags</v-toolbar-title>
                 <v-divider class="mx-4" inset vertical></v-divider>
                 <v-spacer></v-spacer>
@@ -36,7 +31,9 @@
                             <v-container>
                                 <v-row>
                                     <v-col cols="12">
-                                        <v-text-field v-model="editedItem.tag_name" label="Tag Name"></v-text-field>
+                                        <v-form v-model="valid" ref="form">
+                                            <v-text-field v-model="editedItem.tag_name" :rules="[validRules.required]" label="Tag Name"></v-text-field>
+                                        </v-form>
                                     </v-col>
                                 </v-row>
                             </v-container>
@@ -111,10 +108,14 @@
 </template>
 
 <script>
+import {
+    mapState
+} from 'vuex'
 export default {
 
     data() {
         return {
+            valid: true,
             alertColor: 'success',
             timeout: 2000,
             dataUpdateMsg: '',
@@ -122,7 +123,7 @@ export default {
             deleteDialog: false,
             details: [],
             dialog: false,
-            tags:[],
+            tags: [],
             headers: [{
                     text: '#',
                     align: 'start',
@@ -155,6 +156,9 @@ export default {
         formTitle() {
             return this.editedIndex === -1 ? 'New tag' : 'Edit tag'
         },
+        ...mapState({
+            'validRules': state => state.validation.validRules
+        }),
 
     },
     watch: {
@@ -205,31 +209,33 @@ export default {
         },
 
         save() {
-            if (this.editedIndex > -1) {
-                axios.put('/api/tags/' + this.editedItem.id, {
-                        'tag_name': this.editedItem.tag_name,
-                    })
-                    .then(res => {
-                        if (Object.assign(this.tags[this.editedIndex], res.data.tags)) {
-                            this.close()
-                            this.dataUpdateMsg = 'Tag item updated successfully'
-                            this.dataUpdateAlert = true
-                        }
-                    })
-                    .catch(err => console.log(err.response))
-                Object.assign(this.tags[this.editedIndex], this.editedItem)
-            } else {
-
-                axios.post('/api/tags', {
-                        'tag_name': this.editedItem.tag_name,
-                    })
-                    .then(res => {
-                        if (this.tags.push(res.data)) {
-                            this.close()
-                            this.dataUpdateMsg = 'New Tag Added successfully',
+            if (this.$refs.form.validate()) {
+                if (this.editedIndex > -1) {
+                    axios.put('/api/tags/' + this.editedItem.id, {
+                            'tag_name': this.editedItem.tag_name,
+                        })
+                        .then(res => {
+                            if (Object.assign(this.tags[this.editedIndex], res.data.tags)) {
+                                this.close()
+                                this.dataUpdateMsg = 'Tag item updated successfully'
                                 this.dataUpdateAlert = true
-                        }
-                    }).catch(err => console.log(err.response))
+                            }
+                        })
+                        .catch(err => console.log(err.response))
+                    Object.assign(this.tags[this.editedIndex], this.editedItem)
+                } else {
+
+                    axios.post('/api/tags', {
+                            'tag_name': this.editedItem.tag_name,
+                        })
+                        .then(res => {
+                            if (this.tags.push(res.data)) {
+                                this.close()
+                                this.dataUpdateMsg = 'New Tag Added successfully',
+                                    this.dataUpdateAlert = true
+                            }
+                        }).catch(err => console.log(err.response))
+                }
             }
         },
     },
