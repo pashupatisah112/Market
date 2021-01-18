@@ -37,7 +37,7 @@ class ProductController extends Controller
         $product->price=$request->price;
         $product->product_type_id=$request->product_type_id;
         $product->category_id=$request->category_id;
-        $product->subCategory_id=$request->subCategory_id;
+        $product->sub_category_id=$request->subCategory_id;
         $product->company_id=$request->company_id;
         $product->description=$request->description;
         
@@ -48,6 +48,13 @@ class ProductController extends Controller
         $product->tag()->sync($request->tag_name);
         return response()->json($product);
         
+    }
+    public function delete($id)
+    {
+        $product=Product::find($id)->delete();
+        $product->color()->detach();
+        $product->size()->detach();
+        $product->tag()->detach();
     }
     
 }

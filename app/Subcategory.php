@@ -10,8 +10,4 @@ class SubCategory extends Model
     {
         return $this->belongsTo('App\Category');
     }
-    public function product()
-    {
-        return $this->hasMany('App\Product');
-    }
 }

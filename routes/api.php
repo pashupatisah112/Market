@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +30,7 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'Admin'],function(){
     Route::get('getProductSup','ProductController@productSup');
     Route::get('products','ProductController@getProducts');
     Route::post('products','ProductController@store');
+    Route::delete('products/{product}','ProductController@delete');
 
 });
 Route::get('getCategories','User\ProductController@getCategories');

@@ -25,36 +25,37 @@
 
                         <v-card-text>
                             <v-container>
+                                <v-form ref="form" v-model="valid">
                                 <v-row>
                                     <v-col cols="6">
-                                        <v-text-field v-model="editedItem.title" label="Product Name" dense></v-text-field>
+                                        <v-text-field v-model="editedItem.title" label="Product Name" dense :rules="[validRules.required]"></v-text-field>
                                     </v-col>
                                     <v-col cols="6">
-                                        <v-text-field v-model="editedItem.price" label="Price" dense></v-text-field>
+                                        <v-text-field v-model="editedItem.price" label="Price" dense :rules="[validRules.required]"></v-text-field>
                                     </v-col>
                                 </v-row>
                                 <v-row>
 
                                     <v-col cols="4">
-                                        <v-select v-model="editedItem.category" :items="category" label="Category" item-text="category_name" item-value="id" dense></v-select>
+                                        <v-select v-model="editedItem.category" :items="category" label="Category" item-text="category_name" item-value="id" dense :rules="[validRules.required]"></v-select>
                                     </v-col>
                                     <v-col cols="4">
-                                        <v-select v-model="editedItem.subCategory" :items="subCategory" label="Sub-Category" item-text="subCategory_name" item-value="id" dense></v-select>
+                                        <v-select v-model="editedItem.subCategory" :items="subCategory" label="Sub-Category" item-text="subCategory_name" item-value="id" dense :rules="[validRules.required]"></v-select>
                                     </v-col>
                                     <v-col cols="4">
-                                        <v-select v-model="editedItem.company" :items="company" label="Company" item-text="company_name" item-value="id" dense></v-select>
+                                        <v-select v-model="editedItem.company" :items="company" label="Company" item-text="company_name" item-value="id" dense :rules="[validRules.required]"></v-select>
 
                                     </v-col>
                                 </v-row>
                                 <v-row>
                                     <v-col cols="4">
-                                        <v-select v-model="editedItem.selectedSize" :items="size" chips small-chips multiple dense label="Available sizes" item-text="size" item-value="id"></v-select>
+                                        <v-select v-model="editedItem.selectedSize" :items="size" chips small-chips multiple dense label="Available sizes" item-text="size" item-value="id" :rules="[validRules.required]"></v-select>
                                     </v-col>
                                     <v-col cols="4">
-                                        <v-select v-model="editedItem.selectedColor" :items="color" chips small-chips multiple dense label="Available color" item-text="color_name" item-value="id"></v-select>
+                                        <v-select v-model="editedItem.selectedColor" :items="color" chips small-chips multiple dense label="Available color" item-text="color_name" item-value="id" :rules="[validRules.required]"></v-select>
                                     </v-col>
                                     <v-col cols="4">
-                                        <v-select v-model="editedItem.type" :items="productType" label="Product Type" item-text="product_type" item-value="id" dense></v-select>
+                                        <v-select v-model="editedItem.type" :items="productType" label="Product Type" item-text="product_type" item-value="id" dense :rules="[validRules.required]"></v-select>
                                     </v-col>
                                 </v-row>
                                 <v-row>
@@ -69,14 +70,16 @@
                                     </v-col>
                                 </v-row>
                                 <v-row>
-                                    <v-col cols="6">
-                                        <froala id="edit" :tag="'textarea'" :config="config" v-model="editedItem.description"></froala>
-                                    </v-col>
-                                    <v-col cols="6">
-                                        <v-select v-model="editedItem.selectedTag" :items="tag" label="Select Tags" chips small-chips multiple item-text="tag_name" item-value="id" dense></v-select>
-
+                                    <v-col cols="12">
+                                        <v-select v-model="editedItem.selectedTag" :items="tag" label="Select Tags" chips small-chips multiple item-text="tag_name" item-value="id" dense :rules="[validRules.required]"></v-select>
                                     </v-col>
                                 </v-row>
+                                <v-row>
+                                    <v-col cols="12">
+                                        <froala id="edit" :tag="'textarea'" :config="config" v-model="editedItem.description" :rules="[validRules.required]"></froala>
+                                    </v-col>
+                                </v-row>
+                                </v-form>
                             </v-container>
                         </v-card-text>
 
