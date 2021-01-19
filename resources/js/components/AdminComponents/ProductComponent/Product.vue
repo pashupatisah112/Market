@@ -26,59 +26,59 @@
                         <v-card-text>
                             <v-container>
                                 <v-form ref="form" v-model="valid">
-                                <v-row>
-                                    <v-col cols="6">
-                                        <v-text-field v-model="editedItem.title" label="Product Name" dense :rules="[validRules.required]"></v-text-field>
-                                    </v-col>
-                                    <v-col cols="6">
-                                        <v-text-field v-model="editedItem.price" label="Price" dense :rules="[validRules.required]"></v-text-field>
-                                    </v-col>
-                                </v-row>
-                                <v-row>
+                                    <v-row>
+                                        <v-col cols="6">
+                                            <v-text-field v-model="editedItem.title" label="Product Name" dense :rules="[validRules.required]"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="6">
+                                            <v-text-field v-model="editedItem.price" label="Price" dense :rules="[validRules.required]"></v-text-field>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
 
-                                    <v-col cols="4">
-                                        <v-select v-model="editedItem.category" :items="category" label="Category" item-text="category_name" item-value="id" dense :rules="[validRules.required]"></v-select>
-                                    </v-col>
-                                    <v-col cols="4">
-                                        <v-select v-model="editedItem.subCategory" :items="subCategory" label="Sub-Category" item-text="subCategory_name" item-value="id" dense :rules="[validRules.required]"></v-select>
-                                    </v-col>
-                                    <v-col cols="4">
-                                        <v-select v-model="editedItem.company" :items="company" label="Company" item-text="company_name" item-value="id" dense :rules="[validRules.required]"></v-select>
+                                        <v-col cols="4">
+                                            <v-select v-model="editedItem.category" :items="category" label="Category" item-text="category_name" item-value="id" dense :rules="[validRules.required]"></v-select>
+                                        </v-col>
+                                        <v-col cols="4">
+                                            <v-select v-model="editedItem.subCategory" :items="subCategory" label="Sub-Category" item-text="subCategory_name" item-value="id" dense :rules="[validRules.required]"></v-select>
+                                        </v-col>
+                                        <v-col cols="4">
+                                            <v-select v-model="editedItem.company" :items="company" label="Company" item-text="company_name" item-value="id" dense :rules="[validRules.required]"></v-select>
 
-                                    </v-col>
-                                </v-row>
-                                <v-row>
-                                    <v-col cols="4">
-                                        <v-select v-model="editedItem.selectedSize" :items="size" chips small-chips multiple dense label="Available sizes" item-text="size" item-value="id" :rules="[validRules.required]"></v-select>
-                                    </v-col>
-                                    <v-col cols="4">
-                                        <v-select v-model="editedItem.selectedColor" :items="color" chips small-chips multiple dense label="Available color" item-text="color_name" item-value="id" :rules="[validRules.required]"></v-select>
-                                    </v-col>
-                                    <v-col cols="4">
-                                        <v-select v-model="editedItem.type" :items="productType" label="Product Type" item-text="product_type" item-value="id" dense :rules="[validRules.required]"></v-select>
-                                    </v-col>
-                                </v-row>
-                                <v-row>
-                                    <v-col cols="12">
-                                        <v-file-input v-model="files" label="Upload photos" multiple dense @change="onFileChanged">
-                                            <template v-slot:selection="{ text }">
-                                                <v-chip small label color="primary">
-                                                    {{ text }}
-                                                </v-chip>
-                                            </template>
-                                        </v-file-input>
-                                    </v-col>
-                                </v-row>
-                                <v-row>
-                                    <v-col cols="12">
-                                        <v-select v-model="editedItem.selectedTag" :items="tag" label="Select Tags" chips small-chips multiple item-text="tag_name" item-value="id" dense :rules="[validRules.required]"></v-select>
-                                    </v-col>
-                                </v-row>
-                                <v-row>
-                                    <v-col cols="12">
-                                        <froala id="edit" :tag="'textarea'" :config="config" v-model="editedItem.description" :rules="[validRules.required]"></froala>
-                                    </v-col>
-                                </v-row>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="4">
+                                            <v-select v-model="editedItem.selectedSize" :items="size" chips small-chips multiple dense label="Available sizes" item-text="size" item-value="id" :rules="[validRules.required]"></v-select>
+                                        </v-col>
+                                        <v-col cols="4">
+                                            <v-select v-model="editedItem.selectedColor" :items="color" chips small-chips multiple dense label="Available color" item-text="color_name" item-value="id" :rules="[validRules.required]"></v-select>
+                                        </v-col>
+                                        <v-col cols="4">
+                                            <v-select v-model="editedItem.type" :items="productType" label="Product Type" item-text="product_type" item-value="id" dense :rules="[validRules.required]"></v-select>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <v-file-input v-model="files" label="Upload photos" multiple dense>
+                                                <template v-slot:selection="{ text }">
+                                                    <v-chip small label color="primary">
+                                                        {{ text }}
+                                                    </v-chip>
+                                                </template>
+                                            </v-file-input>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <v-autocomplete v-model="editedItem.selectedTag" :items="tag" dense chips small-chips label="Select Tags" multiple item-value="id" item-text="tag_name" :rules="[validRules.required]"></v-autocomplete>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <froala id="edit" :tag="'textarea'" :config="config" v-model="editedItem.description" :rules="[validRules.required]"></froala>
+                                        </v-col>
+                                    </v-row>
                                 </v-form>
                             </v-container>
                         </v-card-text>
@@ -160,6 +160,15 @@
         <v-btn color="white" text @click="snackbar = false">Close</v-btn>
     </v-snackbar>
     <!--end snackbar-->
+
+    <v-file-input v-model="files" label="Upload photos" multiple dense>
+        <template v-slot:selection="{ text }">
+            <v-chip small label color="primary">
+                {{ text }}
+            </v-chip>
+        </template>
+    </v-file-input>
+    <v-btn @click="upload">upload</v-btn>
 
 </v-container>
 </template>
@@ -391,6 +400,7 @@ export default {
                         'tag_name': this.editedItem.selectedTag
                     })
                     .then(res => {
+                        this.upload(res.data.id) //updating photos column of products table
                         if (this.products.push(res.data)) {
                             this.close()
                             this.dataUpdateMsg = 'New Product Added successfully',
@@ -401,30 +411,24 @@ export default {
                     })
             }
         },
-        onFileChanged(e) {
-            console.log(e.target.files[0]);
-            const file = e.target.files[0];
-            this.selectedFile = e.target.files[0];
-            this.url = URL.createObjectURL(file);
-            this.changeIconDialog = true;
-        },
-        updateCourseIcon(item) {
-            this.changeIconDialog = false
-            let data = new FormData()
-            data.append('selectedFile', this.selectedFile, this.selectedFile.name)
-            data.append('id', item.id)
-            let settings = {
+        upload(id) {
+            for(var i=0;i<this.files.length;i++){
+                let data = new FormData()
+                data.append('selectedFile',this.files[0])
+                data.append('id',id)
+                let settings = {
                 headers: {
                     'content-type': 'multipart/form-data'
                 }
             }
-            axios.post('api/savePhotos', data, settings)
+            axios.post('api/imageUpload', data, settings)
                 .then(res => {
-                    this.products.push(res.data.products)
+                    
                 }).catch(err => {
-                    console.log(err.response)
+                    this.dataUpdateMsg = 'Problem Uploading IMages',
+                    this.dataUpdateAlert = true
                 });
-
+            }
         },
     },
 

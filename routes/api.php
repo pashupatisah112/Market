@@ -31,6 +31,7 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'Admin'],function(){
     Route::get('products','ProductController@getProducts');
     Route::post('products','ProductController@store');
     Route::delete('products/{product}','ProductController@delete');
+    Route::post('imageUpload','ProductController@imageUpload');
 
 });
 Route::get('getCategories','User\ProductController@getCategories');
