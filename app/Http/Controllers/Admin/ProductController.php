@@ -11,7 +11,7 @@ use App\Subcategory;
 use App\Product;
 use App\Size;
 use App\Tag;
-use App\Photos;
+use App\Photo;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -60,9 +60,9 @@ class ProductController extends Controller
     public function imageUpload(Request $request)
     {
         $file=$request->selectedFile->store('productImages');
-        $photo=new Photos;
+        $photo=new Photo;
         $photo->product_id=$request->id;
-        $photo->name=$file;
+        $photo->image=$file;
         $photo->save();
     }
     
