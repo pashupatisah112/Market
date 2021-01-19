@@ -34,7 +34,7 @@ class Product extends Model
     {
         return $this->belongsTo('App\ProductType');
     }
-    public function photos()
+    public function photo()
     {
         return $this->hasMany('App\Photo');
     }

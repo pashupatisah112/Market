@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 class ProductController extends Controller
 {
     public function getProducts(){
-        $products=Product::with('category')->with('subCategory')->with('company')->with('productType')->with('color')->with('size')->with('photos')->with('tag')->get();
+        $products=Product::with('category')->with('subCategory')->with('company')->with('productType')->with('color')->with('size')->with('tag')->with('photo')->get();
         return response()->json($products);
     }
     public function productSup()

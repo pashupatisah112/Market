@@ -99,7 +99,7 @@
             <!--view button-->
             <v-tooltip top>
                 <template v-slot:activator="{ on, attrs }">
-                    <v-icon small class="mr-2" @click="goTodetail(item)" v-bind="attrs" v-on="on">
+                    <v-icon small class="mr-2" @click="viewProduct(item)" v-bind="attrs" v-on="on">
                         mdi-eye
                     </v-icon>
                 </template>
@@ -161,14 +161,82 @@
     </v-snackbar>
     <!--end snackbar-->
 
-    <v-file-input v-model="files" label="Upload photos" multiple dense>
-        <template v-slot:selection="{ text }">
-            <v-chip small label color="primary">
-                {{ text }}
-            </v-chip>
-        </template>
-    </v-file-input>
-    <v-btn @click="upload">upload</v-btn>
+    <!--product view dialog-->
+    <v-dialog max-width="600" persistent v-model="productViewDialog">
+        <v-card>
+            <v-btn icon @click="productViewDialog=false" class="float-right">
+                <v-icon>mdi-cancel</v-icon>
+            </v-btn>
+
+            <v-container fluid>
+                <v-row>
+                    <v-col cols="1">
+                        <div style="width:50px; height:75px;margin-bottom:10px" v-for="item in view.photo" :key="item.id">
+                            <v-img :src="getImage(item)"></v-img>
+                        </div>
+                
+                    </v-col>
+                    <v-col cols="5">
+                        <v-img src="../images/sample.png"></v-img>
+                    </v-col>
+                    <v-col cols="6">
+                        <v-row>
+                            <v-col>
+                                <p class="text-h5">{{view.title}}</p>
+                                <h4>{{view.price}}</h4>
+                                <p class="body-2" v-html="view.description"></p>
+                                <div style="width:300px" class="mx-auto">
+                                    <p class="float-left mr-7">Size</p>
+                                    <v-select :items="items" label="Choose Size" dense outlined></v-select>
+                                </div>
+                                <div style="width:300px" class="mx-auto">
+                                    <p class="float-left mr-6">Color</p>
+                                    <v-select :items="items" label="Choose Color" dense outlined></v-select>
+                                </div>
+                                <div style="width:300px" class="mx-auto">
+                                    <p class="float-left mr-5">Count</p>
+                                    <v-btn-toggle>
+                                        <v-btn @click="countMinus" icon>
+                                            <v-icon>mdi-minus</v-icon>
+                                        </v-btn>
+                                        <v-btn class="text--black">
+                                            {{count}}
+                                        </v-btn>
+                                        <v-btn icon @click="countPlus">
+                                            <v-icon>mdi-plus</v-icon>
+                                        </v-btn>
+                                    </v-btn-toggle>
+                                </div>
+                            </v-col>
+
+                        </v-row>
+
+                        <v-row justify="center" class="mt-8">
+                            <v-btn class="text-capitalize white--text" color="blackTheme" rounded>Add to Cart</v-btn>
+                        </v-row>
+
+                        <v-row justify="center" class="mt-5">
+                            <v-col cols="6">
+                                <v-btn icon color="blackTheme">
+                                    <v-icon>mdi-cards-heart</v-icon>
+                                </v-btn>
+                                <v-btn icon color="blackTheme">
+                                    <v-icon>mdi-facebook</v-icon>
+                                </v-btn>
+                                <v-btn icon color="blackTheme">
+                                    <v-icon>mdi-twitter</v-icon>
+                                </v-btn>
+                                <v-btn icon color="blackTheme">
+                                    <v-icon>mdi-instagram</v-icon>
+                                </v-btn>
+                            </v-col>
+                        </v-row>
+                    </v-col>
+                </v-row>
+            </v-container>
+        </v-card>
+    </v-dialog>
+    <!--end product view dialog-->
 
 </v-container>
 </template>
@@ -182,6 +250,9 @@ export default {
 
     data() {
         return {
+            view:[],
+            productViewDialog:false,
+
             valid: true,
             tagItem: [],
             config: {
@@ -412,24 +483,31 @@ export default {
             }
         },
         upload(id) {
-            for(var i=0;i<this.files.length;i++){
+            for (var i = 0; i < this.files.length; i++) {
                 let data = new FormData()
-                data.append('selectedFile',this.files[0])
-                data.append('id',id)
+                data.append('selectedFile', this.files[0])
+                data.append('id', id)
                 let settings = {
-                headers: {
-                    'content-type': 'multipart/form-data'
+                    headers: {
+                        'content-type': 'multipart/form-data'
+                    }
                 }
-            }
-            axios.post('api/imageUpload', data, settings)
-                .then(res => {
-                    
-                }).catch(err => {
-                    this.dataUpdateMsg = 'Problem Uploading IMages',
-                    this.dataUpdateAlert = true
-                });
+                axios.post('api/imageUpload', data, settings)
+                    .then(res => {
+
+                    }).catch(err => {
+                        this.dataUpdateMsg = 'Problem Uploading IMages',
+                            this.dataUpdateAlert = true
+                    });
             }
         },
+        viewProduct(item){
+            this.view=item
+            this.productViewDialog=true
+        },
+        getImage(item){
+            return "../storage/"+ item.image
+        }
     },
 
 }

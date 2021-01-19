@@ -24,7 +24,7 @@
             </v-menu>
 
             <v-btn text>
-                <v-icon>mdi-logout</v-icon>
+                <v-icon >mdi-logout</v-icon>
             </v-btn>
         </div>
     </v-app-bar>

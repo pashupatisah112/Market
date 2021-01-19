@@ -26,7 +26,7 @@
                         <v-spacer></v-spacer>
 
                         <v-btn icon>
-                            <v-icon color="red">mdi-cards-heart</v-icon>
+                            <v-icon color="red">mdi-heart-outline</v-icon>
                         </v-btn>
                     </v-card-actions>
                     <v-card-title class="pa-0">

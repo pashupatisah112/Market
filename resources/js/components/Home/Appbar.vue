@@ -117,9 +117,9 @@
                     <v-card max-width="1200">
                         <v-container fluid>
                             <v-row>
-                                <v-col co v-for="item in categories" :key="item.id"> 
+                                <v-col co v-for="item in categories" :key="item.id">
                                     <p class="font-weight-bold">{{item.category_name}}</p>
-                                    <v-btn text small class="text-capitalize" v-for="sub in item.subcategory" :key="sub.id"  @click="goToList(item,sub)">{{sub.subCategory_name}}</v-btn><br>
+                                    <v-btn text small class="text-capitalize" v-for="sub in item.subcategory" :key="sub.id" @click="goToList(item,sub)">{{sub.subCategory_name}}</v-btn><br>
                                 </v-col>
                             </v-row>
                         </v-container>
@@ -147,9 +147,75 @@
                     <v-icon>mdi-account-search</v-icon>
                 </v-btn>
 
-                <v-btn icon>
-                    <v-icon>mdi-cards-heart</v-icon>
-                </v-btn>
+                <v-menu bottom open-on-hover offset-y transition="expand-transition">
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn icon v-bind="attrs" v-on="on">
+                            <v-icon>mdi-cards-heart</v-icon>
+                        </v-btn>
+                    </template>
+                    <v-card width="400">
+                        <v-row class="px-5">
+                            <v-card-title class="float-left">Your Wishlist</v-card-title>
+                            <v-spacer></v-spacer>
+                            <v-card-subtitle class="float-right">View Similar</v-card-subtitle>
+                        </v-row>
+
+                        <v-container fluid>
+                            <v-row>
+                                <v-col cols="12">
+                                    <v-list two-line dense>
+                                        <v-list-item v-for="chat in items" :key="chat.title" dense class="mt-n4">
+                                            <v-list-item-avatar tile size="60">
+                                                <v-img :alt="`${chat.title} avatar`" :src="chat.avatar"></v-img>
+                                            </v-list-item-avatar>
+
+                                            <v-list-item-content>
+                                                <v-list-item-title v-text="chat.title"></v-list-item-title>
+                                                <v-list-item-subtitle>company name</v-list-item-subtitle>
+                                            </v-list-item-content>
+
+                                            <v-list-item-action>
+                                                <v-row>
+                                                    <v-tooltip top>
+                                                        <template v-slot:activator="{ on, attrs }">
+                                                            <v-btn icon v-bind="attrs" v-on="on">
+                                                                <v-icon >
+                                                                    mdi-eye
+                                                                </v-icon>
+                                                            </v-btn>
+                                                        </template>
+                                                        <span>View</span>
+                                                    </v-tooltip>
+                                                    <v-tooltip v-model="show" top>
+                                                        <template v-slot:activator="{ on, attrs }">
+                                                            <v-btn icon v-bind="attrs" v-on="on">
+                                                                <v-icon>
+                                                                    mdi-cart-plus
+                                                                </v-icon>
+                                                            </v-btn>
+                                                        </template>
+                                                        <span>Add to cart</span>
+                                                    </v-tooltip>
+                                                    <v-tooltip top>
+                                                        <template v-slot:activator="{ on, attrs }">
+                                                            <v-btn icon v-bind="attrs" v-on="on">
+                                                                <v-icon>
+                                                                    mdi-cancel
+                                                                </v-icon>
+                                                            </v-btn>
+                                                        </template>
+                                                        <span>Remove</span>
+                                                    </v-tooltip>
+                                                </v-row>
+
+                                            </v-list-item-action>
+                                        </v-list-item>
+                                    </v-list>
+                                    </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-card>
+                </v-menu>
 
                 <v-menu bottom open-on-hover offset-y transition="expand-transition">
                     <template v-slot:activator="{ on, attrs }">
@@ -388,10 +454,13 @@ export default {
                 this.customerToken = true
             }
         },
-        goToList(item,sub) {
+        goToList(item, sub) {
             this.$router.push({
                 name: 'Category',
-                params:{category:item.category_name,subCategory:sub.subCategory_name}
+                params: {
+                    category: item.category_name,
+                    subCategory: sub.subCategory_name
+                }
             });
         },
         searchOptions() {
@@ -468,7 +537,7 @@ export default {
         getCategories() {
             axios.get('api/getCategories')
                 .then(res => {
-                    this.categories=res.data
+                    this.categories = res.data
                 })
                 .catch(err => console.log(err.response))
         }
