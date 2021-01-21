@@ -28,10 +28,14 @@ export default {
     
     },
     mounted() {
-        
+        this.checkAdmin()
     },
     methods: {
-        
+        checkAdmin(){
+            if(!localStorage.getItem('token')){
+                this.$router.push({name:'AdminLogin'})
+            }
+        }
     }
 }
 </script>

@@ -47,7 +47,8 @@
 
             <v-divider vertical class="my-3 mx-2" style="border-color:rgba(255,255,255,0.2)"></v-divider>
 
-            <v-btn v-if="!customerToken" small text depressed color="transparent" @click="loginDialog=true" class="mt-3 text-capitalize white--text mx-auto">
+            <!--account component-->
+            <v-btn v-if="!token" small text depressed color="transparent" @click="loginDialog=true" class="mt-3 text-capitalize white--text mx-auto">
                 <v-icon color="white">mdi-account</v-icon>
                 {{ $t('words.header.login') }}
             </v-btn>
@@ -58,44 +59,43 @@
                         Account
                     </v-btn>
                 </template>
-                <v-expand-y-transition>
-                    <v-card width="200" tile>
-                        <v-card-title class="pa-2">{{this.auth.name}}</v-card-title>
-                        <v-card-text class="pa-1">
-                            <v-list dense>
-                                <v-list-item dense>
-                                    <v-list-item-content>
-                                        <v-list-item-subtitle>
-                                            <v-icon class="mr-2">mdi-cart</v-icon>My Cart
-                                        </v-list-item-subtitle>
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item dense>
-                                    <v-list-item-content>
-                                        <v-list-item-subtitle>
-                                            <v-icon class="mr-2">mdi-cards-heart</v-icon>Wishlist
-                                        </v-list-item-subtitle>
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item dense>
-                                    <v-list-item-content>
-                                        <v-list-item-subtitle>
-                                            <v-icon class="mr-2">mdi-history</v-icon>Purchase history
-                                        </v-list-item-subtitle>
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item dense @click="logout">
-                                    <v-list-item-content>
-                                        <v-list-item-subtitle>
-                                            <v-icon class="mr-2">mdi-logout</v-icon>Logout
-                                        </v-list-item-subtitle>
-                                    </v-list-item-content>
-                                </v-list-item>
-                            </v-list>
-                        </v-card-text>
-                    </v-card>
-                </v-expand-y-transition>
+                <v-card width="200" tile>
+                    <v-card-title class="pa-2">{{this.auth.name}}</v-card-title>
+                    <v-card-text class="pa-1">
+                        <v-list dense>
+                            <v-list-item dense>
+                                <v-list-item-content>
+                                    <v-list-item-subtitle>
+                                        <v-icon class="mr-2">mdi-cart</v-icon>My Cart
+                                    </v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item dense>
+                                <v-list-item-content>
+                                    <v-list-item-subtitle>
+                                        <v-icon class="mr-2">mdi-cards-heart</v-icon>Wishlist
+                                    </v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item dense>
+                                <v-list-item-content>
+                                    <v-list-item-subtitle>
+                                        <v-icon class="mr-2">mdi-history</v-icon>Purchase history
+                                    </v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-list-item dense @click="logout">
+                                <v-list-item-content>
+                                    <v-list-item-subtitle>
+                                        <v-icon class="mr-2">mdi-logout</v-icon>Logout
+                                    </v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
+                        </v-list>
+                    </v-card-text>
+                </v-card>
             </v-menu>
+            <!--end account component-->
         </v-row>
 
         <v-row>
@@ -143,127 +143,41 @@
                     <v-text-field rounded filled dense placeholder="Search items here..." v-show="search" v-model="searchItem" class="mt-7 mr-2"></v-text-field>
                 </v-expand-x-transition>
 
-                <v-btn icon @click="searchOptions">
+                <v-btn icon @click="searchOptions" small class="mr-2">
                     <v-icon>mdi-account-search</v-icon>
                 </v-btn>
 
-                <v-menu bottom open-on-hover offset-y transition="expand-transition">
+                <!--wishlist component-->
+                <v-menu bottom open-on-hover offset-y transition="expand-y-transition" v-if="token">
                     <template v-slot:activator="{ on, attrs }">
-                        <v-btn icon v-bind="attrs" v-on="on">
-                            <v-icon>mdi-cards-heart</v-icon>
-                        </v-btn>
+                        <v-badge color="green" :value="wishlist.length" :content="wishlist.length" overlap>
+                            <v-btn icon v-bind="attrs" v-on="on" small>
+                                <v-icon>mdi-cards-heart</v-icon>
+                            </v-btn>
+                        </v-badge>
                     </template>
-                    <v-card width="400">
-                        <v-row class="px-5">
-                            <v-card-title class="float-left">Your Wishlist</v-card-title>
-                            <v-spacer></v-spacer>
-                            <v-card-subtitle class="float-right">View Similar</v-card-subtitle>
-                        </v-row>
-
-                        <v-container fluid>
-                            <v-row>
-                                <v-col cols="12">
-                                    <v-list two-line dense>
-                                        <v-list-item v-for="chat in items" :key="chat.title" dense class="mt-n4">
-                                            <v-list-item-avatar tile size="60">
-                                                <v-img :alt="`${chat.title} avatar`" :src="chat.avatar"></v-img>
-                                            </v-list-item-avatar>
-
-                                            <v-list-item-content>
-                                                <v-list-item-title v-text="chat.title"></v-list-item-title>
-                                                <v-list-item-subtitle>company name</v-list-item-subtitle>
-                                            </v-list-item-content>
-
-                                            <v-list-item-action>
-                                                <v-row>
-                                                    <v-tooltip top>
-                                                        <template v-slot:activator="{ on, attrs }">
-                                                            <v-btn icon v-bind="attrs" v-on="on">
-                                                                <v-icon >
-                                                                    mdi-eye
-                                                                </v-icon>
-                                                            </v-btn>
-                                                        </template>
-                                                        <span>View</span>
-                                                    </v-tooltip>
-                                                    <v-tooltip v-model="show" top>
-                                                        <template v-slot:activator="{ on, attrs }">
-                                                            <v-btn icon v-bind="attrs" v-on="on">
-                                                                <v-icon>
-                                                                    mdi-cart-plus
-                                                                </v-icon>
-                                                            </v-btn>
-                                                        </template>
-                                                        <span>Add to cart</span>
-                                                    </v-tooltip>
-                                                    <v-tooltip top>
-                                                        <template v-slot:activator="{ on, attrs }">
-                                                            <v-btn icon v-bind="attrs" v-on="on">
-                                                                <v-icon>
-                                                                    mdi-cancel
-                                                                </v-icon>
-                                                            </v-btn>
-                                                        </template>
-                                                        <span>Remove</span>
-                                                    </v-tooltip>
-                                                </v-row>
-
-                                            </v-list-item-action>
-                                        </v-list-item>
-                                    </v-list>
-                                    </v-col>
-                            </v-row>
-                        </v-container>
-                    </v-card>
+                    <wishlist></wishlist>
                 </v-menu>
+                <!--end wishlist component-->
 
-                <v-menu bottom open-on-hover offset-y transition="expand-transition">
+                <!--cart component-->
+                <v-menu bottom open-on-hover offset-y transition="expand-y-transition" v-if="token">
                     <template v-slot:activator="{ on, attrs }">
-                        <v-btn icon v-bind="attrs" v-on="on">
+                                                <v-badge color="green" :value="wishlist.length" :content="wishlist.length" overlap>
+
+                        <v-btn icon v-bind="attrs" v-on="on" small class="ml-3">
                             <v-icon>mdi-cart</v-icon>
                         </v-btn>
+                        </v-badge>
                     </template>
-                    <v-card width="300">
-                        <v-card-title>Your Cart</v-card-title>
-                        <v-container fluid>
-                            <v-row>
-                                <v-col cols="12">
-                                    <v-list two-line dense>
-                                        <v-list-item v-for="chat in items" :key="chat.title" dense class="mt-n4">
-                                            <v-list-item-avatar tile size="60">
-                                                <v-img :alt="`${chat.title} avatar`" :src="chat.avatar"></v-img>
-                                            </v-list-item-avatar>
-
-                                            <v-list-item-content>
-                                                <v-list-item-title v-text="chat.title"></v-list-item-title>
-                                                <v-list-item-subtitle>1 x Rs.500</v-list-item-subtitle>
-                                            </v-list-item-content>
-
-                                            <v-list-item-action>
-                                                <v-icon>
-                                                    mdi-cancel
-                                                </v-icon>
-                                            </v-list-item-action>
-                                        </v-list-item>
-                                    </v-list>
-
-                                    <v-divider></v-divider>
-                                    <v-row class="mt-2 px-5">
-                                        <P class="text-h6">TOTAL:</P>
-                                        <v-spacer></v-spacer>
-                                        <p class="text-h6">Rs.2000</p>
-                                    </v-row>
-                                    <v-btn rounded block color="blackTheme" class="text-capitalize white--text" @click="viewCart">View Cart</v-btn>
-                                    <v-btn rounded block color="blackTheme" class="text-capitalize white--text my-3">Checkout</v-btn>
-                                </v-col>
-                            </v-row>
-                        </v-container>
-                    </v-card>
+                    <cart></cart>
                 </v-menu>
+                <!--end cart component-->
             </v-toolbar>
         </v-row>
 
-        <v-dialog max-width="600" v-model="loginDialog">
+        <!--login component-->
+        <v-dialog max-width="600" v-model="loginDialog" persistent>
             <v-card>
                 <v-container fluid>
                     <v-row>
@@ -271,7 +185,10 @@
                             <v-img src="../images/login-background.jpg"></v-img>
                         </v-col>
                         <v-col cols="6" class="background pa-0">
-                            <v-card style="height:100%" flat>
+                            <v-card style="height:100%" flat class="pa-0">
+                                <v-btn small icon class="float-right mr-1" @click="loginDialog=false">
+                                    <v-icon>mdi-close</v-icon>
+                                </v-btn>
                                 <div class="pa-5">
                                     <p class="text-center font-weight-bold">Customer Login</p>
                                     <v-form ref="form" v-model="valid">
@@ -325,7 +242,9 @@
 
             </v-card>
         </v-dialog>
+        <!--end login component-->
 
+        <!--terms and conditions-->
         <template>
             <v-row justify="center">
                 <v-dialog v-model="termsDialog" width="600px">
@@ -356,6 +275,7 @@
                 </v-dialog>
             </v-row>
         </template>
+        <!--end terms and conditions-->
 
     </v-container>
 </div>
@@ -363,18 +283,26 @@
 
 <script>
 import {
-    mapState
+    mapState,
+    mapActions,
+    mapMutations
 } from 'vuex';
 import {
     mapFields
 } from 'vuex-map-fields';
+
+import Wishlist from './Wishlist';
+import Cart from './Cart';
 export default {
+    components: {
+        Wishlist,Cart
+    },
     data() {
         return {
+            wishCount: 0,
             termsDialog: '',
-            customerToken: false,
+
             show1: false,
-            loginDialog: false,
             registerMode: false,
             emailMode: true,
             valid: true,
@@ -411,21 +339,7 @@ export default {
                 },
 
             ],
-            items: [{
-                    active: true,
-                    avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-                    title: 'Jason Oner',
-                },
-                {
-                    active: true,
-                    avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-                    title: 'Mike Carlson',
-                },
-                {
-                    avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-                    title: 'Cindy Baker',
-                },
-            ],
+           
             lang: [{
                     title: 'English',
                     lang: 'en'
@@ -439,19 +353,35 @@ export default {
     },
     computed: {
         ...mapState({
-            'validRules': state => state.validation.validRules
+            validRules: state => state.validation.validRules,
+            auth: state => state.authentication.auth,
+            loginDialog: state => state.authentication.loginDialog,
+            token: state => state.authentication.token,
+            wishlist: state => state.product.wishlist,
+            wishListItem: state => state.product.wishListItem
         }),
-        ...mapState(['auth']),
-        ...mapFields(['auth'])
+        ...mapFields(['auth', 'loginDialog', 'token'])
     },
     created() {
         this.checkUser()
         this.getCategories()
+        this.getWishlistItem()
+        //this.getCart()
     },
     methods: {
+        ...mapMutations(['addWishlistItem','getCart']),
+        getWishlistItem() {
+            axios.get('api/getWishlistItem')
+                .then(res => {
+                    this.wishCount = res.data.length
+                    this.addWishlistItem(res.data)
+                })
+                .catch(err => console.log(err.response))
+        },
+
         checkUser() {
-            if (localStorage.getItem('customer-token')) {
-                this.customerToken = true
+            if (localStorage.getItem('token')) {
+                this.token = true
             }
         },
         goToList(item, sub) {
@@ -475,11 +405,7 @@ export default {
 
             }
         },
-        viewCart() {
-            this.$router.push({
-                name: 'Cart'
-            })
-        },
+        
         setLocale(language) {
             this.$store.dispatch('changeLocale', language)
                 .then(() => {
@@ -495,7 +421,8 @@ export default {
                         remember_me: this.remember_me
                     })
                     .then(res => {
-                        localStorage.setItem("customer-token", res.data.token);
+                        localStorage.setItem("token", res.data.token);
+                        this.loginDialog = false
                         this.auth = res.data.auth_user
                         window.location.reload()
                             .catch(err => console.log(err));
@@ -515,7 +442,7 @@ export default {
                         'role_id': 2,
                     })
                     .then(res => {
-                        localStorage.setItem("customer-token", res.data.token);
+                        localStorage.setItem("token", res.data.token);
                         this.auth = res.data.auth_user
                         window.location.reload()
                             .catch(err => console.log(err));
@@ -525,9 +452,10 @@ export default {
             }
         },
         logout: function () {
-            localStorage.removeItem('customer-token');
+            localStorage.removeItem('token');
             localStorage.clear()
             window.location.reload()
+            this.loginDialog = false
         },
         goHome() {
             this.$router.push({

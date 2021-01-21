@@ -17,6 +17,16 @@ const i18n = new VueInternationalization({
     messages: Locale
  });
 
+ //toast notification
+import CxltToastr from "cxlt-vue2-toastr";
+import "cxlt-vue2-toastr/dist/css/cxlt-vue2-toastr.css";
+var toastrConfigs = {
+    position: "top right",
+    showDuration: 500,
+    timeout: 2000
+};
+Vue.use(CxltToastr, toastrConfigs);
+
 const selectedLang=localStorage.getItem('lang') || 'English'
 
 

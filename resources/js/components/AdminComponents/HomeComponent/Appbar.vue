@@ -24,7 +24,7 @@
             </v-menu>
 
             <v-btn text>
-                <v-icon >mdi-logout</v-icon>
+                <v-icon @click="logout">mdi-logout</v-icon>
             </v-btn>
         </div>
     </v-app-bar>
@@ -39,10 +39,14 @@ export default {
         }
     },
     computed:{
-        ...mapActions(['logout'])
+        
     },
     methods:{
-
+        logout(){
+            localStorage.removeItem('token');
+            this.$router.push('/adminLogin').then(res => console.log('Logged out')).catch(err => console.log(err));
+        
+        }
     }
 }
 </script>

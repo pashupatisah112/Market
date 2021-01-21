@@ -33,7 +33,8 @@ class AuthController extends Controller
                 $token=Str::random(80);
                 Auth::user()->api_token=$token;
                 Auth::user()->save();
-                return response()->json(['token'=>$token,'auth_user'=>Auth::user()],203);
+                $auth_user=Auth::user();
+                return response()->json(['token'=>$token,'auth_user'=>$auth_user],203);
         }
         return response()->json(['status'=>'Email or Password is wrong.'],403);
     }

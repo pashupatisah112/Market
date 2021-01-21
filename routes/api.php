@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\User\WishlistController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -34,9 +35,22 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'Admin'],function(){
     Route::post('imageUpload','ProductController@imageUpload');
 
 });
+
+Route::group(['middleware'=>['auth:api'],'namespace'=>'User'],function(){
+    //wishlist
+    Route::post('addToWishlist','WishlistController@addToWishlist');
+    Route::post('removeFromWishlist','WishlistController@removeFromWishlist');
+    Route::get('getWishlist','WishlistController@getWishlist');
+    Route::get('getWishlistItem','WishlistController@getWishListItem');
+
+    //cart
+    Route::get('getCart','CartController@getCart');
+    Route::post('addToCart','WishlistController@addToCart');
+
+});
+
 Route::get('getCategories','User\ProductController@getCategories');
 Route::get('latestProducts','User\ProductController@getLatestProducts');
-
 
 
 //Auth
