@@ -6,14 +6,14 @@
             <v-row>
                 <v-col cols="12">
                     <v-list two-line dense>
-                        <v-list-item v-for="chat in items" :key="chat.title" dense class="mt-n4">
+                        <v-list-item v-for="item in cartlist" :key="item.id" dense class="mt-n4">
                             <v-list-item-avatar tile size="60">
-                                <v-img :alt="`${chat.title} avatar`" :src="chat.avatar"></v-img>
+                                <v-img src="https://cdn.vuetifyjs.com/images/lists/1.jpg'"></v-img>
                             </v-list-item-avatar>
 
                             <v-list-item-content>
-                                <v-list-item-title v-text="chat.title"></v-list-item-title>
-                                <v-list-item-subtitle>1 x Rs.500</v-list-item-subtitle>
+                                <v-list-item-title>{{item.title}}</v-list-item-title>
+                                <v-list-item-subtitle>{{item.cart.amount}} x Rs.{{item.price}}</v-list-item-subtitle>
                             </v-list-item-content>
 
                             <v-list-item-action>
@@ -44,27 +44,16 @@ import {mapState} from 'vuex';
 export default {
     data() {
         return {
-            items: [{
-                    active: true,
-                    avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-                    title: 'Jason Oner',
-                },
-                {
-                    active: true,
-                    avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-                    title: 'Mike Carlson',
-                },
-                {
-                    avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-                    title: 'Cindy Baker',
-                },
-            ],
+        
         }
     },
     computed:{
-        // ...mapstate({
-        //     cartlist:state=>state.product.cartlist
-        // })
+        ...mapState({
+            cartlist:state=>state.product.cartlist
+        })
+    },
+    created(){
+        console.log(this.cartlist)
     },
     methods:{
         viewCart() {

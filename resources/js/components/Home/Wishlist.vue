@@ -42,23 +42,6 @@
                                                     icon
                                                     v-bind="attrs"
                                                     v-on="on"
-                                                    @click="addToCart(item)"
-                                                >
-                                                    <v-icon>
-                                                        mdi-cart-plus
-                                                    </v-icon>
-                                                </v-btn>
-                                            </template>
-                                            <span>Add to cart</span>
-                                        </v-tooltip>
-                                        <v-tooltip top>
-                                            <template
-                                                v-slot:activator="{ on, attrs }"
-                                            >
-                                                <v-btn
-                                                    icon
-                                                    v-bind="attrs"
-                                                    v-on="on"
                                                     @click="removeFromWishlist(item)"
                                                 >
                                                     <v-icon>
@@ -118,7 +101,7 @@ export default {
     },
     methods: {
         ...mapActions(['goToDetails']),
-        ...mapMutations(["applyWishlist", "pullFromWishlist",'addToCart']),
+        ...mapMutations(["applyWishlist", "pullFromWishlist"]),
         getWishlist() {
             axios
                 .get("/api/getWishlist")

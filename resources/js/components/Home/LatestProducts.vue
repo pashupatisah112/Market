@@ -16,7 +16,7 @@
                         <v-hover v-slot="{ hover }">
                             <div style="overflow: hidden;">
                                 <v-img
-                                    src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
+                                    :src="getImage(item)"
                                     width="300"
                                     height="350"
                                     style="transition: transform .4s;"
@@ -33,7 +33,7 @@
                                                 color="white"
                                                 class="text-capitalize"
                                                 small
-                                                @click="quickView"
+                                                @click="quickView(item)"
                                                 >Quick View</v-btn
                                             >
                                         </div>
@@ -84,19 +84,19 @@ export default {
     },
     computed: {
         ...mapState({
-            quickViewDialog: state => state.product.quickViewDialog,
             wishlistItem: state => state.product.wishlistItem
-        })
+        }),
+        ...mapFields(['quickViewDialog','quickViewItem'])
     },
     mounted() {
         this.getLatest();
-        console.log("latest;", this.wishlistItem);
     },
     methods: {
         ...mapActions(['goToDetails']),
-        ...mapMutations(["pushToWishlist"]),
-        quickView() {
+        ...mapMutations(["pushToWishlist",'addToCart']),
+        quickView(item) {
             this.quickViewDialog = true;
+            this.quickViewId=item.id
         },
         
         getLatest() {
@@ -129,7 +129,11 @@ export default {
                         title: "Wishlist",
                         message: "Already Present in your wishlist"
                     });
-        }
+        },
+        getImage(item){
+            return "../storage/"+item.photo[0].image
+        },
+
     }
 };
 </script>

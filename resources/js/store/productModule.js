@@ -3,14 +3,15 @@ import { sortedIndex } from "lodash";
 import router from "../router";
 import Vue from 'vue';
 
-import CxltToastr from 'cxlt-vue2-toastr'
- 
-Vue.use(CxltToastr)
 
 export default {
     state: {
         categories: [],
+
+        //quickview variables
         quickViewDialog: false,
+        quickViewId:null,
+        //end
 
         cartlist: [],
         wishlist: [],
@@ -31,44 +32,27 @@ export default {
             state.wishlistItem.splice(state.wishlistItem.indexOf(item.id));
             state.wishlist.splice(state.wishlist.indexOf(item));
         },
-        addToCart(state, item) {
-            Axios.post("api/addToCart", {
-                product_id: item.id,
-                price: item.price
-            })
+        
+        addToCart(state,product_id,amount,total){
+            Axios.post('api/addToCart',{
+                product:product_id,
+                amt:amount,
+                tot:total
+            }).then(res=>console.log(res.data))
+            .catch(err=>console.log(err.response))
+        },
+        getCart(state) {
+            Axios.get("api/getCart")
                 .then(res => {
-                    console.log(res.data.msg)
-                    if (res.data.msg = "not null") {
-                        console.log('not null')
-                        Vue.prototype.$toast.error({ //vue.prototype using in vuex
-                            title: "Wishlist",
-                            message: "Already in your cart."
-                        });
-                    }
-                    else{
-                        state.cartlist.push(res.data.product);
-                        this.$toast.success({
-                            title: "Wishlist",
-                            message: "Successfully added to your cart."
-                        });
-                        
-                    }
+                    state.cartlist=res.data
+                    console.log('module:',state.cartlist)
                 })
-                .catch(err => {
-                    console.log(err.response);
-                });
-        }
-        // getCart(state) {
-        //     Axios.get("api/getCart")
-        //         .then(res => {
-        //             state.cartlist=res.data
-        //             console.log(res.data)
-        //         })
-        //         .catch(err => console.log(err.response))
+                .catch(err => console.log(err.response))
 
-        // }
+        }
     },
     actions: {
+        
         goToDetails() {
             router.push({
                 name: "Detail"

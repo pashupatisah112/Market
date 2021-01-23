@@ -292,10 +292,11 @@ import {
 } from 'vuex-map-fields';
 
 import Wishlist from './Wishlist';
+import QuickView from '../Common/QuickView';
 import Cart from './Cart';
 export default {
     components: {
-        Wishlist,Cart
+        Wishlist,Cart,QuickView
     },
     data() {
         return {
@@ -358,7 +359,7 @@ export default {
             loginDialog: state => state.authentication.loginDialog,
             token: state => state.authentication.token,
             wishlist: state => state.product.wishlist,
-            wishListItem: state => state.product.wishListItem
+            wishListItem: state => state.product.wishListItem,
         }),
         ...mapFields(['auth', 'loginDialog', 'token'])
     },
@@ -366,7 +367,7 @@ export default {
         this.checkUser()
         this.getCategories()
         this.getWishlistItem()
-        //this.getCart()
+        this.getCart()
     },
     methods: {
         ...mapMutations(['addWishlistItem','getCart']),

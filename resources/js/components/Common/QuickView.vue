@@ -3,26 +3,14 @@
     <v-dialog v-model="quickViewDialog" width="800" persistent>
         <v-card>
             <v-btn icon @click="closeQuickView" class="float-right">
-                <v-icon>mdi-cancel</v-icon>
+                <v-icon>mdi-close</v-icon>
             </v-btn>
 
             <v-container fluid>
                 <v-row>
                     <v-col cols="1">
-                        <div style="width:50px; height:75px;margin-bottom:10px">
-                            <v-img src="../images/sample.png"></v-img>
-                        </div>
-                        <div style="width:50px; height:75px">
-                            <v-img src="../images/sample2.png"></v-img>
-                        </div>
-                        <div style="width:50px; height:75px">
-                            <v-img src="../images/sample3.jpg"></v-img>
-                        </div>
-                        <div style="width:50px; height:75px">
-                            <v-img src="../images/sample4.jpg"></v-img>
-                        </div>
-                        <div style="width:50px; height:75px">
-                            <v-img src="../images/sample5.jpg"></v-img>
+                        <div style="width:50px; height:75px;margin-bottom:10px" v-for="item in quickViewItem.photo" :key="item.id">
+                            <v-img :src="getImage(item)"></v-img>
                         </div>
                     </v-col>
                     <v-col cols="5">
@@ -31,12 +19,12 @@
                     <v-col cols="6">
                         <v-row>
                             <v-col>
-                                <p class="text-h5">Name of the product</p>
-                                <h4>Rs.1800</h4>
+                                <p class="text-h5">{{quickViewItem.title}}</p>
+                                <h4>Rs.{{quickViewItem.price}}</h4>
                                 <p class="body-2">short description</p>
                                 <div style="width:300px" class="mx-auto">
                                     <p class="float-left mr-7">Size</p>
-                                    <v-select :items="items" label="Choose Size" dense outlined></v-select>
+                                    <!-- <v-select :items="quickViewItem.size" :item-text="quickViewItem.size.size" :item-value="quickViewItem.size.size" item label="Choose Size" dense outlined></v-select> -->
                                 </div>
                                 <div style="width:300px" class="mx-auto">
                                     <p class="float-left mr-6">Color</p>
@@ -98,15 +86,25 @@ import {
 export default {
     data() {
         return {
+            quickViewItem:[],
             count: 1,
             items: ['Blue', 'Green', 'Black', 'Yellow']
         }
     },
     computed: {
-        ...mapState(['quickViewDialog']),
+        ...mapState(['quickViewDialog','quickViewId']),
         ...mapFields(['quickViewDialog'])
     },
+    mounted(){
+        this.getQuickViewItem()
+    },
     methods: {
+        getQuickViewItem(){
+            axios.post('api/getQuickViewItem',{
+                id:this.quickViewId
+            }).then(res=>console.log('quick item:',res.data))
+            .catch(err=>console.log(err.response))
+        },
         closeQuickView() {
             this.quickViewDialog = false
         },
@@ -118,6 +116,9 @@ export default {
                 this.count = this.count - 1
             }
 
+        },
+        getImage(item){
+            return "../storage/"+item.image
         }
     }
 }

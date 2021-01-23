@@ -44,24 +44,4 @@ class WishlistController extends Controller
         }
         return response()->json($ids);
     }
-    public function addToCart(Request $request)
-    {
-            $cart=Cart::find($request->product_id);
-            if($cart=null){
-                $cart=new Cart;
-                $cart->product_id=$request->product_id;
-                $cart->user_id=Auth::id();
-                $cart->quantity=1;
-                $cart->total=$request->price;
-                $cart->save();
-                $product=Product::where('id',$cart->id)->with('photo')->first();
-                return response()->json(['product'=>$product,'msg'=>'null']);
-            }else{
-                return response()->json(['msg'=>'not null']);
-
-            }
-            
-            
-
-    }
 }

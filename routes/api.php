@@ -33,6 +33,8 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'Admin'],function(){
     Route::post('products','ProductController@store');
     Route::delete('products/{product}','ProductController@delete');
     Route::post('imageUpload','ProductController@imageUpload');
+    Route::post('addPrimaryImage','ProductController@addPrimaryImage');
+    Route::post('updateImage','ProductController@updateImage');
 
 });
 
@@ -45,7 +47,9 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'User'],function(){
 
     //cart
     Route::get('getCart','CartController@getCart');
-    Route::post('addToCart','WishlistController@addToCart');
+
+    //quickview
+    Route::post('getQuickViewItem','ProductController@getQuickViewItem');
 
 });
 

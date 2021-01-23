@@ -64,6 +64,22 @@ class ProductController extends Controller
         $photo->product_id=$request->id;
         $photo->image=$file;
         $photo->save();
+        $product=Product::where('id',$request->id)->with('photo')->get();
+        return response()->json($product);
+    }
+    public function addPrimaryImage(Request $request)
+    {
+        $path = $request->selectedFile->store('productImages');
+        $image=Product::find($request->id);
+        $image->image=$path;
+        $image->save();
+        $product=Product::where('id',$request->id)->with('photo')->first();
+        return response()->json($product);
+    }
+    public function updateImage(Request $request)
+    {
+        $product=Product::where('id',$request->id)->with('photo')->first();
+        return response()->json($product);
     }
     
 }
