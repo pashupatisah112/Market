@@ -49,6 +49,7 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'User'],function(){
     //cart
     Route::get('getCart','CartController@getCart');
     Route::get('getCartListItem','CartController@getCartListItem');
+    Route::post('removeFromCartlist','CartController@removeFromCartlist');
 
     //quickview
     Route::post('getQuickViewItem','ProductController@getQuickViewItem');

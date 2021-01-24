@@ -13,14 +13,14 @@
                                 </v-list-item-avatar>
 
                                 <v-list-item-content>
-                                    <v-list-item-title>{{item.title}}</v-list-item-title>
+                                    <v-list-item-title class="line-hover" @click="goToDetails">{{item.title}}</v-list-item-title>
                                     <v-list-item-subtitle>{{item.cart.amount}} x Rs.{{item.price}}</v-list-item-subtitle>
                                 </v-list-item-content>
 
                                 <v-list-item-action>
-                                    <v-btn icon small>
+                                    <v-btn icon small @click="removeFromCartlist(item)">
                                         <v-icon>
-                                            mdi-cancel
+                                            mdi-close
                                         </v-icon>
                                     </v-btn>
 
@@ -32,14 +32,14 @@
                         <v-row class="mt-2 px-5">
                             <P class="text-h6">TOTAL:</P>
                             <v-spacer></v-spacer>
-                            <p class="text-h6">Rs.2000</p>
+                            <p class="text-h6">Rs.{{cartTotal}}</p>
                         </v-row>
                         <v-btn rounded block color="blackTheme" class="text-capitalize white--text" @click="viewCart">View Cart</v-btn>
-                        <v-btn rounded block color="blackTheme" class="text-capitalize white--text my-3">Checkout</v-btn>
+                        <v-btn rounded block color="blackTheme" class="text-capitalize white--text my-3"  @click="viewCart">Checkout</v-btn>
                     </div>
                     <hollow-dots-spinner
                 class="mx-auto my-auto"
-                v-else-if="wishlist.length < 1 && noCartText == ''"
+                v-else-if="cartlist.length < 1 && noCartText == ''"
                 :animation-duration="1000"
                 :dot-size="15"
                 :dots-num="3"
@@ -63,13 +63,15 @@ import { HollowDotsSpinner } from "epic-spinners";
 
 import {
     mapState,
-    mapMutations
+    mapMutations,
+    mapActions
 } from 'vuex';
 export default {
-    components:{},
+    components:{HollowDotsSpinner},
     data() {
         return {
-            noCartText:''
+            noCartText:'',
+            cartTotal:0,
         }
     },
     computed: {
@@ -81,7 +83,8 @@ export default {
         this.getCart()
     },
     methods: {
-        ...mapMutations(['cartList']),
+        ...mapMutations(['cartList','removeFromCartlist']),
+        ...mapActions(['goToDetails']),
         viewCart() {
             this.$router.push({
                 name: 'Cart'
@@ -93,8 +96,10 @@ export default {
         getCart(state) {
             axios.get("api/getCart")
                 .then(res => {
-                    this.cartList(res.data)
-                    if(res.data.length<1){
+                    this.cartList(res.data.product)
+                    this.cartTotal=res.data.total
+                    console.log(this.cartlist)
+                    if(res.data.product.length<1){
                         this.noCartText='No cart items added.'
                     }
                 })

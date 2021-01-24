@@ -18,7 +18,8 @@ class CartController extends Controller
             array_push($ids,$cart->product_id);
         }
         $product=Product::whereIn('id',$ids)->select(['id','title','price','image'])->with('cart')->get();
-        return response()->json($product);
+        $total=Cart::where('user_id',Auth::id())->sum('total');
+        return response()->json(['product'=>$product,'total'=>$total]);
     }
     public function getCartListItem()
     {
@@ -41,5 +42,9 @@ class CartController extends Controller
         $cart->save();
         $product=Product::where('id',$request->product_id)->select(['id','title','price','image'])->with('cart')->first();
         return response()->json($product);
+    }
+    public function removeFromCartlist(Request $request)
+    {
+        Cart::find($request->cart_id)->delete();
     }
 }

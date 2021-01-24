@@ -59,6 +59,21 @@ export default {
                 state.cartlistItem=res.data
             })
             .catch(err=>console.log(err.response))
+        },
+        removeFromCartlist(state,item){
+            console.log(item.cart[0].id)
+            Axios.post('api/removeFromCartlist',{
+                cart_id:item.cart[0].id
+            })
+            .then(res=>{
+                state.cartlistItem.splice(state.cartlistItem.indexOf(item.cart[0].id))
+                state.cartlist.splice(state.cartlist.indexOf(item))
+                Vue.prototype.$toast.success({
+                    title: "Cart",
+                    message: "Product removed from cartlist."
+                });
+            })
+            .catch(err=>console.log(err.response))
         }
     },
     actions: {
