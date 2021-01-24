@@ -276,7 +276,7 @@
             </v-row>
         </template>
         <!--end terms and conditions-->
-
+        <quickView></quickView>
     </v-container>
 </div>
 </template>
@@ -360,6 +360,7 @@ export default {
             token: state => state.authentication.token,
             wishlist: state => state.product.wishlist,
             wishListItem: state => state.product.wishListItem,
+            quickViewDialog:state=>state.product.quickViewDialog
         }),
         ...mapFields(['auth', 'loginDialog', 'token'])
     },
@@ -367,10 +368,10 @@ export default {
         this.checkUser()
         this.getCategories()
         this.getWishlistItem()
-        this.getCart()
+        this.getCartListItem()
     },
     methods: {
-        ...mapMutations(['addWishlistItem','getCart']),
+        ...mapMutations(['addWishlistItem','getCartListItem']),
         getWishlistItem() {
             axios.get('api/getWishlistItem')
                 .then(res => {

@@ -11,7 +11,7 @@ class ProductController extends Controller
 {
     public function getLatestProducts()
     {
-        $product=Product::with('photo')->with('color')->with('size')->limit(4)->get();
+        $product=Product::select(['id','title','price','image'])->limit(4)->get();
         return response()->json($product);
     }
     public function getCategories()
@@ -20,7 +20,8 @@ class ProductController extends Controller
         return response()->json($category);
     }
     public function getQuickViewItem(Request $request){
-        $quick=Product::find($request->id)->with('photo')->with('color')->with('size');
+        $quick=Product::where('id',$request->product_id)->with('color')->with('size')->first();
         return response()->json($quick);
     }
+    
 }

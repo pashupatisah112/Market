@@ -8,48 +8,44 @@
 
             <v-container fluid>
                 <v-row>
-                    <v-col cols="1">
-                        <div style="width:50px; height:75px;margin-bottom:10px" v-for="item in quickViewItem.photo" :key="item.id">
-                            <v-img :src="getImage(item)"></v-img>
-                        </div>
-                    </v-col>
                     <v-col cols="5">
-                        <v-img src="../images/sample.png"></v-img>
+                        <v-img :src="getImage(quickViewItem)"></v-img>
                     </v-col>
                     <v-col cols="6">
                         <v-row>
                             <v-col>
                                 <p class="text-h5">{{quickViewItem.title}}</p>
                                 <h4>Rs.{{quickViewItem.price}}</h4>
-                                <p class="body-2">short description</p>
-                                <div style="width:300px" class="mx-auto">
-                                    <p class="float-left mr-7">Size</p>
-                                    <!-- <v-select :items="quickViewItem.size" :item-text="quickViewItem.size.size" :item-value="quickViewItem.size.size" item label="Choose Size" dense outlined></v-select> -->
-                                </div>
-                                <div style="width:300px" class="mx-auto">
-                                    <p class="float-left mr-6">Color</p>
-                                    <v-select :items="items" label="Choose Color" dense outlined></v-select>
-                                </div>
-                                <div style="width:300px" class="mx-auto">
-                                    <p class="float-left mr-5">Count</p>
-                                    <v-btn-toggle>
-                                        <v-btn @click="countMinus" icon>
-                                            <v-icon>mdi-minus</v-icon>
-                                        </v-btn>
-                                        <v-btn class="text--black">
-                                            {{count}}
-                                        </v-btn>
-                                        <v-btn icon @click="countPlus">
-                                            <v-icon>mdi-plus</v-icon>
-                                        </v-btn>
-                                    </v-btn-toggle>
-                                </div>
+                                <v-form v-model="valid" ref="form">
+                                    <div style="width:300px" class="mx-auto">
+                                        <p class="float-left mr-7">Size</p>
+                                        <v-select v-model="cartSize" :rules="[validRules.required]" :items="quickViewItem.size" item-text="size" item-value="id" item label="Choose Size" dense outlined></v-select>
+                                    </div>
+                                    <div style="width:300px" class="mx-auto">
+                                        <p class="float-left mr-6">Color</p>
+                                        <v-select v-model="cartColor" :rules="[validRules.required]" :items="quickViewItem.color" label="Choose Color" item-text="color_name" item-value="id" dense outlined></v-select>
+                                    </div>
+                                    <div style="width:300px" class="mx-auto">
+                                        <p class="float-left mr-5">Count</p>
+                                        <v-btn-toggle>
+                                            <v-btn @click="countMinus" icon>
+                                                <v-icon>mdi-minus</v-icon>
+                                            </v-btn>
+                                            <v-btn class="text--black">
+                                                {{count}}
+                                            </v-btn>
+                                            <v-btn icon @click="countPlus">
+                                                <v-icon>mdi-plus</v-icon>
+                                            </v-btn>
+                                        </v-btn-toggle>
+                                    </div>
+                                </v-form>
                             </v-col>
 
                         </v-row>
 
                         <v-row justify="center" class="mt-8">
-                            <v-btn class="text-capitalize white--text" color="blackTheme" rounded>Add to Cart</v-btn>
+                            <v-btn @click="addToCart" class="text-capitalize white--text" color="blackTheme" rounded>Add to Cart</v-btn>
                         </v-row>
 
                         <v-row justify="center" class="mt-5">
@@ -78,7 +74,8 @@
 
 <script>
 import {
-    mapState
+    mapState,
+    mapMutations
 } from 'vuex';
 import {
     mapFields
@@ -86,28 +83,24 @@ import {
 export default {
     data() {
         return {
-            quickViewItem:[],
+            cartColor: '',
+            cartSize: '',
             count: 1,
-            items: ['Blue', 'Green', 'Black', 'Yellow']
+            valid: true
         }
     },
     computed: {
-        ...mapState(['quickViewDialog','quickViewId']),
-        ...mapFields(['quickViewDialog'])
+        ...mapState({
+            quickViewDialog: state => state.product.quickViewDialog,
+            quickViewItem: state => state.product.quickViewItem,
+            validRules: state => state.validation.validRules,
+            cartlistItem:state=>state.product.cartlistItem
+        }),
     },
-    mounted(){
-        this.getQuickViewItem()
+    mounted() {
     },
     methods: {
-        getQuickViewItem(){
-            axios.post('api/getQuickViewItem',{
-                id:this.quickViewId
-            }).then(res=>console.log('quick item:',res.data))
-            .catch(err=>console.log(err.response))
-        },
-        closeQuickView() {
-            this.quickViewDialog = false
-        },
+        ...mapMutations(['closeQuickView','addToCartlist']),
         countPlus() {
             this.count = this.count + 1
         },
@@ -117,8 +110,34 @@ export default {
             }
 
         },
-        getImage(item){
-            return "../storage/"+item.image
+        getImage(quickViewItem) {
+            return "../storage/" + quickViewItem.image
+        },
+        addToCart() {
+            if (this.$refs.form.validate()) {
+                if(this.cartlistItem.includes(this.quickViewItem.id)){
+                    this.$toast.error({
+                        title: "Cart",
+                        message: "This product already exist in your cart."
+                    });
+                }else{
+                    axios.post('api/addToCart', {
+                        product_id: this.quickViewItem.id,
+                        amount: this.count,
+                        color: this.cartColor,
+                        size: this.cartSize,
+                        total: this.count * this.quickViewItem.price
+                    }).then(res =>{
+                        this.addToCartlist(res.data)
+                        this.$toast.success({
+                        title: "Cart",
+                        message: "Product added to your cart."
+                    });
+                    } )
+                    .catch(err => console.log(err.response))
+                }
+                
+            }
         }
     }
 }

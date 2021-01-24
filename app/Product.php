@@ -36,7 +36,7 @@ class Product extends Model
     }
     public function cart()
     {
-        return $this->belongsToMany('App\Cart','cart_products');
+        return $this->hasMany('App\Cart');
     }
     public function photo()
     {

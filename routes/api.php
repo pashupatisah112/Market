@@ -44,9 +44,11 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'User'],function(){
     Route::post('removeFromWishlist','WishlistController@removeFromWishlist');
     Route::get('getWishlist','WishlistController@getWishlist');
     Route::get('getWishlistItem','WishlistController@getWishListItem');
+    Route::post('addToCart','CartController@addToCart');
 
     //cart
     Route::get('getCart','CartController@getCart');
+    Route::get('getCartListItem','CartController@getCartListItem');
 
     //quickview
     Route::post('getQuickViewItem','ProductController@getQuickViewItem');

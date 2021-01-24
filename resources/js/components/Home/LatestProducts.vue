@@ -10,7 +10,7 @@
                     lg="3"
                     md="3"
                     v-for="item in latest"
-                    :key="item.title"
+                    :key="item.id"
                 >
                     <v-card max-width="300" class="mx-auto" tile flat>
                         <v-hover v-slot="{ hover }">
@@ -28,6 +28,7 @@
                                             class="d-flex transition-fast-in-fast-out v-card--reveal"
                                             style="height: 30%;"
                                         >
+                                            
                                             <v-btn
                                                 rounded
                                                 color="white"
@@ -86,18 +87,13 @@ export default {
         ...mapState({
             wishlistItem: state => state.product.wishlistItem
         }),
-        ...mapFields(['quickViewDialog','quickViewItem'])
     },
     mounted() {
         this.getLatest();
     },
     methods: {
         ...mapActions(['goToDetails']),
-        ...mapMutations(["pushToWishlist",'addToCart']),
-        quickView(item) {
-            this.quickViewDialog = true;
-            this.quickViewId=item.id
-        },
+        ...mapMutations(["pushToWishlist",'addToCart','quickView']),
         
         getLatest() {
             axios
@@ -131,7 +127,7 @@ export default {
                     });
         },
         getImage(item){
-            return "../storage/"+item.photo[0].image
+            return "../storage/"+item.image
         },
 
     }

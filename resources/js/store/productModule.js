@@ -9,11 +9,12 @@ export default {
         categories: [],
 
         //quickview variables
-        quickViewDialog: false,
-        quickViewId:null,
+        quickViewDialog: true,
+        quickViewItem:{},
         //end
 
         cartlist: [],
+        cartlistItem:[],
         wishlist: [],
         wishlistItem: []
     },
@@ -32,23 +33,32 @@ export default {
             state.wishlistItem.splice(state.wishlistItem.indexOf(item.id));
             state.wishlist.splice(state.wishlist.indexOf(item));
         },
-        
-        addToCart(state,product_id,amount,total){
-            Axios.post('api/addToCart',{
-                product:product_id,
-                amt:amount,
-                tot:total
-            }).then(res=>console.log(res.data))
-            .catch(err=>console.log(err.response))
+        quickView(state,item){
+            Axios.post('api/getQuickViewItem',{
+                product_id:item.id
+            }).then(res=>{
+                state.quickViewItem=res.data
+                state.quickViewDialog=true
+            }).catch(err=>console.log(err.response))
         },
-        getCart(state) {
-            Axios.get("api/getCart")
-                .then(res => {
-                    state.cartlist=res.data
-                    console.log('module:',state.cartlist)
-                })
-                .catch(err => console.log(err.response))
+        closeQuickView(state){
+             state.quickViewDialog=false
+        },
+    
+        addToCartlist(state,item){
+            state.cartlist.push(item)
+            state.cartlistItem.push(item.id)
+        },
+        cartList(state,item) {
+            state.cartlist=item
 
+        },
+        getCartListItem(state){
+            Axios.get('api/getCartListItem')
+            .then(res=>{
+                state.cartlistItem=res.data
+            })
+            .catch(err=>console.log(err.response))
         }
     },
     actions: {
