@@ -10,4 +10,8 @@ class Company extends Model
     {
         return $this->hasMany('App\Product');
     }
+    public function subCategory()
+    {
+        return $this->belongsTo('App\SubCategory');
+    }
 }

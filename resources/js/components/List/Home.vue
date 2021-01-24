@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="my-5">
         <filterProduct></filterProduct>
         <list></list>
     </div>

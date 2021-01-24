@@ -25,9 +25,20 @@ export default {
         addWishlistItem(state, item) {
             state.wishlistItem = item;
         },
-        pushToWishlist(state, item) {
-            state.wishlistItem.push(item.id);
-            state.wishlist.push(item);
+        addToWishlist(state,item){
+            axios
+                .post("api/addToWishlist", {
+                    product_id: item.id
+                })
+                .then(res => {
+                    state.wishlistItem.push(item.id);
+                    state.wishlist.push(item);
+                    Vue.prototype.$toast.success({
+                        title: "Wishlist",
+                        message: "Added to your wishlist"
+                    });
+                })
+                .catch(err => console.log(err.response));
         },
         pullFromWishList(state, item) {
             state.wishlistItem.splice(state.wishlistItem.indexOf(item.id));
@@ -82,7 +93,13 @@ export default {
             router.push({
                 name: "Detail"
             });
-        }
+        },
+        alreadyMessage(){
+            Vue.prototype.$toast.info({
+                        title: "Wishlist",
+                        message: "Already Present in your wishlist"
+                    });
+        },
     },
     getters: {}
 };

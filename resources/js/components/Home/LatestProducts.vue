@@ -92,8 +92,8 @@ export default {
         this.getLatest();
     },
     methods: {
-        ...mapActions(['goToDetails']),
-        ...mapMutations(["pushToWishlist",'addToCart','quickView']),
+        ...mapActions(['goToDetails','alreadyMessage']),
+        ...mapMutations(["pushToWishlist",'addToCart','quickView','addToWishlist']),
         
         getLatest() {
             axios
@@ -103,29 +103,8 @@ export default {
                 })
                 .catch(err => console.log(err.response));
         },
-        addToWishlist(item) {
-            //this.pushToWishlist(item)
-            axios
-                .post("api/addToWishlist", {
-                    product_id: item.id
-                })
-                .then(res => {
-                    let data = res.data;
-                    this.pushToWishlist(data);
-                    this.$toast.success({
-                        title: "Wishlist",
-                        message: "Added to your wishlist"
-                    });
-                })
-                .catch(err => console.log(err.response));
-        },
         
-        alreadyMessage(){
-            this.$toast.info({
-                        title: "Wishlist",
-                        message: "Already Present in your wishlist"
-                    });
-        },
+        
         getImage(item){
             return "../storage/"+item.image
         },

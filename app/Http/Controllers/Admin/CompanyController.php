@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Company;
+use App\SubCategory;
 
 class CompanyController extends Controller
 {
@@ -15,8 +16,9 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $company=Company::all();
-        return response()->json($company);
+        $company=Company::with('subCategory')->get();
+        $subCategories=SubCategory::all();
+        return response()->json(['company'=>$company,'subCategories'=>$subCategories]);
     }
 
     /**
@@ -39,6 +41,7 @@ class CompanyController extends Controller
     {
         $company=new Company;
         $company->company_name=$request->company_name;
+        $company->sub_category_id=$request->sub_category_id;
         $company->save();
         return response()->json($company);
     }
@@ -76,6 +79,7 @@ class CompanyController extends Controller
     {
         $company=Company::find($id);
         $company->company_name=$request->company_name;
+        $company->sub_category_id=$request->sub_category_id;
         $company->save();
         return response()->json($company);
     }

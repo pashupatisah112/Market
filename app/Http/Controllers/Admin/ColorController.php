@@ -39,6 +39,7 @@ class ColorController extends Controller
     {
         $color=new Color;
         $color->color_name=$request->color_name;
+        $color->color_code=$request->color_code;
         $color->save();
         return response()->json($color);
     }
@@ -76,6 +77,7 @@ class ColorController extends Controller
     {
         $color=Color::find($id);
         $color->color_name=$request->color_name;
+        $color->color_code=$request->color_code;
         $color->save();
         return response()->json($color);
     }

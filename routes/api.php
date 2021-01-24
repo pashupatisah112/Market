@@ -58,6 +58,9 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'User'],function(){
 
 Route::get('getCategories','User\ProductController@getCategories');
 Route::get('latestProducts','User\ProductController@getLatestProducts');
+Route::post('getProducts','User\ProductController@getProducts');
+Route::post('getSelectedCategory','User\ProductController@getSelectedCategory');
+Route::post('getFilters','User\FilterController@getFilters');
 
 
 //Auth

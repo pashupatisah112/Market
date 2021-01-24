@@ -32,6 +32,7 @@
                                 <v-row>
                                     <v-col cols="12">
                                         <v-form v-model="valid" ref="form">
+                                            <v-select v-model="editedItem.sub_category_id" :rules="[validRules.required]" :items="subCategories" label="Sub-Category" item-text="subCategory_name" item-value="id"></v-select>
                                             <v-text-field v-model="editedItem.company_name" :rules="[validRules.required]" label="Company Name"></v-text-field>
                                         </v-form>
                                     </v-col>
@@ -124,6 +125,7 @@ export default {
             dataUpdateMsg: '',
             dataUpdateAlert: false,
             deleteDialog: false,
+            subCategories:[],
             details: [],
             company: [],
             dialog: false,
@@ -138,6 +140,11 @@ export default {
                     value: 'company_name'
                 },
                 {
+                    text: 'Sub category',
+                    value: 'sub_category.subCategory_name'
+                },
+
+                {
                     text: 'Actions',
                     value: 'actions',
                     sortable: false
@@ -147,10 +154,12 @@ export default {
             editedItem: {
                 id: '',
                 company_name: '',
+                sub_category_id:''
             },
             defaultItem: {
                 id: '',
                 company_name: '',
+                sub_category_id:''
             },
         }
     },
@@ -179,7 +188,11 @@ export default {
     methods: {
         initialize() {
             axios.get('/api/company', {}).
-            then(res => this.company = res.data)
+            then(res =>{
+                this.company = res.data.company
+                this.subCategories=res.data.subCategories
+                console.log(this.company)
+            })
                 .catch(err => console.log(err.response))
 
         },
@@ -215,7 +228,8 @@ export default {
             if (this.$refs.form.validate()) {
                 if (this.editedIndex > -1) {
                     axios.put('/api/company/' + this.editedItem.id, {
-                            'company_name': this.editedItem.category_name,
+                            'company_name': this.editedItem.company_name,
+                            'sub_category_id':this.editedItem.sub_category_id
                         })
                         .then(res => {
                             if (Object.assign(this.company[this.editedIndex], res.data.company)) {
@@ -230,6 +244,7 @@ export default {
 
                     axios.post('/api/company', {
                             'company_name': this.editedItem.company_name,
+                            'sub_category_id':this.editedItem.sub_category_id
                         })
                         .then(res => {
                             if (this.company.push(res.data)) {

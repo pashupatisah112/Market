@@ -37,6 +37,8 @@
                                 <v-row>
                                     <v-col cols="12">
                                         <v-text-field v-model="editedItem.color_name" label="Color Name"></v-text-field>
+                                        <v-text-field v-model="editedItem.color_code" label="Color Code"></v-text-field>
+
                                     </v-col>
                                 </v-row>
                             </v-container>
@@ -136,6 +138,10 @@ export default {
                     value: 'color_name'
                 },
                 {
+                    text: 'Color code',
+                    value: 'color_code'
+                },
+                {
                     text: 'Actions',
                     value: 'actions',
                     sortable: false
@@ -145,10 +151,12 @@ export default {
             editedItem: {
                 id: '',
                 color_name: '',
+                color_code:''
             },
             defaultItem: {
                 id: '',
                 color_name: '',
+                color_code:''
             },
         }
     },
@@ -210,6 +218,7 @@ export default {
             if (this.editedIndex > -1) {
                 axios.put('/api/color/' + this.editedItem.id, {
                         'color_name': this.editedItem.color_name,
+                        'color_code':this.editedItem.color_code
                     })
                     .then(res => {
                         if (Object.assign(this.color[this.editedIndex], res.data.color)) {
@@ -224,6 +233,7 @@ export default {
 
                 axios.post('/api/color', {
                         'color_name': this.editedItem.color_name,
+                        'color_code':this.editedItem.color_code
                     })
                     .then(res => {
                         if (this.color.push(res.data)) {
