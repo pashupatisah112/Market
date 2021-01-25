@@ -23,13 +23,18 @@
                             <v-container>
                                 <v-form ref="form" v-model="valid">
                                     <v-row>
-                                        <v-col cols="6">
+                                        <v-col cols="4">
                                             <v-text-field v-model="editedItem.title" label="Product Name" dense :rules="[
                                                         validRules.required
                                                     ]"></v-text-field>
                                         </v-col>
-                                        <v-col cols="6">
+                                        <v-col cols="4">
                                             <v-text-field v-model="editedItem.price" type="number" label="Price" dense :rules="[
+                                                        validRules.required
+                                                    ]"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="4">
+                                            <v-text-field v-model="editedItem.code" label="Product Code" dense :rules="[
                                                         validRules.required
                                                     ]"></v-text-field>
                                         </v-col>
@@ -76,21 +81,6 @@
                                                     ]"></v-select>
                                         </v-col>
                                     </v-row>
-                                    <!-- <v-row>
-                                        <v-col cols="12">
-                                            <v-file-input v-model="files" label="Upload photos" multiple dense :rules="[
-                                                        validRules.required
-                                                    ]">
-                                                <template v-slot:selection="{
-                                                            text
-                                                        }">
-                                                    <v-chip small label color="primary">
-                                                        {{ text }}
-                                                    </v-chip>
-                                                </template>
-                                            </v-file-input>
-                                        </v-col>
-                                    </v-row> -->
                                     <v-row>
                                         <v-col cols="12">
                                             <v-autocomplete v-model="
@@ -432,6 +422,7 @@ export default {
                 id: "",
                 title: "",
                 price: "",
+                code:'',
                 category: "",
                 subCategory: "",
                 type: "",
@@ -445,6 +436,7 @@ export default {
                 id: "",
                 title: "",
                 price: "",
+                code:'',
                 category: "",
                 subCategory: "",
                 type: "",
@@ -538,6 +530,7 @@ export default {
                         .put("/api/products/" + this.editedItem.id, {
                             title: this.editedItem.title,
                             price: this.editedItem.price,
+                            code:this.editedItem.code,
                             product_type_id: this.editedItem.type,
                             category_id: this.editedItem.category,
                             subCategory_id: this.editedItem.subCategory,
@@ -572,6 +565,7 @@ export default {
                         .post("/api/products", {
                             title: this.editedItem.title,
                             price: this.editedItem.price,
+                            code:this.editedItem.code,
                             product_type_id: this.editedItem.type,
                             category_id: this.editedItem.category,
                             subCategory_id: this.editedItem.subCategory,

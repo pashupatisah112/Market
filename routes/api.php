@@ -62,6 +62,8 @@ Route::post('getProducts','User\ProductController@getProducts');
 Route::post('getSelectedCategory','User\ProductController@getSelectedCategory');
 Route::post('getFilters','User\FilterController@getFilters');
 
+Route::post('getProductDetails','User\ProductController@getProductDetails');
+
 
 //Auth
 Route::post('register', 'AuthController@register');

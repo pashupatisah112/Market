@@ -4,7 +4,7 @@
         <v-row>
             <p class="font-weight-bold text-decoration-underline mt-1">{{category}}</p>
             <!-- trending wala haru fetch gar jati aatxa in one line -->
-            <v-chip v-for="item in selectedCategory[0].sub_category" :key="item.id" class="mx-2">{{item.subCategory_name}}</v-chip>
+            <!-- <v-chip v-for="item in selectedCategory[0].sub_category" :key="item.id" class="mx-2">{{item.subCategory_name}}</v-chip> -->
 
             <v-spacer></v-spacer>
 

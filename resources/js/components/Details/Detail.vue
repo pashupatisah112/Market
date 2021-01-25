@@ -6,27 +6,19 @@
                 <v-card flat>
                     <v-container fluid>
                         <v-row class="px-10">
-                            <v-col cols="1">
-                                <div style="width:50px; height:75px;margin-bottom:10px">
-                                    <v-img src="../images/sample.png"></v-img>
-                                </div>
-                                <div style="width:50px; height:75px">
-                                    <v-img src="../images/sample2.png"></v-img>
-                                </div>
-                                <div style="width:50px; height:75px">
-                                    <v-img src="../images/sample3.jpg"></v-img>
-                                </div>
-                                <div style="width:50px; height:75px">
-                                    <v-img src="../images/sample4.jpg"></v-img>
-                                </div>
-                                <div style="width:50px; height:75px">
-                                    <v-img src="../images/sample5.jpg"></v-img>
+                            <v-col cols="1" align="center">
+                                <div style="width:60px; height:auto;margin-bottom:10px" v-for="item in product" :key="item.id">
+                                    <v-img :src="getImage(item)"></v-img>
                                 </div>
                             </v-col>
-                            <v-col cols="5">
-                                <v-img src="../images/sample.png"></v-img>
-                            </v-col>
-                            <v-col cols="6">
+                            <!-- <v-col cols="5">
+                                <v-img :src="getImage(product[0])">
+                                    <div v-if="!imageView==null" style="width:100%;height:100%" class="border">
+                                        <v-img :src="showImage(imageView)"></v-img>
+                                    </div>
+                                </v-img>
+                            </v-col> -->
+                            <!-- <v-col cols="6">
                                 <v-row>
                                     <v-col>
                                         <p class="text-h5">Name of the product</p>
@@ -85,7 +77,7 @@
                                 </v-row>
                                 <v-divider></v-divider>
 
-                            </v-col>
+                            </v-col> -->
                         </v-row>
                         <v-row class="px-10">
                             <v-card flat>
@@ -116,13 +108,17 @@
 import {
     mapState
 } from 'vuex';
-import {
-    mapFields
-} from 'vuex-map-fields';
+
 export default {
     data() {
         return {
+            product:[],
             count: 1,
+            imageView:null,
+
+
+
+
             items: ['Blue', 'Green', 'Black', 'Yellow'],
             tab: null,
             details: [
@@ -132,22 +128,29 @@ export default {
         }
     },
     computed: {
-        ...mapState(['quickViewDialog']),
-        ...mapFields(['quickViewDialog'])
+       product_code(){
+           return this.$route.params.code
+       },
+       product_title(){
+           return this.$route.params.title
+       }
+    },
+    mounted(){
+        this.getProductDetails()
     },
     methods: {
-        closeQuickView() {
-            this.quickViewDialog = false
-        },
-        countPlus() {
-            this.count = this.count + 1
-        },
-        countMinus() {
-            if (this.count != 1) {
-                this.count = this.count - 1
-            }
-
-        }
+      getProductDetails(){
+         axios.post('api/getProductDetails',{
+             code:this.product_code
+         }).then(res=>{
+             this.product=res.data
+             console.log('details:',res.data)
+         })
+         .catch(err=>console.log(err.response))
+      },
+      getImage(item){
+          return "../storage/"+item.image
+      }
     }
 }
 </script>

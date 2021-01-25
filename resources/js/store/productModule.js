@@ -88,11 +88,12 @@ export default {
         }
     },
     actions: {
-        
-        goToDetails() {
+        goToDetails(state,item) {
             router.push({
-                name: "Detail"
+                name: "Detail",
+                params:{code:item.product_code,title:item.title}
             });
+            
         },
         alreadyMessage(){
             Vue.prototype.$toast.info({

@@ -98,12 +98,12 @@ const routes = [
                 component: Home
             },
             {
-                path: "/:category/:subCategory",
+                path: ":category/:subCategory",
                 name: "Category",
                 component: Category
             },
             {
-                path: "/category_name/product_name",
+                path: ":code", //yaha arko param 'title' pni rakhda save hudaina refresh garda but 'code' matrai rakhda hunxa
                 name: "Detail",
                 component: Detail
             },
@@ -131,7 +131,7 @@ const routes = [
     }
 ];
 const userRoutes = [];
-const router = new VueRouter({ routes, userRoutes }); //global token check for authorization
+const router = new VueRouter({routes, userRoutes,}); //global token check for authorization [mode: 'history',]add this to remo hashtag mode
 router.beforeEach((to, from, next) => {
     const token = localStorage.getItem("token") || null;
     window.axios.defaults.headers["Authorization"] = "Bearer " + token;
