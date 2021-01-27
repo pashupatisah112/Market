@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\User;
 
 use App\Category;
+use App\Comment;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Product;
+use App\Rating;
 use App\SubCategory;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -37,8 +41,67 @@ class ProductController extends Controller
     }
     public function getProductDetails(Request $request)
     {
-        $product=Product::where('product_code',$request->code)->with('photo')->with('color')->with('size')->with('company')->get();
+        $product=Product::where('product_code',$request->code)->with('photo')->with('color')->with('size')->with('company')->first();
         return response()->json($product);
+    }
+    public function getRatings(Request $request)
+    {
+         $product=Product::where('product_code',$request->code)->first();
+         $avg_rating=DB::table('ratings')->where('product_id',$product->id)->avg('rating');
+         $total_rated=DB::table('ratings')->where('product_id',$product->id)->count();
+         $rated=DB::table('ratings')->where('product_id',$product->id)->select('rating',DB::raw('count(*) as total'))->groupBy('rating')->orderBy('rating','desc')->get();
+         $user_rated=Rating::where('product_id',$product->id)->where('user_id',Auth::id())->select('rating')->first();
+        return response()->json(['avg'=>$avg_rating,'rating_count'=>$total_rated,'rated'=>$rated,'user_rated'=>$user_rated]);
+        //return $total_rated;
+    }
+    public function giveRating(Request $request)
+    {
+        
+        $product=Product::where('product_code',$request->code)->first();
+         $rating=Rating::where('product_id',$product->id)->where('user_id',Auth::id())->first();
+         if($rating==null){
+             $rate=new Rating;
+            $rate->user_id=Auth::id();
+            $rate->product_id=$product->id;
+            $rate->rating=$request->rated;
+            $rate->save();
+            return response()->json(['new_rating'=>$rate]);
+         }
+         else{
+             $rate=Rating::find($rating->id);
+             $rate->rating=$request->rated;
+             $rate->save();
+             return response()->json(['update_rating'=>$rate]);
+         }
+    }
+    public function getComments(Request $request)
+    {
+        $product=Product::where('product_code',$request->code)->select('id')->first();
+        $comment=Comment::where('product_id',$product->id)->with('user:id,name')->get();
+        return response()->json($comment);
+    }
+    public function makeComment(Request $request)
+    {
+        $product=Product::where('product_code',$request->code)->select('id')->first();
+        $comment=new Comment;
+        $comment->user_id=Auth::id();
+        $comment->product_id=$product->id;
+        $comment->comment=$request->comment;
+        $comment->save();
+        $comm=Comment::where('id',$comment->id)->with('user:id,name')->first();
+        return response()->json($comm);
+    }
+    public function getTags(Request $request)
+    {
+        $product=Product::where('product_code',$request->code)->select('id')->with('tag')->first();
+        return response()->json($product);
+    }
+    public function getSimilarProducts(Request $request)
+    {
+        $product=Product::where('product_code',$request->code)->select(['sub_category_id','company_id'])->first();
+        $sugg=Product::where('sub_category_id',$product->sub_category_id)->where('company_id',$product->company_id)->select(['id','title','price','image','product_code'])->get();
+        return response()->json($sugg);
+
     }
     
 }

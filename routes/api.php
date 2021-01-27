@@ -54,6 +54,20 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'User'],function(){
     //quickview
     Route::post('getQuickViewItem','ProductController@getQuickViewItem');
 
+    //rating
+    Route::post('getRatings','ProductController@getRatings');
+    Route::post('giveRating','ProductController@giveRating');
+
+    //comments
+    Route::post('getComments','ProductController@getComments');
+    Route::post('makeComment','ProductController@makeComment');
+
+    //tags
+    Route::post('getTags','ProductController@getTags');
+
+    //similar
+    Route::post('getSimilarProducts','ProductController@getSimilarProducts');
+
 });
 
 Route::get('getCategories','User\ProductController@getCategories');
