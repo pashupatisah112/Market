@@ -34,7 +34,7 @@
                                                     ]"></v-text-field>
                                         </v-col>
                                         <v-col cols="4">
-                                            <v-text-field v-model="editedItem.code" label="Product Code" dense :rules="[
+                                            <v-text-field v-model="editedItem.product_code" label="Product product_code" dense :rules="[
                                                         validRules.required
                                                     ]"></v-text-field>
                                         </v-col>
@@ -49,7 +49,7 @@
                                         </v-col>
                                         <v-col cols="4">
                                             <v-select v-model="
-                                                        editedItem.subCategory
+                                                        editedItem.sub_category
                                                     " :items="subCategory" label="Sub-Category" item-text="subCategory_name" item-value="id" dense :rules="[
                                                         validRules.required
                                                     ]"></v-select>
@@ -76,7 +76,7 @@
                                                     ]"></v-select>
                                         </v-col>
                                         <v-col cols="4">
-                                            <v-select v-model="editedItem.type" :items="productType" label="Product Type" item-text="product_type" item-value="id" dense :rules="[
+                                            <v-select v-model="editedItem.product_type" :items="productType" label="Product Type" item-text="product_type" item-value="id" dense :rules="[
                                                         validRules.required
                                                     ]"></v-select>
                                         </v-col>
@@ -89,6 +89,18 @@
                                                         validRules.required
                                                     ]"></v-autocomplete>
                                         </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <v-textarea outlined clearable placeholder="Enter your tags" rows="2" auto-grow="" @keyup.enter="enterTag" v-model="selectTag">
+                                                <template slot="prepend-inner">
+                                                    <v-chip close v-for="(item,index) in enterSelectedTag" :key="index" @click:close="removeTag(item)">
+                                                        {{ item }}
+                                                    </v-chip>
+                                                </template>
+                                            </v-textarea>
+                                        </v-col>
+
                                     </v-row>
                                     <v-row>
                                         <v-col cols="12">
@@ -368,11 +380,11 @@ export default {
             primary: null,
             secondary: null,
             isSelecting: false,
-            isSecondarySelecting:false,
+            isSecondarySelecting: false,
             selectedItem: {
                 title: ''
             },
-            selectedIndex:null,
+            selectedIndex: null,
 
             alertColor: "success",
             timeout: 2000,
@@ -388,6 +400,9 @@ export default {
             size: [],
             color: [],
             tag: [],
+
+            enterSelectedTag: [],
+            selectTag: '',
             headers: [{
                     text: "#",
                     align: "start",
@@ -422,10 +437,10 @@ export default {
                 id: "",
                 title: "",
                 price: "",
-                code:'',
+                product_code: "",
                 category: "",
-                subCategory: "",
-                type: "",
+                sub_category: "",
+                product_type: "",
                 company: "",
                 description: "",
                 selectedColor: [],
@@ -436,10 +451,10 @@ export default {
                 id: "",
                 title: "",
                 price: "",
-                code:'',
+                product_code: "",
                 category: "",
-                subCategory: "",
-                type: "",
+                sub_category: "",
+                product_type: "",
                 company: "",
                 description: "",
                 selectedColor: [],
@@ -492,7 +507,6 @@ export default {
                 .get("/api/products", {})
                 .then(res => {
                     this.products = res.data;
-                    console.log(res.data);
                 })
                 .catch(err => console.log(err.response));
         },
@@ -500,6 +514,12 @@ export default {
         editItem(item) {
             this.editedIndex = this.products.indexOf(item);
             this.editedItem = Object.assign({}, item);
+
+            //these three done to get selected value during editing
+            this.editedItem.selectedColor = item.color
+            this.editedItem.selectedSize = item.size
+            this.editedItem.selectedTag = item.tag
+
             this.productDialog = true;
         },
 
@@ -530,10 +550,10 @@ export default {
                         .put("/api/products/" + this.editedItem.id, {
                             title: this.editedItem.title,
                             price: this.editedItem.price,
-                            code:this.editedItem.code,
-                            product_type_id: this.editedItem.type,
+                            product_code: this.editedItem.product_code,
+                            product_type_id: this.editedItem.product_type,
                             category_id: this.editedItem.category,
-                            subCategory_id: this.editedItem.subCategory,
+                            subCategory_id: this.editedItem.sub_category,
                             company_id: this.editedItem.company,
                             description: this.editedItem.description,
                             color_name: this.editedItem.selectedColor,
@@ -565,10 +585,10 @@ export default {
                         .post("/api/products", {
                             title: this.editedItem.title,
                             price: this.editedItem.price,
-                            code:this.editedItem.code,
-                            product_type_id: this.editedItem.type,
+                            product_code: this.editedItem.product_code,
+                            product_type_id: this.editedItem.product_type,
                             category_id: this.editedItem.category,
-                            subCategory_id: this.editedItem.subCategory,
+                            subCategory_id: this.editedItem.sub_category,
                             company_id: this.editedItem.company,
                             description: this.editedItem.description,
                             color_name: this.editedItem.selectedColor,
@@ -591,8 +611,8 @@ export default {
             }
         },
         onSecondaryUpload(e) {
-            let file=e.target.files
-            
+            let file = e.target.files
+
             for (var i = 0; i < file.length; i++) {
                 let data = new FormData();
                 data.append("selectedFile", file[i]);
@@ -604,23 +624,22 @@ export default {
                 };
                 axios
                     .post("api/imageUpload", data, settings)
-                    .then(res => {
-                    })
+                    .then(res => {})
                     .catch(err => {
                         (this.dataUpdateMsg = "Problem Uploading Images"),
                         (this.dataUpdateAlert = true);
                     });
             }
-            axios.post('api/updateImage',{
-                id:this.selectedItem.id
-            }).then(res=>{
-                   this.selectedItem = res.data
-                    this.products.splice(this.selectedIndex,1,res.data)
-            }).catch(err=>console.log(err.response))
+            axios.post('api/updateImage', {
+                id: this.selectedItem.id
+            }).then(res => {
+                this.selectedItem = res.data
+                this.products.splice(this.selectedIndex, 1, res.data)
+            }).catch(err => console.log(err.response))
 
         },
         showImages(item) {
-            this.selectedIndex=this.products.indexOf(item)
+            this.selectedIndex = this.products.indexOf(item)
             this.selectedItem = item;
             this.imageViewDialog = true;
 
@@ -683,11 +702,18 @@ export default {
                 .post("api/addPrimaryImage", data, settings)
                 .then(res => {
                     this.selectedItem = res.data
-                    this.products.splice(this.selectedIndex,1,res.data)
+                    this.products.splice(this.selectedIndex, 1, res.data)
                 })
                 .catch(err => {
                     console.log(err.response);
                 });
+        },
+        enterTag() {
+            this.enterSelectedTag.push(this.selectTag)
+            this.selectTag = ''
+        },
+        removeTag(item) {
+            this.enterSelectedTag.splice(this.enterSelectedTag.indexOf(item), 1)
         }
     }
 };

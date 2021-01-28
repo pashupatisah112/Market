@@ -74,7 +74,13 @@ Route::get('getCategories','User\ProductController@getCategories');
 Route::get('latestProducts','User\ProductController@getLatestProducts');
 Route::post('getProducts','User\ProductController@getProducts');
 Route::post('getSelectedCategory','User\ProductController@getSelectedCategory');
+
+//Filter
 Route::post('getFilters','User\FilterController@getFilters');
+Route::post('sortBy','User\FilterController@sortBy');
+Route::post('colorFilter','User\FilterController@colorFilter');
+Route::post('companyFilter','User\FilterController@companyFilter');
+Route::post('priceFilter','User\FilterController@priceFilter');
 
 Route::post('getProductDetails','User\ProductController@getProductDetails');
 

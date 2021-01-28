@@ -1,6 +1,6 @@
 <template>
     <div class="my-5">
-        <filterProduct></filterProduct>
+        <!-- <filterProduct></filterProduct> -->
         <list></list>
     </div>
 </template>
