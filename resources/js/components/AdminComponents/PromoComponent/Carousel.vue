@@ -1,13 +1,13 @@
 <template>
 <v-container fluid>
     <!--course list-->
-    <v-data-table :headers="headers" :items="promo" sort-by="calories" class="elevation-1">
+    <v-data-table :headers="headers" :items="featured" sort-by="calories" class="elevation-1">
         <template v-slot:top>
             <v-toolbar flat color="white">
-                <v-toolbar-title>Promo Management</v-toolbar-title>
+                <v-toolbar-title>Featured Product Management</v-toolbar-title>
                 <v-divider class="mx-4" inset vertical></v-divider>
                 <v-spacer></v-spacer>
-                <!--add new Promo-->
+                <!--add new featured-->
                 <v-dialog v-model="dialog" max-width="500px">
                     <template v-slot:activator="{ on:dialog,attrs }">
                         <v-tooltip top>
@@ -30,9 +30,14 @@
                             <v-container>
                                 <v-row>
                                     <v-col cols="12">
-                                        <v-text-field v-model="editedItem.course_name" label="Course Name" :rules="courseRules" :error-messages="errCourse" required></v-text-field>
-                                        <v-textarea v-model="editedItem.description" label="Short Description" :auto-grow="true" :clearable="true" :rows="1"></v-textarea>
-                                        editor needed for detail
+                                        <v-form v-model="valid" ref="form">
+                                            <v-text-field v-model="editedItem.preTag" label="Pre-tag" outlined dense :rules="[validRules.required]"></v-text-field>
+                                            <v-text-field v-model="editedItem.promoTitle" label="Featured Title" outlined dense :rules="[validRules.required]"></v-text-field>
+                                            <v-select v-model="
+                                                        editedItem.product_id
+                                                    " :items="products" item-text="title" item-value="id" label="Select product" outlined dense :rules="[validRules.required]"></v-select>
+                                            <v-textarea outlined v-model="editedItem.description" label="Short Description" :auto-grow="true" :clearable="true" :rows="1"></v-textarea>
+                                        </v-form>
                                     </v-col>
                                 </v-row>
                             </v-container>
@@ -48,16 +53,18 @@
                 <!--end add new-->
             </v-toolbar>
         </template>
-        <!--promo item actions-->
+        <!--featured item actions-->
         <template v-slot:item.actions="{ item }">
             <!--view button-->
             <v-tooltip top>
-                <template v-slot:activator="{ on, attrs }">
-                    <v-icon small class="mr-2" @click="goTodetail(item)" v-bind="attrs" v-on="on">
-                        mdi-eye
-                    </v-icon>
+                <template v-slot:activator="{ on: tooltip }">
+                    <v-btn icon v-on="{ ...tooltip }" @click="showImages(item)">
+                        <v-icon small class="mr-2">
+                            mdi-image
+                        </v-icon>
+                    </v-btn>
                 </template>
-                <span>View details</span>
+                <span>View Image</span>
             </v-tooltip>
 
             <!--end view button-->
@@ -115,34 +122,76 @@
     </v-snackbar>
     <!--end snackbar-->
 
+     <!--image view dialog-->
+    <v-dialog v-model="imageViewDialog" max-width="800px" persistent>
+        <v-card>
+            <v-btn icon @click="imageViewDialog = false" class="float-right">
+                <v-icon>mdi-close</v-icon>
+            </v-btn>
+            <v-card-title>
+                {{ selectedItem.title }}
+            </v-card-title>
+            <v-container fluid>
+                <v-row justify="center">
+                    <v-col cols="12" align="center">
+                        <v-img :src="getImage(selectedItem)" alt="Primary img"></v-img>
+                        <div>
+                            <div v-if="selectedItem.image==null">
+                                <v-btn icon outlined x-large @click="onButtonClick" :loading="isSelecting" class="mt-2">
+                                    <v-icon>mdi-image-plus</v-icon>
+                                </v-btn>
+                                <input ref="uploader" class="d-none" type="file" accept="image/*" @change="onFileChanged" />
+                                <p>Add image</p>
+                            </div>
+                            <div v-else>
+                                <v-btn icon outlined x-large class="mt-2" @click="onButtonClick" :loading="isSelecting">
+                                    <v-icon>mdi-image-plus</v-icon>
+                                </v-btn>
+                                <input ref="uploader" class="d-none" type="file" accept="image/*" @change="onFileChanged" />
+                                <p>Change image</p>
+                            </div>
+                        </div>
+                    </v-col>
+                </v-row>
+            </v-container>
+        </v-card>
+    </v-dialog>
+    <!--end image view dialog-->
+
 </v-container>
 </template>
 
 <script>
+import {
+    mapState
+} from 'vuex'
 
 export default {
-    
+
     data() {
         return {
-            role_id: null,
-            iconDialog: false,
-            changeIconDialog: false,
+            //form
+            valid:true,
+
+            //image
             selectedFile: null,
             isSelecting: false,
-            url: null,
+             selectedItem: {
+                title: ''
+            },
+            selectedIndex: null,
+            imageViewDialog:false,
+
+            //dialog
             alertColor: 'success',
             timeout: 2000,
             dataUpdateMsg: '',
             dataUpdateAlert: false,
             deleteDialog: false,
-            errors: [],
-            errCourse: '',
-            courseRules: [
-                v => !!v || 'Role Name is required',
-                v => v.length <= 15 || "Max 15 characters",
-            ],
-            details: [],
+
             dialog: false,
+
+            //headers
             headers: [{
                     text: '#',
                     align: 'start',
@@ -150,16 +199,16 @@ export default {
                     value: 'id',
                 },
                 {
-                    text: 'Course Name',
-                    value: 'course_name'
+                    text: 'Title',
+                    value: 'promoTitle'
+                },
+                {
+                    text: 'Pretag',
+                    value: 'preTag'
                 },
                 {
                     text: 'Description',
                     value: 'description'
-                },
-                {
-                    text: 'Details',
-                    value: 'detail'
                 },
                 {
                     text: 'Actions',
@@ -167,29 +216,35 @@ export default {
                     sortable: false
                 },
             ],
-            promo: [],
+            featured: [],
+            products:[],
             editedIndex: -1,
             editedItem: {
                 id: '',
-                course_name: '',
+                preTag: '',
+                promoTitle: '',
                 description: '',
-                detail: '',
-                icon: '',
+                product_id: '',
+                image: ''
             },
             defaultItem: {
                 id: '',
-                course_name: '',
+                preTag: '',
+                promoTitle: '',
                 description: '',
-                details: '',
-                icon: '',
+                product_id: '',
+                image: ''
             },
         }
     },
 
     computed: {
         formTitle() {
-            return this.editedIndex === -1 ? 'New Course' : 'Edit Course'
+            return this.editedIndex === -1 ? 'New Featured' : 'Edit Featured'
         },
+        ...mapState({
+            validRules: state => state.validation.validRules
+        })
 
     },
     watch: {
@@ -200,57 +255,40 @@ export default {
 
     created() {
         this.initialize()
-    },
-    mounted() {
-        axios.get('/api/getCurrentUser', {}).
-        then(res => this.role_id = res.data.auth_user[0].role_id)
-            .catch(err => console.log(err.response))
-
+        this.getProducts()
     },
     methods: {
+        getProducts(){
+            axios.get('/api/getProductsFeatured', {}).
+            then(res => {
+                this.products = res.data
+            })
+                .catch(err => console.log(err.response))
+        },
         initialize() {
-            this.promo = []
-            axios.get('/api/promo', {}).
-            then(res => this.promo = res.data.promo)
+            axios.get('/api/featured', {}).
+            then(res => this.featured = res.data)
                 .catch(err => console.log(err.response))
 
         },
 
         editItem(item) {
-            this.editedIndex = this.promo.indexOf(item)
+            this.editedIndex = this.featured.indexOf(item)
             this.editedItem = Object.assign({}, item)
             this.dialog = true
         },
 
         deleteItem(item) {
-            const index = this.promo.indexOf(item)
-            this.promo.splice(index, 1)
-            axios.delete('/api/promo/' + item.id)
+            const index = this.featured.indexOf(item)
+            this.featured.splice(index, 1)
+            axios.delete('/api/featured/' + item.id)
                 .then(this.deleteDialog = false,
                     this.dataUpdateMsg = 'Course item deleted successfully',
-                    this.dataUpdateAlert = true
+                    this.dataUpdateAlert = true,
+                    this.featured.splice(this.featured.indexOf(item),1)
                 )
         },
         goTodetail(item) {
-            if (this.role_id == 1) {
-                this.$router.push({
-                    name: 'admin.course.details',
-                    params: {
-                        id: item.id,
-                        role_id: this.role_id,
-                        course_name: item.course_name
-                    }
-                })
-            } else if (this.role_id == 2) {
-                this.$router.push({
-                    name: 'staff.course.details',
-                    params: {
-                        id: item.id,
-                        role_id: this.role_id,
-                        course_name: item.course_name
-                    }
-                })
-            }
 
         },
 
@@ -267,37 +305,41 @@ export default {
 
         save() {
             if (this.editedIndex > -1) {
-                axios.put('/api/promo/' + this.editedItem.id, {
-                        'course_name': this.editedItem.course_name,
+                axios.put('/api/featured/' + this.editedItem.id, {
+                        'preTag': this.editedItem.preTag,
+                        'promoTitle':this.editedItem.promoTitle,
+                        'product_id':this.editedItem.product_id,
                         'description': this.editedItem.description,
-                        'detail': this.editedItem.detail
                     })
                     .then(res => {
-                        if (Object.assign(this.promo[this.editedIndex], res.data.promo)) {
+                        if (Object.assign(this.featured[this.editedIndex], res.data.featured)) {
                             this.close()
                             this.dataUpdateMsg = 'Course item updated successfully'
                             this.dataUpdateAlert = true
                         }
+                        this.$refs.form.reset()
                     })
                     .catch(err => {
                         if (err.response.status == 422) {
                             this.errCourse = err.response.data.errors.course_name
                         }
                     })
-                Object.assign(this.promo[this.editedIndex], this.editedItem)
+                Object.assign(this.featured[this.editedIndex], this.editedItem)
             } else {
 
-                axios.post('/api/promo', {
-                        'course_name': this.editedItem.course_name,
+                axios.post('/api/featured', {
+                        'preTag': this.editedItem.preTag,
+                        'promoTitle':this.editedItem.promoTitle,
+                        'product_id':this.editedItem.product_id,
                         'description': this.editedItem.description,
-                        'detail': this.editedItem.detail
                     })
                     .then(res => {
-                        if (this.promo.push(res.data.promo)) {
+                        if (this.featured.push(res.data)) {
                             this.close()
                             this.dataUpdateMsg = 'New Course Added successfully',
                                 this.dataUpdateAlert = true
                         }
+                        this.$refs.form.reset()
                     }).catch(err => {
                         if (err.response.status == 422) {
                             this.errCourse =
@@ -306,44 +348,57 @@ export default {
                     })
             }
         },
-        onButtonClick() {
-            this.isSelecting = true
-            window.addEventListener('focus', () => {
-                this.isSelecting = false
-            }, {
-                once: true
-            })
+        showImages(item) {
+            this.selectedIndex = this.products.indexOf(item)
+            this.selectedItem = item;
+            this.imageViewDialog = true;
 
-            this.$refs.uploader.click()
+        },
+       onButtonClick() {
+            this.isSelecting = true;
+            window.addEventListener(
+                "focus",
+                () => {
+                    this.isSelecting = false;
+                }, {
+                    once: true
+                }
+            );
+
+            this.$refs.uploader.click();
         },
         onFileChanged(e) {
-            console.log(e.target.files[0]);
             const file = e.target.files[0];
             this.selectedFile = e.target.files[0];
-            this.url = URL.createObjectURL(file);
-            this.changeIconDialog = true;
+            this.addFeaturedImage();
         },
-        updateCourseIcon(item) {
-            this.changeIconDialog = false
-            let data = new FormData()
-            data.append('selectedFile', this.selectedFile, this.selectedFile.name)
-            data.append('id', item.id)
+        addFeaturedImage() {
+            let data = new FormData();
+            data.append(
+                "selectedFile",
+                this.selectedFile,
+                this.selectedFile.name
+            );
+            data.append("id", this.selectedItem.id);
             let settings = {
                 headers: {
-                    'content-type': 'multipart/form-data'
+                    "content-type": "multipart/form-data"
                 }
-            }
-            axios.post('api/updateCourseIcon', data, settings)
+            };
+            axios
+                .post("api/addFeaturedImage", data, settings)
                 .then(res => {
-                    this.promo.push(res.data.promo)
-                }).catch(err => {
-                    console.log(err.response)
+                    this.selectedItem = res.data
+                    this.products.splice(this.selectedIndex, 1, res.data)
+                })
+                .catch(err => {
+                    console.log(err.response);
                 });
-
         },
-        getCourseIcon(item) {
-            return "../storage/" + item.icon
-        }
+        getImage(selectedItem) {
+            return "../storage/" + selectedItem.image;
+        },
+
     },
 
 }

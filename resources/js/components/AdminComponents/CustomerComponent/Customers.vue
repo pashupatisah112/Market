@@ -1,26 +1,20 @@
 <template>
 <v-container fluid>
-
-    <!--heading-->
-    <v-row class="mt-5" justify="center">
-        <p class="headline text-lg-center font-weight-bold">Customers</p>
-    </v-row>
-    <!--end heading-->
-
     <!--customer list-->
     <v-data-table :headers="headers" :items="customers" class="elevation-1">
         <template v-slot:top>
             <v-toolbar flat color="white">
                 <v-card class="px-3 py-3 mb-2 mr-2" color="success">
                     <v-card-actions>
-                        <v-icon x-large color="white">mdi-account-star</v-icon>
+                        <p class="white--text">{{customers.length}}</p>
                     </v-card-actions>
                 </v-card>
                 <v-toolbar-title>Customers Management</v-toolbar-title>
                 <v-divider class="mx-4" inset vertical></v-divider>
             </v-toolbar>
-        </template>yyy
+        </template>
         <template v-slot:no-data>
+            <p>No Data Found</p>
             <v-btn color="primary" @click="initialize">Reset</v-btn>
         </template>
     </v-data-table>
@@ -49,7 +43,7 @@ export default {
                     value: 'email'
                 },
             ],
-            customers: [],
+            customers: []
         }
     },
 
@@ -58,9 +52,11 @@ export default {
     },
     methods: {
         initialize() {
-            this.customers = []
-            axios.get('/api/customers', {}).
-            then(res => this.customers = res.data.customers)
+            axios.get('/api/customers').
+            then(res => {
+                this.customers=res.data
+                console.log(this.customers)
+            })
                 .catch(err => console.log(err.response))
 
         },

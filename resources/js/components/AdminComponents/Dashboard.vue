@@ -2,7 +2,8 @@
 <v-container fluid>
     <v-row>
         <v-col cols="6" v-for="data in analytics" :key="data.title">
-            <v-card class="mt-4 mx-auto">
+            show new users,new orders and comments
+            <!-- <v-card class="mt-4 mx-auto">
                 <v-sheet class="v-sheet--offset mx-auto" color="main" elevation="12" max-width="calc(100% - 32px)">
                     <v-sparkline :labels="data.labels" :value="data.value" color="white" line-width="2" padding="16"></v-sparkline>
                 </v-sheet>
@@ -22,7 +23,7 @@
                     </v-icon>
                     <span class="caption grey--text font-weight-light">{{data.footer_data}} {{data.footer_title}}</span>
                 </v-card-text>
-            </v-card>
+            </v-card> -->
             <!-- <v-row class="px-3">
                 <v-col v-for="card in cards" :key="card.title" cols="12" lg="3" md="4" sm="6" xs="12" class="mt-5">
                     <v-card height="100">

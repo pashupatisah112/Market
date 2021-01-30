@@ -41,7 +41,7 @@ const routes = [
         component: Admin,
         children: [
             {
-                path: "",
+                path: "dashboard",
                 name: "AdminDashboard",
                 component: Dashboard
             },
@@ -66,16 +66,6 @@ const routes = [
                 component: Carousel
             },
             {
-                path: "cart-list",
-                name: "CartList",
-                component: CartList
-            },
-            {
-                path: "wishlist",
-                name: "WishList",
-                component: WishList
-            },
-            {
                 path: "sales",
                 name: "Sales",
                 component: Sales
@@ -86,6 +76,21 @@ const routes = [
                 component: Comment
             }
         ],
+        // beforeEnter: (to, from, next) => {
+        //     axios
+        //         .get("api/verify",{
+
+        //         })
+        //         .then(res => {
+        //             console.log('login data:',res.data)
+        //             // if (res.data.role_id == 1) {
+        //             //     next()
+        //             // } else {
+        //             //     next("/adminLogin");
+        //             // }
+        //         })
+        //         .catch(err => next("/adminLogin"));
+        // }
         
     },
     {
@@ -131,7 +136,7 @@ const routes = [
     }
 ];
 const userRoutes = [];
-const router = new VueRouter({routes, userRoutes,}); //global token check for authorization [mode: 'history',]add this to remo hashtag mode
+const router = new VueRouter({routes, userRoutes}); //global token check for authorization [mode: 'history',]add this to remo hashtag mode
 router.beforeEach((to, from, next) => {
     const token = localStorage.getItem("token") || null;
     window.axios.defaults.headers["Authorization"] = "Bearer " + token;

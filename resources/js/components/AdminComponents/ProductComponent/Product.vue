@@ -81,15 +81,7 @@
                                                     ]"></v-select>
                                         </v-col>
                                     </v-row>
-                                    <v-row>
-                                        <v-col cols="12">
-                                            <v-autocomplete v-model="
-                                                        editedItem.selectedTag
-                                                    " :items="tag" dense chips small-chips label="Select Tags" multiple item-value="id" item-text="tag_name" :rules="[
-                                                        validRules.required
-                                                    ]"></v-autocomplete>
-                                        </v-col>
-                                    </v-row>
+                
                                     <v-row>
                                         <v-col cols="12">
                                             <v-textarea outlined clearable placeholder="Enter your tags" rows="2" auto-grow="" @keyup.enter="enterTag" v-model="selectTag">
@@ -481,6 +473,7 @@ export default {
     created() {
         this.initialize();
         this.getProductSup();
+        console.log('product tag:',this.tag)
     },
     mounted() {},
     methods: {
@@ -496,9 +489,8 @@ export default {
                     this.subCategory = res.data.subCategory;
                     this.company = res.data.company;
                     this.productType = res.data.productType;
-                    (this.size = res.data.size),
-                    (this.color = res.data.color),
-                    (this.tag = res.data.tag);
+                    this.size = res.data.size,
+                    this.color = res.data.color
                 })
                 .catch(err => console.log(err.response));
         },
@@ -512,13 +504,20 @@ export default {
         },
 
         editItem(item) {
+            //getting tags of selected product
+            axios.post('api/getProductTags',{
+                product_id:item.id
+            }).then(res=>{
+                this.enterSelectedTag=res.data
+            }).catch(err=>console.log(err.response))
+
             this.editedIndex = this.products.indexOf(item);
             this.editedItem = Object.assign({}, item);
 
             //these three done to get selected value during editing
             this.editedItem.selectedColor = item.color
             this.editedItem.selectedSize = item.size
-            this.editedItem.selectedTag = item.tag
+            this.enterSelectedTag = item.tag
 
             this.productDialog = true;
         },
@@ -551,16 +550,18 @@ export default {
                             title: this.editedItem.title,
                             price: this.editedItem.price,
                             product_code: this.editedItem.product_code,
-                            product_type_id: this.editedItem.product_type,
-                            category_id: this.editedItem.category,
-                            subCategory_id: this.editedItem.sub_category,
-                            company_id: this.editedItem.company,
+                            product_type_id: this.editedItem.product_type.id,
+                            category_id: this.editedItem.category.id,
+                            subCategory_id: this.editedItem.sub_category.id,
+                            company_id: this.editedItem.company.id,
                             description: this.editedItem.description,
                             color_name: this.editedItem.selectedColor,
                             size: this.editedItem.selectedSize,
-                            tag_name: this.editItem.selectedTag
+                            tag_name: this.editItem.enterSelectedTag
                         })
                         .then(res => {
+                            this.$refs.form.reset();
+                            console.log(res.data)
                             if (
                                 Object.assign(
                                     this.products[this.editedIndex],
@@ -593,7 +594,7 @@ export default {
                             description: this.editedItem.description,
                             color_name: this.editedItem.selectedColor,
                             size: this.editedItem.selectedSize,
-                            tag_name: this.editedItem.selectedTag
+                            tag_name: this.enterSelectedTag
                         })
                         .then(res => {
                             if (this.products.push(res.data)) {
@@ -602,12 +603,13 @@ export default {
                                     "New Product Added successfully"),
                                 (this.dataUpdateAlert = true);
                             }
+                            this.$refs.form.reset();
                         })
                         .catch(err => {
                             console.log(err.response);
                         });
                 }
-                this.$refs.form.reset();
+                
             }
         },
         onSecondaryUpload(e) {

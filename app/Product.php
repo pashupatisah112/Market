@@ -24,7 +24,7 @@ class Product extends Model
     }
     public function tag()
     {
-        return $this->belongsToMany('App\Tag','product_tag');
+        return $this->hasMany('App\Tag');
     }
     public function company()
     {

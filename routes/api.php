@@ -28,13 +28,23 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'Admin'],function(){
 
     Route::get('customers','CustomerController@getCustomers');
 
+    //products
+    Route::post('getProductTags','ProductController@getProductTags');
     Route::get('getProductSup','ProductController@productSup');
     Route::get('products','ProductController@getProducts');
     Route::post('products','ProductController@store');
     Route::delete('products/{product}','ProductController@delete');
+    Route::put('products/{product}','ProductController@update');
     Route::post('imageUpload','ProductController@imageUpload');
     Route::post('addPrimaryImage','ProductController@addPrimaryImage');
     Route::post('updateImage','ProductController@updateImage');
+
+    //featured
+    Route::get('featured','FeaturedController@index');
+    Route::get('getProductsFeatured','FeaturedController@getProductsFeatured');
+    Route::post('featured','FeaturedController@store');
+    Route::delete('featured/{featured}','FeaturedController@delete');
+    Route::put('featured/{featured}','FeaturedController@update');
 
 });
 

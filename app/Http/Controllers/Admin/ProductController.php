@@ -28,9 +28,17 @@ class ProductController extends Controller
         $company=Company::all();
         $size=Size::all();
         $color=Color::all();
-        $tag=Tag::all();
-        return response()->json(['category'=>$category,'subCategory'=>$subCategory,'productType'=>$productType,'company'=>$company,'size'=>$size,'color'=>$color,'tag'=>$tag]);
+        return response()->json(['category'=>$category,'subCategory'=>$subCategory,'productType'=>$productType,'company'=>$company,'size'=>$size,'color'=>$color]);
     }
+    public function getProductTags(Request $request)
+    {
+        $tag=Tag::where('product_id',$request->product_id)->select('id','tag_name')->get();
+        $tags=[];
+        foreach($tag as $t){
+            array_push($tags,$t->tag_name);
+        }
+        return response()->json($tags);
+    }    
     public function store(Request $request)
     {
         $product=new Product;
@@ -47,16 +55,46 @@ class ProductController extends Controller
         
         $product->color()->sync($request->color_name);
         $product->size()->sync($request->size);
-        $product->tag()->sync($request->tag_name);
+        $tags=$request->tag_name;
+        foreach($tags as $tag){
+            $ta=new Tag;
+            $ta->tag_name=$tag;
+            $ta->product_id=$product->id;
+            $ta->save();
+        }
         return response()->json($product);
         
     }
+    public function update(Request $request, $id)
+    {
+        $product=Product::find($id);
+        $product->title=$request->title;
+        $product->price=$request->price;
+        $request->product_code=$request->code;
+        $product->product_type_id=$request->product_type_id;
+        $product->category_id=$request->category_id;
+        $product->sub_category_id=$request->subCategory_id;
+        $product->company_id=$request->company_id;
+        $product->description=$request->description;
+        
+        $product->save();
+        
+        $product->color()->sync($request->color_name);
+        $product->size()->sync($request->size);
+        //  $tags=$request->tag_name;
+        // foreach($tags as $tag){
+        //     $ta=new Tag;
+        //     $ta->tag_name=$tag;
+        //     $ta->product_id=$product->id;
+        //     $ta->save();
+        // }
+        return response()->json($product);
+        }
     public function delete($id)
     {
         $product=Product::find($id)->delete();
         $product->color()->detach();
         $product->size()->detach();
-        $product->tag()->detach();
     }
     public function imageUpload(Request $request)
     {

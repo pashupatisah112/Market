@@ -30,7 +30,7 @@ export default {
             items: [{
                     title: 'Dashboard',
                     icon: 'mdi-view-dashboard',
-                    to: '/admin',
+                    to: '/admin/dashboard',
                 },
                 {
                     title: 'Customers',
@@ -51,16 +51,6 @@ export default {
                     title: 'Promo',
                     icon: 'mdi-file-question',
                     to: '/admin/carousel'
-                },
-                {
-                    title: 'Carts',
-                    icon: 'mdi-file-question',
-                    to: '/admin/cart-list'
-                },
-                {
-                    title: 'Wishlist',
-                    icon: 'mdi-file-question',
-                    to: '/admin/wishlist'
                 },
                 {
                     title: 'Sales',
