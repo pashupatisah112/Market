@@ -46,6 +46,11 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'Admin'],function(){
     Route::delete('featured/{featured}','FeaturedController@delete');
     Route::put('featured/{featured}','FeaturedController@update');
 
+    //Comments
+    Route::get('commentList','CommentController@commentList');
+    Route::post('replyComment','CommentController@replyComment');
+    Route::post('deleteComment','CommentController@delete');
+
 });
 
 Route::group(['middleware'=>['auth:api'],'namespace'=>'User'],function(){
