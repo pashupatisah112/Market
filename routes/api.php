@@ -51,6 +51,10 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'Admin'],function(){
     Route::post('replyComment','CommentController@replyComment');
     Route::post('deleteComment','CommentController@delete');
 
+    //sales
+    Route::get('sales','SalesController@index');
+    Route::post('changeDeliveryStatus','SalesController@changeDeliveryStatus');
+
 });
 
 Route::group(['middleware'=>['auth:api'],'namespace'=>'User'],function(){
@@ -63,6 +67,7 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'User'],function(){
 
     //cart
     Route::get('getCart','CartController@getCart');
+    Route::get('getCartDetail','CartController@getCartDetail');
     Route::get('getCartListItem','CartController@getCartListItem');
     Route::post('removeFromCartlist','CartController@removeFromCartlist');
 

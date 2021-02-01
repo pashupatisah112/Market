@@ -60,7 +60,7 @@ export default {
             state.cartlist.push(item)
             state.cartlistItem.push(item.id)
         },
-        cartList(state,item) {
+        getCartList(state,item) {
             state.cartlist=item
 
         },

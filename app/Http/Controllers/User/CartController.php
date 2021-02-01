@@ -7,41 +7,42 @@ use Illuminate\Http\Request;
 use App\Cart;
 use App\Product;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
     public function getCart()
     {
-        $ids=[];
-        $carts=Cart::where('user_id',Auth::id())->select('product_id')->get();
-        foreach($carts as $cart){
-            array_push($ids,$cart->product_id);
-        }
-        $product=Product::whereIn('id',$ids)->select(['id','title','price','image'])->with('cart')->get();
-        $total=Cart::where('user_id',Auth::id())->sum('total');
+        $product=Cart::where('user_id',Auth::id())->with('product:id,title,price,image,product_code')->get();
+        $total=DB::table('carts')->where('user_id',Auth::id())->sum('total');
+        return response()->json(['product'=>$product,'total'=>$total]);
+    }
+    public function getCartDetail()
+    {
+        $product=Cart::where('user_id',Auth::id())->with('product:id,title,price,image,product_code')->with('color')->with('size')->get();
+        $total=DB::table('carts')->where('user_id',Auth::id())->sum('total');
         return response()->json(['product'=>$product,'total'=>$total]);
     }
     public function getCartListItem()
     {
         $ids=[];
-        $carts=Cart::where('user_id',Auth::id())->select('product_id')->get();
+        $carts=Cart::where('user_id',Auth::id())->get();
         foreach($carts as $cart){
-            array_push($ids,$cart->product_id);
+            array_push($ids,$cart->id);
         }
         return response()->json($ids);
     }
     public function addToCart(Request $request)
     {
         $cart=new Cart;
-        $cart->product_id=$request->product_id;
         $cart->user_id=Auth::id();
         $cart->amount=$request->amount;
         $cart->total=$request->total;
         $cart->size=$request->size;
         $cart->color=$request->color;
         $cart->save();
-        $product=Product::where('id',$request->product_id)->select(['id','title','price','image'])->with('cart')->first();
-        return response()->json($product);
+        $cart->product()->sync($request->product_id);
+        return response()->json($cart);
     }
     public function removeFromCartlist(Request $request)
     {

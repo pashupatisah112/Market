@@ -4,17 +4,18 @@
         <v-card-title>Your Cart</v-card-title>
         <v-container fluid>
             <v-row>
+                {{cartlist.id}}
                 <v-col cols="12">
                     <div v-if="cartlist.length>0">
                         <v-list two-line dense>
                             <v-list-item v-for="item in cartlist" :key="item.id" dense class="mt-n4">
                                 <v-list-item-avatar tile size="60">
-                                    <v-img :src="getImage(item)"></v-img>
+                                    <v-img :src="getImage(item.product[0])"></v-img>
                                 </v-list-item-avatar>
 
                                 <v-list-item-content>
-                                    <v-list-item-title class="line-hover" @click="goToDetails">{{item.title}}</v-list-item-title>
-                                    <v-list-item-subtitle>{{item.cart.amount}} x Rs.{{item.price}}</v-list-item-subtitle>
+                                    <v-list-item-title class="line-hover" @click="goToDetails">{{item.product[0].title}}</v-list-item-title>
+                                    <v-list-item-subtitle>{{item.amount}} x Rs.{{item.product[0].price}}</v-list-item-subtitle>
                                 </v-list-item-content>
 
                                 <v-list-item-action>
@@ -35,22 +36,12 @@
                             <p class="text-h6">Rs.{{cartTotal}}</p>
                         </v-row>
                         <v-btn rounded block color="blackTheme" class="text-capitalize white--text" @click="viewCart">View Cart</v-btn>
-                        <v-btn rounded block color="blackTheme" class="text-capitalize white--text my-3"  @click="viewCart">Checkout</v-btn>
+                        <v-btn rounded block color="blackTheme" class="text-capitalize white--text my-3" @click="viewCart">Checkout</v-btn>
                     </div>
-                    <hollow-dots-spinner
-                class="mx-auto my-auto"
-                v-else-if="cartlist.length < 1 && noCartText == ''"
-                :animation-duration="1000"
-                :dot-size="15"
-                :dots-num="3"
-                color="#ff1d5e"
-            />
-            <p
-                v-else
-                class="text--disabled mx-auto my-5 ml-5 position-absolute"
-            >
-                {{ noCartText }}
-            </p>
+                    <hollow-dots-spinner class="mx-auto my-auto" v-else-if="cartlist.product.length < 1 && noCartText == ''" :animation-duration="1000" :dot-size="15" :dots-num="3" color="#ff1d5e" />
+                    <p v-else class="text--disabled mx-auto my-5 ml-5 position-absolute">
+                        {{ noCartText }}
+                    </p>
                 </v-col>
             </v-row>
         </v-container>
@@ -59,7 +50,9 @@
 </template>
 
 <script>
-import { HollowDotsSpinner } from "epic-spinners";
+import {
+    HollowDotsSpinner
+} from "epic-spinners";
 
 import {
     mapState,
@@ -67,11 +60,13 @@ import {
     mapActions
 } from 'vuex';
 export default {
-    components:{HollowDotsSpinner},
+    components: {
+        HollowDotsSpinner
+    },
     data() {
         return {
-            noCartText:'',
-            cartTotal:0,
+            noCartText: '',
+            cartTotal: 0,
         }
     },
     computed: {
@@ -83,11 +78,11 @@ export default {
         this.getCart()
     },
     methods: {
-        ...mapMutations(['cartList','removeFromCartlist']),
+        ...mapMutations(['getCartList', 'removeFromCartlist']),
         ...mapActions(['goToDetails']),
         viewCart() {
             this.$router.push({
-                name: 'Cart'
+                name: 'CartView'
             })
         },
         getImage(item) {
@@ -96,11 +91,10 @@ export default {
         getCart(state) {
             axios.get("api/getCart")
                 .then(res => {
-                    this.cartList(res.data.product)
-                    this.cartTotal=res.data.total
-                    console.log(this.cartlist)
-                    if(res.data.product.length<1){
-                        this.noCartText='No cart items added.'
+                    this.getCartList(res.data.product)
+                    this.cartTotal = res.data.total
+                    if (res.data.product.length < 1) {
+                        this.noCartText = 'No cart items added.'
                     }
                 })
                 .catch(err => console.log(err.response))

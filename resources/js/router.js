@@ -10,8 +10,6 @@ import Customer from "./components/AdminComponents/CustomerComponent/Customers";
 import Product from "./components/AdminComponents/ProductComponent/Product";
 import ProductSup from "./components/AdminComponents/ProductComponent/ProductSup";
 import Carousel from "./components/AdminComponents/PromoComponent/Carousel";
-import CartList from "./components/AdminComponents/ProductComponent/Carts";
-import WishList from "./components/AdminComponents/ProductComponent/WishList";
 import Sales from "./components/AdminComponents/SalesComponent/Sales";
 import Comment from "./components/AdminComponents/CommentComponent/Comment";
 
@@ -108,6 +106,11 @@ const routes = [
                 component: Category
             },
             {
+                path: "/cart-view",
+                name: "CartView",
+                component: Cart
+            },
+            {
                 path: ":code", //yaha arko param 'title' pni rakhda save hudaina refresh garda but 'code' matrai rakhda hunxa
                 name: "Detail",
                 component: Detail
@@ -117,11 +120,7 @@ const routes = [
                 name: "Collection",
                 component: Collection
             },
-            {
-                path: "/cart",
-                name: "Cart",
-                component: Cart
-            },
+            
             {
                 path: "/about",
                 name: "About",

@@ -163,7 +163,7 @@
                 <!--cart component-->
                 <v-menu bottom open-on-hover offset-y transition="expand-y-transition" v-if="token">
                     <template v-slot:activator="{ on, attrs }">
-                                                <v-badge color="green" :value="cartlist.length" :content="cartlist.length" overlap>
+                         <v-badge color="green" :value="cartlist.length" :content="cartlist.length" overlap>
 
                         <v-btn icon v-bind="attrs" v-on="on" small class="ml-3">
                             <v-icon>mdi-cart</v-icon>
@@ -296,7 +296,9 @@ import QuickView from '../Common/QuickView';
 import Cart from './Cart';
 export default {
     components: {
-        Wishlist,Cart,QuickView
+        Wishlist,
+        Cart,
+        QuickView
     },
     data() {
         return {
@@ -340,7 +342,7 @@ export default {
                 },
 
             ],
-           
+
             lang: [{
                     title: 'English',
                     lang: 'en'
@@ -358,10 +360,10 @@ export default {
             auth: state => state.authentication.auth,
             loginDialog: state => state.authentication.loginDialog,
             token: state => state.authentication.token,
-            cartlist:state=>state.product.cartlist,
+            cartlist: state => state.product.cartlist,
             wishlist: state => state.product.wishlist,
             wishListItem: state => state.product.wishListItem,
-            quickViewDialog:state=>state.product.quickViewDialog
+            quickViewDialog: state => state.product.quickViewDialog
         }),
         ...mapFields(['auth', 'loginDialog', 'token'])
     },
@@ -372,7 +374,7 @@ export default {
         this.getCartListItem()
     },
     methods: {
-        ...mapMutations(['addWishlistItem','getCartListItem']),
+        ...mapMutations(['addWishlistItem', 'getCartListItem']),
         getWishlistItem() {
             axios.get('api/getWishlistItem')
                 .then(res => {
@@ -408,7 +410,7 @@ export default {
 
             }
         },
-        
+
         setLocale(language) {
             this.$store.dispatch('changeLocale', language)
                 .then(() => {
