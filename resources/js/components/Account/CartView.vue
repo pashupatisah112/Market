@@ -64,7 +64,7 @@
                     </v-card-title>
 
                     <v-card-text>
-                        Subtotal: Rs.5000
+                        Subtotal: Rs. {{total}}
                     </v-card-text>
 
                     <v-divider class="mx-5"></v-divider>
