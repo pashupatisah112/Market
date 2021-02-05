@@ -32,7 +32,7 @@ class Product extends Model
     }
     public function productType()
     {
-        return $this->belongsToMany('App\ProductType');
+        return $this->belongsTo('App\ProductType');
     }
     public function cart()
     {

@@ -45,6 +45,7 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'Admin'],function(){
     Route::post('featured','FeaturedController@store');
     Route::delete('featured/{featured}','FeaturedController@delete');
     Route::put('featured/{featured}','FeaturedController@update');
+    Route::post('addFeaturedImage','FeaturedController@addFeaturedImage');
 
     //Comments
     Route::get('commentList','CommentController@commentList');

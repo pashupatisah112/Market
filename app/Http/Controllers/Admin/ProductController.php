@@ -98,27 +98,22 @@ class ProductController extends Controller
     }
     public function imageUpload(Request $request)
     {
-        $file=$request->selectedFile->store('productImages');
+        //$file=$request->selectedFile->store('productImages'); works fine on simple upload
         $photo=new Photo;
-        $photo->product_id=$request->id;
-        $photo->image=$file;
+        $photo->product_id=$request->product_id;
+        $photo->image=$request->image;
         $photo->save();
-        $product=Product::where('id',$request->id)->with('photo')->get();
+        $product=Product::where('id',$request->product_id)->with('category')->with('subCategory')->with('company')->with('productType')->with('color')->with('size')->with('tag')->with('photo')->first();
         return response()->json($product);
     }
     public function addPrimaryImage(Request $request)
     {
-        $path = $request->selectedFile->store('productImages');
-        $image=Product::find($request->id);
-        $image->image=$path;
+        // $path = $request->selectedFile->store('productImages'); //works with simple database upload 
+        $image=Product::find($request->product_id);
+        $image->image=$request->file;
         $image->save();
         $product=Product::where('id',$request->id)->with('photo')->first();
-        return response()->json($product);
-    }
-    public function updateImage(Request $request)
-    {
-        $product=Product::where('id',$request->id)->with('photo')->first();
-        return response()->json($product);
+        return response()->json($request);
     }
     
 }

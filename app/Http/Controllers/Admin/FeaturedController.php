@@ -43,4 +43,11 @@ class FeaturedController extends Controller
         $products=Product::select('id','title')->get();
         return response()->json($products);
     }
+    public function addFeaturedImage(Request $request)
+    {
+         $photo=Featured::find($request->id);
+         $photo->photo=$request->photo;
+         $photo->save();
+         return response()->json($photo);
+    }
 }

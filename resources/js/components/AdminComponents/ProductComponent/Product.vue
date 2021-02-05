@@ -81,7 +81,7 @@
                                                     ]"></v-select>
                                         </v-col>
                                     </v-row>
-                
+
                                     <v-row>
                                         <v-col cols="12">
                                             <v-textarea outlined clearable placeholder="Enter your tags" rows="2" auto-grow="" @keyup.enter="enterTag" v-model="selectTag">
@@ -297,12 +297,15 @@
                     <v-divider class="my-2" vertical></v-divider>
 
                     <v-col cols="7" align="center">
-                        <v-row>
-                            <v-col v-for="img in selectedItem.photo" :key="img.id">
+                        <v-row v-if="selectedItem.photo">
+                            {{selectedItem.photo[0]}}
+                             <v-img :src="getImage(selectedItem.photo[0])" ></v-img>
+                            <!-- <v-col v-for="item in selectedItem.photo" :key="item.id">
+                                
                                 <div style="width:125px;height:auto">
-                                    <v-img :src="getImage(img)" alt="sec img"></v-img>
+                                    <v-img :src="getImage(item)" ></v-img>
                                 </div>
-                            </v-col>
+                            </v-col> -->
                         </v-row>
 
                         <v-row justify="center">
@@ -326,6 +329,7 @@
 
 <script>
 import VueFroala from "vue-froala-wysiwyg";
+import firebase from 'firebase';
 import {
     mapState
 } from "vuex";
@@ -368,15 +372,16 @@ export default {
             },
 
             //image upload
+            uploadTask: '',
+
             selectedFile: [],
             primary: null,
             secondary: null,
             isSelecting: false,
             isSecondarySelecting: false,
-            selectedItem: {
-                title: ''
-            },
+            selectedItem: '',
             selectedIndex: null,
+            
 
             alertColor: "success",
             timeout: 2000,
@@ -473,7 +478,7 @@ export default {
     created() {
         this.initialize();
         this.getProductSup();
-        console.log('product tag:',this.tag)
+        console.log('product tag:', this.tag)
     },
     mounted() {},
     methods: {
@@ -490,7 +495,7 @@ export default {
                     this.company = res.data.company;
                     this.productType = res.data.productType;
                     this.size = res.data.size,
-                    this.color = res.data.color
+                        this.color = res.data.color
                 })
                 .catch(err => console.log(err.response));
         },
@@ -505,11 +510,11 @@ export default {
 
         editItem(item) {
             //getting tags of selected product
-            axios.post('api/getProductTags',{
-                product_id:item.id
-            }).then(res=>{
-                this.enterSelectedTag=res.data
-            }).catch(err=>console.log(err.response))
+            axios.post('api/getProductTags', {
+                product_id: item.id
+            }).then(res => {
+                this.enterSelectedTag = res.data
+            }).catch(err => console.log(err.response))
 
             this.editedIndex = this.products.indexOf(item);
             this.editedItem = Object.assign({}, item);
@@ -609,52 +614,96 @@ export default {
                             console.log(err.response);
                         });
                 }
-                
+
             }
         },
         onSecondaryUpload(e) {
             let file = e.target.files
 
             for (var i = 0; i < file.length; i++) {
-                let data = new FormData();
-                data.append("selectedFile", file[i]);
-                data.append("id", this.selectedItem.id);
-                let settings = {
-                    headers: {
-                        "content-type": "multipart/form-data"
-                    }
-                };
-                axios
-                    .post("api/imageUpload", data, settings)
-                    .then(res => {})
-                    .catch(err => {
-                        (this.dataUpdateMsg = "Problem Uploading Images"),
-                        (this.dataUpdateAlert = true);
-                    });
+                console.log(file[i].name)
+                var storageRef = firebase.storage().ref('productImage/' + file[i].name); //prductImages is folder created in firebase in storage/files section
+                this.uploadTask = storageRef.put(file)
+
+                this.uploadTask.on('state_changed', function (snapshot) {
+
+                }, (error) => {
+                    //if 403 errors change rules in firebabse
+                    //allow read, write: if request.auth == null;
+                    //later authentication should be implemented this is just for testing
+                    console.log(error)
+                }, () => {
+                    this.uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => { //here => has been used to get access with 'this' keyword
+                        let img = downloadURL
+                        axios
+                            .post("api/imageUpload", {
+                                product_id: this.selectedItem.id,
+                                image: img
+                            })
+                            .then(res => {
+                                this.selectedItem = res.data
+                                this.products.splice(this.selectedIndex, 1, res.data)
+                            })
+                            .catch(err => {
+                                (this.dataUpdateMsg = "Problem Uploading Images"),
+                                (this.dataUpdateAlert = true);
+                            });
+                    })
+                })
+
             }
-            axios.post('api/updateImage', {
-                id: this.selectedItem.id
-            }).then(res => {
-                this.selectedItem = res.data
-                this.products.splice(this.selectedIndex, 1, res.data)
-            }).catch(err => console.log(err.response))
+            // axios.post('api/updateImage', {
+            //     id: this.selectedItem.id
+            // }).then(res => {
+            //     this.selectedItem = res.data
+            //     this.products.splice(this.selectedIndex, 1, res.data)
+            // }).catch(err => console.log(err.response))
+
+            //multiple file upload work on simple database
+            // let file = e.target.files
+
+            // for (var i = 0; i < file.length; i++) {
+            //     let data = new FormData();
+            //     data.append("selectedFile", file[i]);
+            //     data.append("id", this.selectedItem.id);
+            //     let settings = {
+            //         headers: {
+            //             "content-type": "multipart/form-data"
+            //         }
+            //     };
+            //     axios
+            //         .post("api/imageUpload", data, settings)
+            //         .then(res => {})
+            //         .catch(err => {
+            //             (this.dataUpdateMsg = "Problem Uploading Images"),
+            //             (this.dataUpdateAlert = true);
+            //         });
+            // }
+            // axios.post('api/updateImage', {
+            //     id: this.selectedItem.id
+            // }).then(res => {
+            //     this.selectedItem = res.data
+            //     this.products.splice(this.selectedIndex, 1, res.data)
+            // }).catch(err => console.log(err.response))
 
         },
         showImages(item) {
             this.selectedIndex = this.products.indexOf(item)
-            this.selectedItem = item;
-            this.imageViewDialog = true;
+             this.selectedItem = item;
+             this.selectedSec=item.photo
+             this.imageViewDialog = true;
 
         },
         viewProduct(item) {
             this.view = item;
             this.productViewDialog = true;
         },
-        getImage(selectedItem) {
-            return "../storage/" + selectedItem.image;
+        getImage(item) {
+            return item.image;
         },
-        getPrimary(primary) {
-            return "../storage/" + primary.image;
+        getImg(item) {
+            //return item.image
+            console.log(item)
         },
         onButtonClick() {
             this.isSelecting = true;
@@ -683,32 +732,64 @@ export default {
             this.$refs.secondaryUploader.click();
         },
         onFileChanged(e) {
-            const file = e.target.files[0];
-            this.selectedFile = e.target.files[0];
+            let file = e.target.files[0]
+            console.log(file.name)
+            var storageRef = firebase.storage().ref('productImage/' + file.name); //prductImages is folder created in firebase in storage/files section
+            this.uploadTask = storageRef.put(file)
             this.addPrimaryImage();
+            //working on simple database upload
+            // const file = e.target.files[0];
+            // this.selectedFile = e.target.files[0];
+            // this.addPrimaryImage();
         },
         addPrimaryImage() {
-            let data = new FormData();
-            data.append(
-                "selectedFile",
-                this.selectedFile,
-                this.selectedFile.name
-            );
-            data.append("id", this.selectedItem.id);
-            let settings = {
-                headers: {
-                    "content-type": "multipart/form-data"
-                }
-            };
-            axios
-                .post("api/addPrimaryImage", data, settings)
-                .then(res => {
-                    this.selectedItem = res.data
-                    this.products.splice(this.selectedIndex, 1, res.data)
+            this.uploadTask.on('state_changed', function (snapshot) {
+
+            }, (error) => {
+                //if 403 errors change rules in firebabse
+                //allow read, write: if request.auth == null;
+                //later authentication should be implemented this is just for testing
+                console.log(error)
+            }, () => {
+                this.uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => { //here => has been used to get access with 'this' keyword
+                    let image = downloadURL
+                    console.log(image)
+                    axios
+                        .post("api/addPrimaryImage", {
+                            product_id: this.selectedItem.id,
+                            file: image
+                        })
+                        .then(res => {
+                            this.selectedItem = res.data
+                            this.products.splice(this.selectedIndex, 1, res.data)
+                        })
+                        .catch(err => {
+                            console.log(err.response);
+                        });
                 })
-                .catch(err => {
-                    console.log(err.response);
-                });
+            })
+            //working on simple database upload
+            // let data = new FormData();
+            // data.append(
+            //     "selectedFile",
+            //     this.selectedFile,
+            //     this.selectedFile.name
+            // );
+            // data.append("id", this.selectedItem.id);
+            // let settings = {
+            //     headers: {
+            //         "content-type": "multipart/form-data"
+            //     }
+            // };
+            // axios
+            //     .post("api/addPrimaryImage", data, settings)
+            //     .then(res => {
+            //         this.selectedItem = res.data
+            //         this.products.splice(this.selectedIndex, 1, res.data)
+            //     })
+            //     .catch(err => {
+            //         console.log(err.response);
+            //     });
         },
         enterTag() {
             this.enterSelectedTag.push(this.selectTag)

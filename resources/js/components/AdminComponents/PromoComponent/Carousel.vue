@@ -122,7 +122,7 @@
     </v-snackbar>
     <!--end snackbar-->
 
-     <!--image view dialog-->
+    <!--image view dialog-->
     <v-dialog v-model="imageViewDialog" max-width="800px" persistent>
         <v-card>
             <v-btn icon @click="imageViewDialog = false" class="float-right">
@@ -134,7 +134,7 @@
             <v-container fluid>
                 <v-row justify="center">
                     <v-col cols="12" align="center">
-                        <v-img :src="getImage(selectedItem)" alt="Primary img"></v-img>
+                        <v-img :src="getImage(selectedItem)" :aspect-ratio="9/16" alt="Primary img"></v-img>
                         <div>
                             <div v-if="selectedItem.image==null">
                                 <v-btn icon outlined x-large @click="onButtonClick" :loading="isSelecting" class="mt-2">
@@ -165,22 +165,21 @@
 import {
     mapState
 } from 'vuex'
-
+import firebase from 'firebase'
 export default {
-
     data() {
         return {
             //form
-            valid:true,
+            valid: true,
 
             //image
             selectedFile: null,
             isSelecting: false,
-             selectedItem: {
+            selectedItem: {
                 title: ''
             },
             selectedIndex: null,
-            imageViewDialog:false,
+            imageViewDialog: false,
 
             //dialog
             alertColor: 'success',
@@ -217,7 +216,7 @@ export default {
                 },
             ],
             featured: [],
-            products:[],
+            products: [],
             editedIndex: -1,
             editedItem: {
                 id: '',
@@ -258,11 +257,11 @@ export default {
         this.getProducts()
     },
     methods: {
-        getProducts(){
+        getProducts() {
             axios.get('/api/getProductsFeatured', {}).
             then(res => {
-                this.products = res.data
-            })
+                    this.products = res.data
+                })
                 .catch(err => console.log(err.response))
         },
         initialize() {
@@ -285,11 +284,8 @@ export default {
                 .then(this.deleteDialog = false,
                     this.dataUpdateMsg = 'Course item deleted successfully',
                     this.dataUpdateAlert = true,
-                    this.featured.splice(this.featured.indexOf(item),1)
+                    this.featured.splice(this.featured.indexOf(item), 1)
                 )
-        },
-        goTodetail(item) {
-
         },
 
         focusMessage() {
@@ -307,8 +303,8 @@ export default {
             if (this.editedIndex > -1) {
                 axios.put('/api/featured/' + this.editedItem.id, {
                         'preTag': this.editedItem.preTag,
-                        'promoTitle':this.editedItem.promoTitle,
-                        'product_id':this.editedItem.product_id,
+                        'promoTitle': this.editedItem.promoTitle,
+                        'product_id': this.editedItem.product_id,
                         'description': this.editedItem.description,
                     })
                     .then(res => {
@@ -329,8 +325,8 @@ export default {
 
                 axios.post('/api/featured', {
                         'preTag': this.editedItem.preTag,
-                        'promoTitle':this.editedItem.promoTitle,
-                        'product_id':this.editedItem.product_id,
+                        'promoTitle': this.editedItem.promoTitle,
+                        'product_id': this.editedItem.product_id,
                         'description': this.editedItem.description,
                     })
                     .then(res => {
@@ -354,7 +350,7 @@ export default {
             this.imageViewDialog = true;
 
         },
-       onButtonClick() {
+        onButtonClick() {
             this.isSelecting = true;
             window.addEventListener(
                 "focus",
@@ -368,35 +364,41 @@ export default {
             this.$refs.uploader.click();
         },
         onFileChanged(e) {
-            const file = e.target.files[0];
-            this.selectedFile = e.target.files[0];
-            this.addFeaturedImage();
+            let file = e.target.files[0]
+            console.log(file.name)
+            var storageRef = firebase.storage().ref('productImage/' + file.name); //prductImages is folder created in firebase in storage/files section
+             this.uploadTask = storageRef.put(file)
+             this.addFeaturedImage();
         },
         addFeaturedImage() {
-            let data = new FormData();
-            data.append(
-                "selectedFile",
-                this.selectedFile,
-                this.selectedFile.name
-            );
-            data.append("id", this.selectedItem.id);
-            let settings = {
-                headers: {
-                    "content-type": "multipart/form-data"
-                }
-            };
-            axios
-                .post("api/addFeaturedImage", data, settings)
-                .then(res => {
-                    this.selectedItem = res.data
-                    this.products.splice(this.selectedIndex, 1, res.data)
+            this.uploadTask.on('state_changed', function (snapshot) {
+
+            }, (error) => {
+                //if 403 errors change rules in firebabse
+                //allow read, write: if request.auth == null;
+                //later authentication should be implemented this is just for testing
+                console.log(error)
+            }, () => {
+                this.uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => { //here => has been used to get access with 'this' keyword
+                    let image = downloadURL
+                    axios
+                        .post("api/addFeaturedImage", {
+                            id: this.selectedItem.id,
+                            photo: image
+                        })
+                        .then(res => {
+                            console.log(res.data)
+                             this.selectedItem = res.data
+                             this.products.splice(this.selectedIndex, 1, res.data)
+                        })
+                        .catch(err => {
+                            console.log(err.response);
+                        });
                 })
-                .catch(err => {
-                    console.log(err.response);
-                });
+            })
         },
         getImage(selectedItem) {
-            return "../storage/" + selectedItem.image;
+            return selectedItem.photo;
         },
 
     },
