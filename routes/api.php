@@ -56,6 +56,9 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'Admin'],function(){
     Route::get('sales','SalesController@index');
     Route::post('changeDeliveryStatus','SalesController@changeDeliveryStatus');
 
+    //analytics
+    Route::get('getDailyData','AnalyticsController@getDailyData');
+
 });
 
 Route::group(['middleware'=>['auth:api'],'namespace'=>'User'],function(){

@@ -1,9 +1,9 @@
 <template>
 <v-container fluid>
     <!--course list-->
-    <v-data-table :headers="headers" :items="sales" class="elevation-1">
+    <v-data-table :headers="headers" :items="sales">
         <template v-slot:top>
-            <v-toolbar flat color="white">
+            <v-toolbar flat>
                 <v-toolbar-title>Sales Management</v-toolbar-title>
             </v-toolbar>
         </template>
@@ -64,7 +64,7 @@
         </template>
     </v-data-table>
     <!--end course list-->
-
+     change status to delivered,pending or cancelled
 </v-container>
 </template>
 
