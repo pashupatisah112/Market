@@ -92,6 +92,9 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'User'],function(){
     //similar
     Route::post('getSimilarProducts','ProductController@getSimilarProducts');
 
+    //collections
+    Route::get('getCollection','ProductController@getCollection');
+
 });
 
 Route::get('getCategories','User\ProductController@getCategories');
@@ -114,3 +117,16 @@ Route::post('register', 'AuthController@register');
 Route::post('customer-login', 'AuthController@customerLogin');
 Route::post('admin-login', 'AuthController@adminLogin');
 Route::get('verify', 'AuthController@verify');
+
+
+Route::group(['middleware' => ['web']], function () {
+    //facebook
+Route::get('facebook/auth/redirect', 'AuthController@handleFacebookRedirect');
+Route::get('facebook/auth/callback', 'AuthController@handleFacebookCallback');
+
+//google
+Route::get('google/auth/redirect', 'AuthController@handleGoogleRedirect');
+Route::get('google/auth/callback', 'AuthController@handleGoogleCallback');
+
+
+});

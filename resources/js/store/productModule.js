@@ -93,6 +93,7 @@ export default {
                 name: "Detail",
                 params:{code:item.product_code,title:item.title}
             });
+            console.log(item.product_code)
             window.location.reload()
             
         },

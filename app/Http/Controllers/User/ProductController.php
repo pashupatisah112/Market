@@ -7,6 +7,7 @@ use App\Comment;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Product;
+use App\ProductType;
 use App\Rating;
 use App\SubCategory;
 use Illuminate\Support\Facades\Auth;
@@ -102,6 +103,12 @@ class ProductController extends Controller
         $sugg=Product::where('sub_category_id',$product->sub_category_id)->where('company_id',$product->company_id)->select(['id','title','price','image','product_code'])->get();
         return response()->json($sugg);
 
+    }
+    public function getCollection()
+    {
+        $coll=ProductType::where('product_type','Collection')->first();
+        $product=Product::where('product_type_id',$coll->id)->select(['id','title','price','image','product_code'])->get();
+        return response()->json($product);
     }
     
 }

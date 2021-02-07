@@ -10,9 +10,6 @@
                     <v-hover v-slot="{ hover }">
                         <div style="overflow: hidden;">
                             <v-img :src="getImage(item)" width="200" height="250" style="transition: transform .4s;" :class="{ 'on-hover': hover }">
-                                <!-- <v-slide-y-transition hide-on-leave>
-
-                                </v-slide-y-transition> -->
                                 <v-slide-y-reverse-transition hide-on-leave>
                                     <div v-if="hover" class="d-flex transition-fast-in-fast-out v-card--reveal" style="height: 30%;">
                                         <v-col align="center">
@@ -21,7 +18,6 @@
                                                 <v-rating v-model="rating" background-color="yellow" half-increments small color="orange"></v-rating>
                                             </div>
                                         </v-col>
-
                                     </div>
                                 </v-slide-y-reverse-transition>
                             </v-img>
@@ -88,7 +84,7 @@ export default {
         },
 
         getImage(item) {
-            return "../storage/" + item.image
+            return item.image
         },
 
     }

@@ -17,11 +17,17 @@ import Comment from "./components/AdminComponents/CommentComponent/Comment";
 import Main from "./components/Index";
 import Home from "./components/Home/Home";
 import Category from "./components/List/Home";
-import Collection from "./components/Collections/Home";
+import TopSeller from './components/TopSeller/TopSeller';
+import Collection from "./components/Collections/Collection";
+import Offer from './components/Offers/Offer';
+import Sale from './components/Sale/Sale';
 import Detail from "./components/Details/Home";
 import Cart from "./components/Account/CartView";
+import PurchaseHistory from "./components/Account/History";
 import About from "./components/Other/About";
 import Contact from "./components/Other/Contact";
+
+import Test from './components/Home/Test';
 
 const routes = [
     // {
@@ -106,29 +112,55 @@ const routes = [
                 component: Category
             },
             {
-                path: "/cart-view",
-                name: "CartView",
-                component: Cart
-            },
-            {
-                path: ":code", //yaha arko param 'title' pni rakhda save hudaina refresh garda but 'code' matrai rakhda hunxa
+                path: "/:code", //yaha arko param 'title' pni rakhda save hudaina refresh garda but 'code' matrai rakhda hunxa
                 name: "Detail",
                 component: Detail
+            },
+            {
+                path: "/top-sellers",
+                name: "TopSeller",
+                component: TopSeller
             },
             {
                 path: "/collections",
                 name: "Collection",
                 component: Collection
             },
-            
+            {
+                path: "/offers",
+                name: "Offers",
+                component: Offer
+            },
+            {
+                path: "/sale",
+                name: "Sale",
+                component: Sale
+            },
+            {
+                path: "/cart-view",
+                name: "CartView",
+                component: Cart
+            },
+            {
+                path: "/history-view",
+                name: "History",
+                component: PurchaseHistory
+            },
             {
                 path: "/about",
                 name: "About",
                 component: About
             },
+            
+            
             {
                 path: "/contact",
                 name: "Contact",
+                component: Contact
+            },
+            {
+                path: "/test",
+                name: "test",
                 component: Contact
             }
         ]

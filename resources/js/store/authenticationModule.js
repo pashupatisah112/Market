@@ -1,12 +1,24 @@
 import router from "../router";
 export default {
     state: {
-       auth:null,
        loginDialog:false,
-       userToken:false,
+       termsDialog:false,
+       token:false,
+       auth:[]
     },
     mutations: {
-        
+        setLoginDialog(state){
+            state.loginDialog=true
+        },
+        unsetLoginDialog(state){
+            state.loginDialog=false
+        },
+        setAuth(state,item){
+            state.auth=item
+        },
+        setToken(state){
+            state.token=true
+        }
     },
     actions: {
         // logout: function () {

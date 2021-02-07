@@ -296,16 +296,16 @@
 
                     <v-divider class="my-2" vertical></v-divider>
 
-                    <v-col cols="7" align="center">
+                    <!-- <v-col cols="7" align="center">
                         <v-row v-if="selectedItem.photo">
                             {{selectedItem.photo[0]}}
                              <v-img :src="getImage(selectedItem.photo[0])" ></v-img>
-                            <!-- <v-col v-for="item in selectedItem.photo" :key="item.id">
+                            <v-col v-for="item in selectedItem.photo" :key="item.id">
                                 
                                 <div style="width:125px;height:auto">
                                     <v-img :src="getImage(item)" ></v-img>
                                 </div>
-                            </v-col> -->
+                            </v-col>
                         </v-row>
 
                         <v-row justify="center">
@@ -318,7 +318,7 @@
                             </div>
                         </v-row>
 
-                    </v-col>
+                    </v-col> -->
                 </v-row>
             </v-container>
         </v-card>

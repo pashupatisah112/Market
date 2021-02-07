@@ -38,8 +38,8 @@ class CartController extends Controller
         $cart->user_id=Auth::id();
         $cart->amount=$request->amount;
         $cart->total=$request->total;
-        $cart->size=$request->size;
-        $cart->color=$request->color;
+        $cart->size_id=$request->size;
+        $cart->color_id=$request->color;
         $cart->save();
         $cart->product()->sync($request->product_id);
         return response()->json($cart);

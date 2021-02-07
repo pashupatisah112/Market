@@ -111,7 +111,7 @@ export default {
 
         },
         getImage(quickViewItem) {
-            return "../storage/" + quickViewItem.image
+            return quickViewItem.image
         },
         addToCart() {
             if (this.$refs.form.validate()) {

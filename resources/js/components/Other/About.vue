@@ -1,5 +1,7 @@
 <template>
     <div>
-        <p>about page</p>
+        <v-container>
+            <v-row></v-row>
+        </v-container>
     </div>
 </template>

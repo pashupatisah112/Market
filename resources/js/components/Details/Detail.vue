@@ -138,13 +138,13 @@ export default {
                 .catch(err => console.log(err.response))
         },
         getImage(item) {
-            return "../storage/" + item.image
+            return item.image
         },
         getPrimaryImage(product) {
-            return "../storage/" + product.image
+            return product.image
         },
         showImage(imageData) {
-            return "../storage/" + imageData.image
+            return imageData.image
         },
         countPlus() {
             this.count = this.count + 1

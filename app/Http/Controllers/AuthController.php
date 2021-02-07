@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use App\User;
+use Laravel\Socialite\Facades\Socialite;
 
 
 
@@ -68,5 +69,22 @@ class AuthController extends Controller
         $user->role_id=$request->role_id;
         $user->save();
         return response()->json(['token'=>$token,'auth_user'=>$user]);
+    }
+    public function handleFacebookRedirect()
+    {
+        return Socialite::driver('facebook')->redirect();
+    }
+    public function handleFacebookCallback()
+    {
+        $user = Socialite::driver('facebook')->user();
+        return $user;
+    }
+    public function handleGoogleRedirect()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+    public function handleGoogleCallback()
+    {
+        $user = Socialite::driver('google')->user();
     }
 }
