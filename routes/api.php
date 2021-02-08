@@ -95,6 +95,9 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'User'],function(){
     //collections
     Route::get('getCollection','ProductController@getCollection');
 
+    //offers
+    Route::get('getOffers','ProductController@getOffers');
+
 });
 
 Route::get('getCategories','User\ProductController@getCategories');

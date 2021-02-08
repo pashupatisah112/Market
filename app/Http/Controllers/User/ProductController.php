@@ -110,5 +110,11 @@ class ProductController extends Controller
         $product=Product::where('product_type_id',$coll->id)->select(['id','title','price','image','product_code'])->get();
         return response()->json($product);
     }
+    public function getOffers()
+    {
+        $coll=ProductType::where('product_type','Offered')->first();
+        $product=Product::where('product_type_id',$coll->id)->select(['id','title','price','image','product_code'])->get();
+        return response()->json($product);
+    }
     
 }

@@ -106,26 +106,18 @@ const routes = [
                 name: "Home",
                 component: Home
             },
+            
             {
-                path: ":category/:subCategory",
-                name: "Category",
-                component: Category
-            },
-            {
-                path: "/:code", //yaha arko param 'title' pni rakhda save hudaina refresh garda but 'code' matrai rakhda hunxa
-                name: "Detail",
-                component: Detail
+                path: "/collections",
+                name: "Collection",
+                component: Collection
             },
             {
                 path: "/top-sellers",
                 name: "TopSeller",
                 component: TopSeller
             },
-            {
-                path: "/collections",
-                name: "Collection",
-                component: Collection
-            },
+            
             {
                 path: "/offers",
                 name: "Offers",
@@ -162,7 +154,17 @@ const routes = [
                 path: "/test",
                 name: "test",
                 component: Contact
-            }
+            },
+            {
+                path: ":category/:subCategory",
+                name: "Category",
+                component: Category
+            },
+            {
+                path: ":code", //yaha arko param 'title' pni rakhda save hudaina refresh garda but 'code' matrai rakhda hunxa
+                name: "Detail",
+                component: Detail
+            },
         ]
     }
 ];
