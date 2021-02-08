@@ -1,6 +1,9 @@
 <template>
 <div>
     <v-container>
+        <vue-khalti v-bind="khaltiConfig">
+            <div @click="onKhaltiClick">khalti</div>
+        </vue-khalti>
         <v-row justify="center">
             <p class="text-h4">Your cart</p>
         </v-row>
@@ -104,10 +107,10 @@
                 <v-card-text>
                     <v-form v-model="valid" ref="form">
                         <v-radio-group v-model="paymentGroup" :rules="[validRules.required]">
-                            <v-radio label="E-sewa" value="esewa" ></v-radio>
-                            <v-radio label="Khalti" value="khalti" ></v-radio>
-                            <v-radio label="Fonepay" value="fonepay" ></v-radio>
-                            <v-radio label="Cash On Delivery" value="cod" ></v-radio>
+                            <v-radio label="E-sewa" value="esewa"></v-radio>
+                            <v-radio label="Khalti" value="khalti"></v-radio>
+                            <v-radio label="Fonepay" value="fonepay"></v-radio>
+                            <v-radio label="Cash On Delivery" value="cod"></v-radio>
                         </v-radio-group>
                     </v-form>
                 </v-card-text>
@@ -125,22 +128,52 @@
 <script>
 import {
     mapState
-} from 'vuex'
+} from 'vuex';
+import VueKhalti from 'vue-khalti';
+import KhaltiCheckout from "khalti-checkout-web";
+
 export default {
+    components: {
+        VueKhalti
+    },
     data() {
         return {
             valid: true,
             net_total: 0,
             location: '',
             delivery_charge: 0,
-            contact:'',
+            contact: '',
             carts: [],
             total: '',
             count: 1,
             addresses: ['Inside Kathmandu Valley', 'Outside Kathmandu Valley'],
             payment: ['Esewa', 'Khalti', 'Fonepay', 'Cash on delivery'],
-            paymentDialog:false,
-            paymentGroup:''
+            paymentDialog: false,
+            paymentGroup: '',
+            khaltiConfig: {
+                "publicKey": "test_public_key_6371fd2fd0134e82a764511e20fd933f",
+                "productIdentity": "12345678",
+                "productName": "product",
+                "productUrl": "http://gameofthrones.wikia.com/wiki/Dragons",
+                "amount": 1000,
+                "eventHandler": {
+                    onSuccess(payload) {
+                        axios.post('api/verifyKhaltiPayment',{
+                            'token':payload.token,
+                            'amount':payload.amount
+                        })
+                        .then(console.log(res=>console.log(res.data)))
+                        .catch(err=>console.log(err.response))
+                    },
+                    onError(error) {
+                        console.log(error);
+                    },
+                    onClose() {
+                        console.log('widget is closing');
+                    }
+                }
+            },
+
         }
     },
     mounted() {
@@ -168,23 +201,30 @@ export default {
             return item.image
         },
         confirmOrder() {
-            if(this.$refs.form.validate()){
-                this.paymentDialog=true
+            if (this.$refs.form.validate()) {
+                this.paymentDialog = true
             }
         },
-        setupDeliveryCharge(e){
-            if(e=='Outside Kathmandu Valley'){
-                this.delivery_charge=100
+        setupDeliveryCharge(e) {
+            if (e == 'Outside Kathmandu Valley') {
+                this.delivery_charge = 100
+            } else {
+                this.delivery_charge = 0
             }
-            else{
-                this.delivery_charge=0
-            }
-             this.net_total=this.delivery_charge+this.total
+            this.net_total = this.delivery_charge + this.total
         },
-        buy(){
-            if(this.$refs.form.validate()){
+        buy() {
+            if (this.$refs.form.validate()) {
                 console.log(this.paymentGroup)
             }
+        },
+        onKhaltiClick() {
+            let checkout = new KhaltiCheckout(this.khaltiConfig);
+            const khaltiCheckout = this.$refs.khaltiCheckout
+            //khaltiCheckout.onClick()
+            checkout.show({
+                amount: 1000
+            });
         }
     }
 }

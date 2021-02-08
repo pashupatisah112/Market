@@ -98,6 +98,9 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'User'],function(){
     //offers
     Route::get('getOffers','ProductController@getOffers');
 
+    //payments
+    Route::post('verifyKhaltiPayment','PaymentController@verifyKhaltiPayment');
+
 });
 
 Route::get('getCategories','User\ProductController@getCategories');
