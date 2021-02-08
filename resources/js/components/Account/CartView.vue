@@ -162,7 +162,7 @@ export default {
                             'token':payload.token,
                             'amount':payload.amount
                         })
-                        .then(console.log(res=>console.log(res.data)))
+                        .then()
                         .catch(err=>console.log(err.response))
                     },
                     onError(error) {

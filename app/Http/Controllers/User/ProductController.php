@@ -10,6 +10,7 @@ use App\Product;
 use App\ProductType;
 use App\Rating;
 use App\SubCategory;
+use App\Featured;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -115,6 +116,11 @@ class ProductController extends Controller
         $coll=ProductType::where('product_type','Offered')->first();
         $product=Product::where('product_type_id',$coll->id)->select(['id','title','price','image','product_code'])->get();
         return response()->json($product);
+    }
+    public function getFeatured()
+    {
+        $prod=Featured::with('product:id,title,product_code')->get();
+        return response()->json($prod);
     }
     
 }

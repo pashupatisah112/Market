@@ -29,7 +29,7 @@ export default new Vuetify({
             },
             dark: {
                 primary: colors.blue.lighten3
-            },
+            }
         }
     }
 });

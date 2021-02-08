@@ -101,7 +101,12 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'User'],function(){
     //payments
     Route::post('verifyKhaltiPayment','PaymentController@verifyKhaltiPayment');
 
+    
+
 });
+//Featured
+Route::get('getFeatured','User\ProductController@getFeatured');
+Route::post('getSimilarFeatured','User\ProductController@getSimilarFeatured');
 
 Route::get('getCategories','User\ProductController@getCategories');
 Route::get('latestProducts','User\ProductController@getLatestProducts');
