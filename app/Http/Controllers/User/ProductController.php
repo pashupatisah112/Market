@@ -122,5 +122,45 @@ class ProductController extends Controller
         $prod=Featured::with('product:id,title,product_code')->get();
         return response()->json($prod);
     }
+    public function getTopProducts()
+    {
+        $ids=[];
+        $sales=DB::table('sales')->select('product_id',DB::raw('count(product_id) as total'))->groupBy('product_id')->orderBy('total','desc')->get();
+        foreach($sales as $sale){
+            array_push($ids,$sale->product_id);
+        }
+        $product=Product::whereIn('id',$ids)->select(['id','title','price','image','product_code'])->limit(12)->get();
+        return response()->json($product);
+    }
+    public function getTopCategory()
+    {
+        $ids=[];
+        $sub_ids=[];
+        $sales=DB::table('sales')->select('product_id',DB::raw('count(product_id) as total'))->groupBy('product_id')->orderBy('total','desc')->get();
+        foreach($sales as $sale){
+            array_push($ids,$sale->product_id);
+        }
+        $products=Product::whereIn('id',$ids)->select(['id','sub_category_id'])->get();
+        foreach($products as $product)
+        {
+            if(!in_array($product->sub_category_id,$sub_ids))
+            {
+                array_push($sub_ids,$product->sub_category_id);
+            }
+            
+        }
+        $subcat=SubCategory::whereIn('id',$sub_ids)->select(['id','subCategory_name'])->limit(8)->get();
+        return response()->json($subcat);
+    }
+    public function filterTopCategories(Request $request)
+    {
+        $ids=[];
+        $sales=DB::table('sales')->select('product_id',DB::raw('count(product_id) as total'))->groupBy('product_id')->orderBy('total','desc')->get();
+        foreach($sales as $sale){
+            array_push($ids,$sale->product_id);
+        }
+        $product=Product::whereIn('id',$ids)->where('sub_category_id',$request->sub_cat_id)->select(['id','title','price','image','product_code'])->limit(12)->get();
+        return response()->json($product);
+    }
     
 }

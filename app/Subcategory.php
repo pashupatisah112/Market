@@ -14,4 +14,8 @@ class SubCategory extends Model
     {
         return $this->hasMany('App\Company');
     }
+    public function product()
+    {
+        return $this->hasMany('App\Product');
+    }
 }

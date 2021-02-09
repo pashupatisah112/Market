@@ -5,66 +5,103 @@
             <h2 class="mt-5">TOP SELLING PRODUCTS</h2>
         </v-row>
         <v-row justify="center" class="px-10 mt-5">
-            <v-chip v-for="item in chips" :key="item.title" class="mx-2">{{item.title}}</v-chip>
+            <v-chip v-for="item in categories" :key="item.id" class="mx-2" @click="filterTop(item)" link>{{item.subCategory_name}}</v-chip>
         </v-row>
         <v-row class=" mt-5">
-            <v-col cols="12" lg="3" md="3" v-for="i in 8" :key="i">
-                 <v-card max-width="300" class="mx-auto" tile flat >
-                <v-hover v-slot="{ hover }">
-                    <div style="overflow: hidden;">
-                        <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg" width="300" height="350" style="transition: transform .4s;" :class="{ 'on-hover': hover }">
-                            <v-slide-y-reverse-transition hide-on-leave>
-                                <div v-if="hover" class="d-flex transition-fast-in-fast-out v-card--reveal" style="height: 30%;">
-                                    <v-btn rounded color="white" class="text-capitalize" small>Quick View</v-btn>
-                                </div>
-                            </v-slide-y-reverse-transition>
-                        </v-img>
+            <v-col cols="12" lg="2" md="3" v-for="item in top" :key="item.id">
+                <v-card max-width="300" class="mx-auto" tile flat>
+                    <v-hover v-slot="{ hover }">
+                        <div style="overflow: hidden;">
+                            <v-img :src="getImage(item)" width="200" height="250" style="transition: transform .4s;" :class="{ 'on-hover': hover }">
+                                <v-slide-y-reverse-transition hide-on-leave>
+                                    <div v-if="hover" class="d-flex transition-fast-in-fast-out v-card--reveal" style="height: 30%;">
+                                        <v-col align="center">
+                                            <v-btn rounded color="white" class="text-capitalize mb-1" small @click="quickView(item)">Quick View</v-btn>
+                                            <div style="background-color:rgba(0,0,0,0.7)">
+                                                <v-rating v-model="rating" background-color="yellow" half-increments small color="orange"></v-rating>
+                                            </div>
+                                        </v-col>
+                                    </div>
+                                </v-slide-y-reverse-transition>
+                            </v-img>
+                        </div>
+                    </v-hover>
+                    <v-card-actions class="pa-0">
+                        <v-card-subtitle class="pa-0 link" @click="goToDetails(item)">
+                            {{ item.title }}
+                        </v-card-subtitle>
 
-                    </div>
-
-                </v-hover>
-                <v-card-actions class="pa-0">
-                    <v-card-subtitle class="pa-0">
-                        product name
-                    </v-card-subtitle>
-
-                    <v-spacer></v-spacer>
-
-                    <v-btn icon>
-                        <v-icon color="red">mdi-cards-heart</v-icon>
-                    </v-btn>
-                </v-card-actions>
-                <v-card-title class="pa-0">
-                    price
-                </v-card-title>
-
-            </v-card>
+                        <v-spacer></v-spacer>
+                        <v-btn icon v-if="wishlistItem.includes(item.id)">
+                            <v-icon color="red" @click="alreadyMessage">mdi-heart</v-icon>
+                        </v-btn>
+                        <v-btn icon v-else>
+                            <v-icon color="red" @click="addToWishlist(item)">mdi-heart-outline</v-icon>
+                        </v-btn>
+                    </v-card-actions>
+                    <v-card-title class="pa-0">
+                        Rs.{{ item.price }}
+                    </v-card-title>
+                </v-card>
             </v-col>
-           
+
         </v-row>
     </v-container>
 </div>
 </template>
 
 <script>
+import {
+    mapState,
+    mapMutations,
+    mapActions
+} from "vuex";
 export default {
     data() {
         return {
-            chips:[
-                {title:'Coat'},
-                {title:'Sarees'},
-                {title:'Jeans'},
-                {title:'Shirt'},
-                {title:'Hoodies'},
-                {title:'Lehenga'},
-                {title:'Jumpsuit'},
-                {title:'Jacket'},
-                ]
+            categories: [],
+            top: [],
+            rating: 0
         }
     },
+    computed: {
+        ...mapState({
+            wishlistItem: state => state.product.wishlistItem
+        }),
+    },
+    mounted() {
+        this.getTopProducts();
+        this.getTopCategory()
+    },
     methods: {
-        productHover() {
+        ...mapActions(['goToDetails', 'alreadyMessage']),
+        ...mapMutations(["pushToWishlist", 'addToCart', 'quickView', 'addToWishlist']),
+        getTopCategory(){
+            axios
+                .get("api/getTopCategory")
+                .then(res => {
+                    this.categories=res.data
+                })
+                .catch(err => console.log(err.response));
+        },
+        getTopProducts() {
+            axios
+                .get("api/getTopProducts")
+                .then(res => {
+                    this.top = res.data;
+                })
+                .catch(err => console.log(err.response));
+        },
 
+        getImage(item) {
+            return item.image
+        },
+        filterTop(item){
+            axios.post('api/filterTopCategories',{
+                sub_cat_id:item.id
+            })
+            .then(res=>this.top=res.data)
+            .catch(err=>console.log(err.response))
         }
     }
 }

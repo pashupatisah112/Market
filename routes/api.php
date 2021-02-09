@@ -100,13 +100,15 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'User'],function(){
 
     //payments
     Route::post('verifyKhaltiPayment','PaymentController@verifyKhaltiPayment');
-
-    
-
 });
 //Featured
 Route::get('getFeatured','User\ProductController@getFeatured');
 Route::post('getSimilarFeatured','User\ProductController@getSimilarFeatured');
+
+//Top Selling
+Route::get('getTopProducts','User\ProductController@getTopProducts');
+Route::get('getTopCategory','User\ProductController@getTopCategory');
+Route::post('filterTopCategories','User\ProductController@filterTopCategories');
 
 Route::get('getCategories','User\ProductController@getCategories');
 Route::get('latestProducts','User\ProductController@getLatestProducts');
