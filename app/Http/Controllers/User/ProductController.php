@@ -162,5 +162,10 @@ class ProductController extends Controller
         $product=Product::whereIn('id',$ids)->where('sub_category_id',$request->sub_cat_id)->select(['id','title','price','image','product_code'])->limit(12)->get();
         return response()->json($product);
     }
-    
+    public function getProductOffers()
+    {
+        $type=ProductType::where('product_type','Offered')->first();
+        $product=Product::where('product_type_id',$type->id)->select(['id','title','price','image','product_code'])->limit(12)->get();
+        return response()->json($product);
+    }
 }

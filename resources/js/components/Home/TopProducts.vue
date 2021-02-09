@@ -15,12 +15,14 @@
                             <v-img :src="getImage(item)" width="200" height="250" style="transition: transform .4s;" :class="{ 'on-hover': hover }">
                                 <v-slide-y-reverse-transition hide-on-leave>
                                     <div v-if="hover" class="d-flex transition-fast-in-fast-out v-card--reveal" style="height: 30%;">
-                                        <v-col align="center">
+                                        <v-row justify="center">
+                                        <v-col cols="12" align="center">
                                             <v-btn rounded color="white" class="text-capitalize mb-1" small @click="quickView(item)">Quick View</v-btn>
-                                            <div style="background-color:rgba(0,0,0,0.7)">
+                                            <div style="background-color:rgba(0,0,0,0.7)" class="mb-3">
                                                 <v-rating v-model="rating" background-color="yellow" half-increments small color="orange"></v-rating>
                                             </div>
                                         </v-col>
+                                        </v-row>
                                     </div>
                                 </v-slide-y-reverse-transition>
                             </v-img>

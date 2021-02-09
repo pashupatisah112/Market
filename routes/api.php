@@ -110,6 +110,9 @@ Route::get('getTopProducts','User\ProductController@getTopProducts');
 Route::get('getTopCategory','User\ProductController@getTopCategory');
 Route::post('filterTopCategories','User\ProductController@filterTopCategories');
 
+//Offered
+Route::get('getProductOffers','User\ProductController@getProductOffers');
+
 Route::get('getCategories','User\ProductController@getCategories');
 Route::get('latestProducts','User\ProductController@getLatestProducts');
 Route::post('getProducts','User\ProductController@getProducts');

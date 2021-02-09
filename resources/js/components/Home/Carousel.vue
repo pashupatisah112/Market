@@ -41,7 +41,6 @@ export default {
             axios.get('api/getFeatured')
                 .then(res => {
                     this.featured = res.data
-                    console.log(res.data)
                 })
                 .catch(err => console.log(err.response))
         },
