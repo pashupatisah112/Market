@@ -18,7 +18,7 @@ class ProductController extends Controller
 {
     public function getLatestProducts()
     {
-        $product=Product::select(['id','title','price','image','product_code'])->limit(6)->get();
+        $product=Product::select(['id','title','price','image','product_code'])->with('rating:product_id,rating')->limit(6)->get();
         return response()->json($product);
     }
     public function getCategories()
@@ -129,7 +129,7 @@ class ProductController extends Controller
         foreach($sales as $sale){
             array_push($ids,$sale->product_id);
         }
-        $product=Product::whereIn('id',$ids)->select(['id','title','price','image','product_code'])->limit(12)->get();
+        $product=Product::whereIn('id',$ids)->select(['id','title','price','image','product_code'])->with('rating:product_id,rating')->limit(12)->get();
         return response()->json($product);
     }
     public function getTopCategory()
@@ -159,13 +159,13 @@ class ProductController extends Controller
         foreach($sales as $sale){
             array_push($ids,$sale->product_id);
         }
-        $product=Product::whereIn('id',$ids)->where('sub_category_id',$request->sub_cat_id)->select(['id','title','price','image','product_code'])->limit(12)->get();
+        $product=Product::whereIn('id',$ids)->where('sub_category_id',$request->sub_cat_id)->select(['id','title','price','image','product_code'])->with('rating:product_id,rating')->limit(12)->get();
         return response()->json($product);
     }
     public function getProductOffers()
     {
         $type=ProductType::where('product_type','Offered')->first();
-        $product=Product::where('product_type_id',$type->id)->select(['id','title','price','image','product_code'])->limit(12)->get();
+        $product=Product::where('product_type_id',$type->id)->select(['id','title','price','image','product_code'])->with('rating:product_id,rating')->limit(12)->get();
         return response()->json($product);
     }
 }

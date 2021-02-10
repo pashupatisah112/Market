@@ -1,12 +1,12 @@
 <template>
 <div>
-    <v-btn v-if="!token" small text depressed color="transparent" @click="setLoginDialog" class="mt-3 text-capitalize white--text mx-auto">
+    <v-btn v-if="!token" small text depressed color="transparent" @click="setLoginDialog" class="text-capitalize white--text mx-auto">
         <v-icon color="white">mdi-account</v-icon>
         {{ $t('words.header.login') }}
     </v-btn>
     <v-menu v-else offset-y>
         <template v-slot:activator="{ on, attrs }">
-            <v-btn dark v-bind="attrs" v-on="on" small text depressed color="transparent" class="mt-3 text-capitalize mx-auto">
+            <v-btn dark v-bind="attrs" v-on="on" small text depressed color="transparent" class=" text-capitalize mx-auto">
                 <v-icon>mdi-account</v-icon>
                 Account
             </v-btn>

@@ -75,8 +75,7 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'User'],function(){
     Route::get('getCartListItem','CartController@getCartListItem');
     Route::post('removeFromCartlist','CartController@removeFromCartlist');
 
-    //quickview
-    Route::post('getQuickViewItem','ProductController@getQuickViewItem');
+    
 
     //rating
     Route::post('getRatings','ProductController@getRatings');
@@ -117,6 +116,9 @@ Route::get('getCategories','User\ProductController@getCategories');
 Route::get('latestProducts','User\ProductController@getLatestProducts');
 Route::post('getProducts','User\ProductController@getProducts');
 Route::post('getSelectedCategory','User\ProductController@getSelectedCategory');
+
+//quickview
+Route::post('getQuickViewItem','User\ProductController@getQuickViewItem');
 
 //Filter
 Route::post('getFilters','User\FilterController@getFilters');

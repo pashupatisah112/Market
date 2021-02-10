@@ -26,7 +26,8 @@ export default {
             state.wishlistItem = item;
         },
         addToWishlist(state,item){
-            axios
+            if(this.state.authentication.token){ //'this.state' refers to root state
+                axios
                 .post("api/addToWishlist", {
                     product_id: item.id
                 })
@@ -39,6 +40,11 @@ export default {
                     });
                 })
                 .catch(err => console.log(err.response));
+            }
+            else{
+                this.state.authentication.loginDialog=true
+            }
+            
         },
         pullFromWishList(state, item) {
             state.wishlistItem.splice(state.wishlistItem.indexOf(item.id));
