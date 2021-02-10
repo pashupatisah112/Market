@@ -109,13 +109,13 @@ class ProductController extends Controller
     public function getCollection()
     {
         $coll=ProductType::where('product_type','Collection')->first();
-        $product=Product::where('product_type_id',$coll->id)->select(['id','title','price','image','product_code'])->get();
+        $product=Product::where('product_type_id',$coll->id)->select(['id','title','price','image','product_code'])->with('rating:product_id,rating')->get();
         return response()->json($product);
     }
     public function getOffers()
     {
         $coll=ProductType::where('product_type','Offered')->first();
-        $product=Product::where('product_type_id',$coll->id)->select(['id','title','price','image','product_code'])->get();
+        $product=Product::where('product_type_id',$coll->id)->select(['id','title','price','image','product_code'])->with('rating:product_id,rating')->get();
         return response()->json($product);
     }
     public function getFeatured()

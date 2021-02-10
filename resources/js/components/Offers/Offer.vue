@@ -1,21 +1,25 @@
 <template>
 <div>
-    <v-container>
-        <v-row>
-            <v-col cols="12" lg="2" md="3" v-for="item in offers" :key="item.id">
-               <v-card max-width="300" class="mx-auto" tile flat>
+    <v-container fluid>
+        <v-row justify="center">
+            <p class="text-h6 font-weight-bold">Product With Offers</p>
+        </v-row>
+        <v-row class="px-10" v-if="this.offers.length>0">
+            <v-col cols="12" lg="3" md="4" sm="6" v-for="item in offers" :key="item.id">
+                <v-card max-width="300" class="mx-auto" tile flat>
                     <v-hover v-slot="{ hover }">
                         <div style="overflow: hidden;">
-                            <v-img :src="getImage(item)" width="200" height="250" style="transition: transform .4s;" :class="{ 'on-hover': hover }">
+                            <v-img :src="getImage(item)" width="300" height="350" style="transition: transform .4s;" :class="{ 'on-hover': hover }">
                                 <v-slide-y-reverse-transition hide-on-leave>
                                     <div v-if="hover" class="d-flex transition-fast-in-fast-out v-card--reveal" style="height: 30%;">
-                                        <v-col align="center">
-                                            <v-btn rounded color="white" class="text-capitalize mb-1" small @click="quickView(item)">Quick View</v-btn>
-                                            <div style="background-color:rgba(0,0,0,0.7)">
-                                                <v-rating v-model="rating" background-color="yellow" half-increments small color="orange"></v-rating>
-                                            </div>
-                                        </v-col>
-
+                                        <v-row justify="center">
+                                            <v-col align="center">
+                                                <v-btn rounded color="white" class="text-capitalize mb-1" small @click="quickView(item)">Quick View</v-btn>
+                                                <div style="background-color:rgba(0,0,0,0.7)" class="mb-n2">
+                                                    <v-rating v-model="rating" background-color="yellow" half-increments small color="orange"></v-rating>
+                                                </div>
+                                            </v-col>
+                                        </v-row>
                                     </div>
                                 </v-slide-y-reverse-transition>
                             </v-img>
@@ -40,17 +44,27 @@
                 </v-card>
             </v-col>
         </v-row>
+        <hollow-dots-spinner class="mx-auto my-16" v-else :animation-duration="1000" :dot-size="20" :dots-num="3" color="#ff1d5e" />
+
     </v-container>
 </div>
 </template>
 
 <script>
-import {mapState,mapMutations,mapActions} from 'vuex';
+import {
+    mapState,
+    mapMutations,
+    mapActions
+} from 'vuex';
+import {
+    HollowDotsSpinner
+} from "epic-spinners";
 export default {
+    components:{HollowDotsSpinner},
     data() {
         return {
             offers: [],
-            rating:0
+            rating: 0
         };
     },
     computed: {
@@ -77,6 +91,14 @@ export default {
         getImage(item) {
             return item.image
         },
+        getRating(item) {
+            let rate = 0
+            for (var i = 0; i < item.rating.length; i++) {
+                rate = rate + parseInt(item.rating[i].rating)
+
+            }
+            return rate / item.rating.length
+        }
 
     }
 };

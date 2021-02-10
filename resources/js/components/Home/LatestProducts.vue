@@ -64,6 +64,7 @@ import {
     HollowDotsSpinner
 } from "epic-spinners";
 export default {
+    components:{HollowDotsSpinner},
     data() {
         return {
             latest: [],

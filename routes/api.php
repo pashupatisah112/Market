@@ -91,18 +91,15 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'User'],function(){
     //similar
     Route::post('getSimilarProducts','ProductController@getSimilarProducts');
 
-    //collections
-    Route::get('getCollection','ProductController@getCollection');
-
-    //offers
-    Route::get('getOffers','ProductController@getOffers');
-
     //payments
     Route::post('verifyKhaltiPayment','PaymentController@verifyKhaltiPayment');
 });
 //Featured
 Route::get('getFeatured','User\ProductController@getFeatured');
 Route::post('getSimilarFeatured','User\ProductController@getSimilarFeatured');
+
+//collections
+Route::get('getCollection','User\ProductController@getCollection');
 
 //Top Selling
 Route::get('getTopProducts','User\ProductController@getTopProducts');
@@ -113,6 +110,7 @@ Route::post('fromTopBrands','User\ProductController@fromTopBrands');
 
 //Offered
 Route::get('getProductOffers','User\ProductController@getProductOffers');
+Route::get('getOffers','User\ProductController@getOffers');
 
 Route::get('getCategories','User\ProductController@getCategories');
 Route::get('latestProducts','User\ProductController@getLatestProducts');

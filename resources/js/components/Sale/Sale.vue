@@ -67,7 +67,7 @@ export default {
 
         getOffers() {
             axios
-                .get("api/getOffers")
+                .get("api/getSak")
                 .then(res => {
                     this.offers = res.data
                 })
