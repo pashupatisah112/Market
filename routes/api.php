@@ -108,6 +108,8 @@ Route::post('getSimilarFeatured','User\ProductController@getSimilarFeatured');
 Route::get('getTopProducts','User\ProductController@getTopProducts');
 Route::get('getTopCategory','User\ProductController@getTopCategory');
 Route::post('filterTopCategories','User\ProductController@filterTopCategories');
+Route::get('getTopSellers','User\ProductController@getTopSellers');
+Route::post('fromTopBrands','User\ProductController@fromTopBrands');
 
 //Offered
 Route::get('getProductOffers','User\ProductController@getProductOffers');

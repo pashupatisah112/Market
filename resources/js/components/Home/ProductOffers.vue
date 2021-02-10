@@ -55,7 +55,7 @@
                 </v-slide-item>
             </v-slide-group>
         </v-row>
-        <hollow-dots-spinner class="mx-auto my-auto" v-else :animation-duration="1000" :dot-size="15" :dots-num="3" color="#ff1d5e" />
+        <hollow-dots-spinner class="mx-auto my-16" v-else :animation-duration="1000" :dot-size="20" :dots-num="3" color="#ff1d5e" />
 
     </v-container>
 </div>

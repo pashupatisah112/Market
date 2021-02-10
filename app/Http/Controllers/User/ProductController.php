@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Category;
 use App\Comment;
+use App\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Product;
@@ -167,5 +168,29 @@ class ProductController extends Controller
         $type=ProductType::where('product_type','Offered')->first();
         $product=Product::where('product_type_id',$type->id)->select(['id','title','price','image','product_code'])->with('rating:product_id,rating')->limit(12)->get();
         return response()->json($product);
+    }
+    public function getTopSellers()
+    {
+        $ids=[];
+        $brandId=[];
+        $sales=DB::table('sales')->select('product_id',DB::raw('count(product_id) as total'))->groupBy('product_id')->orderBy('total','desc')->get();
+        foreach($sales as $sale){
+            array_push($ids,$sale->product_id);
+        }
+        $products=Product::whereIn('id',$ids)->select(['id','title','price','image','product_code','company_id'])->with('rating:product_id,rating')->get();
+        foreach($products as $product){
+            if(!in_array($product->company_id,$brandId)){
+                array_push($brandId,$product->company_id);
+            }
+           
+        }
+        $companies=Company::whereIn('id',$brandId)->get();
+
+        return response()->json(['product'=>$products,'company'=>$companies]);
+    }
+    public function fromTopBrands(Request $request)
+    {
+         $product=Product::where('company_id',$request->company_id)->select(['id','title','price','image','product_code','company_id'])->with('rating:product_id,rating')->get();
+         return response()->json($product);
     }
 }
