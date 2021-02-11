@@ -34,11 +34,11 @@ const routes = [
     //     path: "/admin",
     //     redirect: "/adminLogin"
     // },
-    {
-        path: "/adminLogin",
-        name: "AdminLogin",
-        component: AdminLogin
-    },
+    // {
+    //     path: "/adminLogin",
+    //     name: "AdminLogin",
+    //     component: AdminLogin
+    // },
 
     {
         path: "/admin",

@@ -27,7 +27,7 @@
                         <v-divider></v-divider>
                     </div>
                 </div>
-                 
+
                 <v-row>
                     <v-form v-model="valid" ref="form" style="width:75%">
                         <v-textarea v-model="commentBox" rows="1" :rules="[validRules.required]" class="mx-5 mt-5 " rounded auto-grow dense full-width placeholder="Ask or write something..." outlined></v-textarea>
@@ -55,7 +55,8 @@ export default {
     },
     computed: {
         ...mapState({
-            validRules: state => state.validation.validRules
+            validRules: state => state.validation.validRules,
+            auth:state=>state.autentication.auth
         })
     },
     mounted() {
@@ -77,6 +78,12 @@ export default {
                 }).then(res => {
                     this.comments.push(res.data)
                     this.$refs.form.reset()
+                    db.collection("notification").add({
+                        user_name: this.auth.name,
+                        type: 'comment',
+                        created_at: new Date(),
+                        read_at: null,
+                    })
                 }).catch(err => console.log(err.response))
             }
         }

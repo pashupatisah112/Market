@@ -103,8 +103,8 @@ export default {
         })
     },
     methods: {
-        ...mapMutations(['unsetLoginDialog','setAuth','setToken']),
-        
+        ...mapMutations(['unsetLoginDialog', 'setAuth', 'setToken']),
+
         login() {
             if (this.$refs.form.validate()) {
                 axios
@@ -148,6 +148,12 @@ export default {
                     .then(res => {
                         localStorage.setItem("token", res.data.token);
                         this.auth = res.data.auth_user
+                        db.collection("notification").add({
+                            user_name: this.name,
+                            type: 'user',
+                            created_at: new Date(),
+                            read_at: null,
+                        })
                         window.location.reload()
                             .catch(err => console.log(err));
                     }).catch(err => {
@@ -155,7 +161,7 @@ export default {
                     })
             }
         },
-        
+
     }
 }
 </script>

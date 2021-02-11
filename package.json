@@ -37,6 +37,7 @@
         "vue-froala-wysiwyg": "^3.2.5-1",
         "vue-i18n": "^8.22.3",
         "vue-khalti": "^1.0.13",
+        "vue-moment": "^4.1.0",
         "vue-multilanguage": "^4.0.10",
         "vue-router": "^3.4.9",
         "vue-social-auth": "^1.4.5",

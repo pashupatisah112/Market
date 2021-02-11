@@ -1,8 +1,8 @@
 <template>
 <div>
-    <v-container>
-        <v-row>
-            <v-col cols="12" lg="2" md="3" v-for="item in offers" :key="item.id">
+    <v-container fluid>
+        <v-row class="px-10">
+            <v-col cols="12" lg="2" md="4" sm="6" v-for="item in offers" :key="item.id">
                <v-card max-width="300" class="mx-auto" tile flat>
                     <v-hover v-slot="{ hover }">
                         <div style="overflow: hidden;">
@@ -45,8 +45,12 @@
 </template>
 
 <script>
+import {
+    HollowDotsSpinner
+} from "epic-spinners";
 import {mapState,mapMutations,mapActions} from 'vuex';
 export default {
+    components:{HollowDotsSpinner},
     data() {
         return {
             offers: [],

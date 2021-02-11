@@ -58,6 +58,7 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'Admin'],function(){
 
     //analytics
     Route::get('getDailyData','AnalyticsController@getDailyData');
+    Route::get('getDisplayData','AnalyticsController@getDisplayData');
 
 });
 

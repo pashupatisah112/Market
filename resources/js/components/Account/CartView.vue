@@ -181,7 +181,9 @@ export default {
     },
     computed: {
         ...mapState({
-            validRules: state => state.validation.validRules
+            validRules: state => state.validation.validRules,
+            cartlist:state=>state.product.cartlist,
+            auth:state=>state.authentication.auth
         })
     },
 
@@ -215,7 +217,19 @@ export default {
         },
         buy() {
             if (this.$refs.form.validate()) {
-                console.log(this.paymentGroup)
+                db.collection("notification").add({
+                    user_name:this.auth.name,
+                    type:'order',
+                    item_num: this.cartlist.length,
+                    created_at:new Date(),
+                    read_at:null,
+                })
+                .then(
+                    console.log('ordered')
+                )
+                .catch(function (error) {
+                    console.error("Error adding document: ", error);
+                });
             }
         },
         onKhaltiClick() {

@@ -8,15 +8,11 @@
                     <p class="text-center font-weight-bold">{{getMonth()}} {{new Date().getFullYear()}}</p>
                 </v-col>
                 <v-col cols="5">
-                    total users
-                    total orders
-                    option to select year and month to generate report data
-                    add notification for new users,new orders,new comments
+                    <p class="font-weight-bold mt-10">Total Users: {{totalUser}}</p>
+                    <p class="font-weight-bold">Total Deliveries: {{totalDelivery}}</p>
                 </v-col>
             </v-row>
-
         </v-col>
-
     </v-row>
 </v-container>
 </template>
@@ -30,6 +26,8 @@ export default {
     },
     data() {
         return {
+            totalUser:0,
+            totalDelivery:0,
             monthNames: ["January", "February", "March", "April", "May", "June",
                 "July", "August", "September", "October", "November", "December"
             ]
@@ -38,12 +36,20 @@ export default {
 
     },
     mounted() {
-
+        this.getDisplayData()
     },
     methods: {
         getMonth() {
             let index = new Date().getMonth()
             return this.monthNames[index]
+        },
+        getDisplayData() {
+            axios.get('api/getDisplayData')
+                .then(res => {
+                    this.totalUser=res.data.user_count
+                    this.totalDelivery=res.data.delivery_count
+                })
+                .catch(err => console.log(err.response))
         }
     }
 }
