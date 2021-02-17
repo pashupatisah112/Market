@@ -10,8 +10,9 @@ import Customer from "./components/AdminComponents/CustomerComponent/Customers";
 import Product from "./components/AdminComponents/ProductComponent/Product";
 import ProductSup from "./components/AdminComponents/ProductComponent/ProductSup";
 import Carousel from "./components/AdminComponents/PromoComponent/Carousel";
-import Sales from "./components/AdminComponents/SalesComponent/Sales";
+import Orders from "./components/AdminComponents/OrderComponent/Orders";
 import Comment from "./components/AdminComponents/CommentComponent/Comment";
+import Invoice from './components/AdminComponents/OrderComponent/Invoice';
 
 //User
 import Main from "./components/Index";
@@ -70,15 +71,16 @@ const routes = [
                 component: Carousel
             },
             {
-                path: "sales",
+                path: "orders",
                 name: "Sales",
-                component: Sales
+                component: Orders
             },
             {
                 path: "comments",
                 name: "Comments",
                 component: Comment
-            }
+            },
+           
         ],
         // beforeEnter: (to, from, next) => {
         //     axios
@@ -97,6 +99,12 @@ const routes = [
         // }
         
     },
+    {
+        path: "/invoice",
+        name: "Invoice",
+        component: Invoice
+    },
+    
     {
         path: "/",
         component: Main,

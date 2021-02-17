@@ -49,13 +49,13 @@ export default {
                 },
                 {
                     title: 'Promo',
-                    icon: 'mdi-file-question',
+                    icon: 'mdi-google-ads',
                     to: '/admin/carousel'
                 },
                 {
-                    title: 'Sales',
-                    icon: 'mdi-file-question',
-                    to: '/admin/sales'
+                    title: 'Orders',
+                    icon: 'mdi-cart-arrow-down',
+                    to: '/admin/orders'
                 },
                 {
                     title: 'Comments',

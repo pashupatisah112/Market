@@ -8,6 +8,11 @@ export default {
     state: {
         categories: [],
 
+        //invoice
+        invoiceOrder:[],
+        invoiceProduct:[],
+        invoiceTotal:0,
+
         //quickview variables
         quickViewDialog: true,
         quickViewItem:{},
@@ -91,6 +96,15 @@ export default {
                 });
             })
             .catch(err=>console.log(err.response))
+        },
+        setupInvoiceOrder(state,order){
+            state.invoiceOrder=order
+        },
+        setupInvoiceProduct(state,product){
+            state.invoiceProduct=product
+        },
+        setupInvoiceTotal(state,total){
+            state.invoiceTotal=total
         }
     },
     actions: {

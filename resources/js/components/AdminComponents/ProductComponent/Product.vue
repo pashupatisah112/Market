@@ -119,7 +119,21 @@
         </template>
         <!--course item actions-->
         <template v-slot:item.actions="{ item }">
-            <!--view button-->
+            <!--product view button-->
+            <v-tooltip top>
+                <template v-slot:activator="{ on: tooltip }">
+                    <v-btn icon v-on="{ ...tooltip }" @click="viewProduct(item)">
+                        <v-icon small class="mr-2">
+                            mdi-eye
+                        </v-icon>
+                    </v-btn>
+                </template>
+                <span>View Product</span>
+            </v-tooltip>
+
+            <!--end view button-->
+
+            <!-- image view button-->
             <v-tooltip top>
                 <template v-slot:activator="{ on: tooltip }">
                     <v-btn icon v-on="{ ...tooltip }" @click="showImages(item)">
@@ -187,7 +201,7 @@
     <!--end snackbar-->
 
     <!--product view dialog-->
-    <!-- <v-dialog max-width="600" persistent v-model="productViewDialog">
+    <v-dialog max-width="600" persistent v-model="productViewDialog">
         <v-card>
             <v-btn icon @click="productViewDialog=false" class="float-right">
                 <v-icon>mdi-cancel</v-icon>
@@ -195,79 +209,30 @@
 
             <v-container fluid>
                 <v-row>
-                    <v-col cols="1">
-                        <div style="width:50px; height:75px;margin-bottom:10px" v-for="item in view.photo" :key="item.id">
-                            <v-img :src="getImage(item)"></v-img>
-                        </div>
-
-                    </v-col>
-                    <v-col cols="5">
-                        <v-img src="../images/sample.png"></v-img>
-                    </v-col>
-                    <v-col cols="6">
-                        <v-row>
-                            <v-col>
-                                <p class="text-h5">{{view.title}}</p>
-                                <h4>{{view.price}}</h4>
-                                <p class="body-2" v-html="view.description"></p>
-                                <div style="width:300px" class="mx-auto">
-                                    <p class="float-left mr-7">Size</p>
-                                    <v-select :items="items" label="Choose Size" dense outlined></v-select>
-                                </div>
-                                <div style="width:300px" class="mx-auto">
-                                    <p class="float-left mr-6">Color</p>
-                                    <v-select :items="items" label="Choose Color" dense outlined></v-select>
-                                </div>
-                                <div style="width:300px" class="mx-auto">
-                                    <p class="float-left mr-5">Count</p>
-                                    <v-btn-toggle>
-                                        <v-btn @click="countMinus" icon>
-                                            <v-icon>mdi-minus</v-icon>
-                                        </v-btn>
-                                        <v-btn class="text--black">
-                                            {{count}}
-                                        </v-btn>
-                                        <v-btn icon @click="countPlus">
-                                            <v-icon>mdi-plus</v-icon>
-                                        </v-btn>
-                                    </v-btn-toggle>
-                                </div>
-                            </v-col>
-
-                        </v-row>
-
-                        <v-row justify="center" class="mt-8">
-                            <v-btn class="text-capitalize white--text" color="blackTheme" rounded>Add to Cart</v-btn>
-                        </v-row>
-
-                        <v-row justify="center" class="mt-5">
-                            <v-col cols="6">
-                                <v-btn icon color="blackTheme">
-                                    <v-icon>mdi-cards-heart</v-icon>
-                                </v-btn>
-                                <v-btn icon color="blackTheme">
-                                    <v-icon>mdi-facebook</v-icon>
-                                </v-btn>
-                                <v-btn icon color="blackTheme">
-                                    <v-icon>mdi-twitter</v-icon>
-                                </v-btn>
-                                <v-btn icon color="blackTheme">
-                                    <v-icon>mdi-instagram</v-icon>
-                                </v-btn>
-                            </v-col>
-                        </v-row>
+                    <v-col cols="12">
+                        <p class="text-h5">Title: {{view.title}}</p>
+                        <h4>Price: {{view.price}}</h4>
+                        <h4>Color: <v-chip small v-for="item in view.color" :key="item.id" class="font-weight-light mx-1">{{item.color_name+', '}}</v-chip></h4>
+                        <h4>Size: <v-chip small v-for="item in view.size" :key="item.id" class="font-weight-light mx-1">{{item.size+', '}}</v-chip></h4>
+                        <h4>Category: <span>{{view.category}}</span></h4>
+                        <h4>Sub category: {{view.subCategory}}</h4>
+                        <h4>Company: {{view.company}}</h4>
+                        <h4>Product code: {{view.product_code}}</h4>
+                        <h4>Tags: <v-chip small v-for="item in view.tag" :key="item.id" class="font-weight-light mx-1">{{item.tag_name+', '}}</v-chip></h4>
+                        <h4>Description: {{view.description}}</h4>
+                        <p class="body-2" v-html="view.description"></p>
                     </v-col>
                 </v-row>
             </v-container>
         </v-card>
-    </v-dialog> -->
+    </v-dialog>
     <!--end product view dialog-->
 
     <!--image view button-->
     <v-dialog v-model="imageViewDialog" max-width="800px" persistent>
         <v-card>
             <v-btn icon @click="imageViewDialog = false" class="float-right">
-                <v-icon>mdi-close</v-icon>
+                <v-icon>mdi-cancel</v-icon>
             </v-btn>
             <v-card-title>
                 {{ selectedItem.title }}
@@ -296,14 +261,11 @@
 
                     <v-divider class="my-2" vertical></v-divider>
 
-                    <!-- <v-col cols="7" align="center">
-                        <v-row v-if="selectedItem.photo">
-                            {{selectedItem.photo[0]}}
-                             <v-img :src="getImage(selectedItem.photo[0])" ></v-img>
-                            <v-col v-for="item in selectedItem.photo" :key="item.id">
-                                
+                    <v-col cols="7" align="center">
+                        <v-row>
+                            <v-col v-for="item in multiple" :key="item.id">
                                 <div style="width:125px;height:auto">
-                                    <v-img :src="getImage(item)" ></v-img>
+                                    <v-img :src="getImage(item)" alt="Primary img"></v-img>
                                 </div>
                             </v-col>
                         </v-row>
@@ -318,7 +280,7 @@
                             </div>
                         </v-row>
 
-                    </v-col> -->
+                    </v-col>
                 </v-row>
             </v-container>
         </v-card>
@@ -381,7 +343,7 @@ export default {
             isSecondarySelecting: false,
             selectedItem: '',
             selectedIndex: null,
-            
+            multiple:[],
 
             alertColor: "success",
             timeout: 2000,
@@ -641,9 +603,8 @@ export default {
                                 image: img
                             })
                             .then(res => {
-                                this.selectedItem = res.data
-                                this.products.splice(this.selectedIndex, 1, res.data)
-                            })
+                                this.selectedItem.photo[i] = res.data
+                                })
                             .catch(err => {
                                 (this.dataUpdateMsg = "Problem Uploading Images"),
                                 (this.dataUpdateAlert = true);
@@ -689,21 +650,25 @@ export default {
         },
         showImages(item) {
             this.selectedIndex = this.products.indexOf(item)
-             this.selectedItem = item;
-             this.selectedSec=item.photo
-             this.imageViewDialog = true;
+            this.selectedItem = item;
+            this.multiple=item.photo
+            console.log('multiple:',this.multiple)
+            this.imageViewDialog = true;
+
 
         },
         viewProduct(item) {
             this.view = item;
             this.productViewDialog = true;
+            
         },
         getImage(item) {
             return item.image;
         },
         getImg(item) {
-            //return item.image
-            console.log(item)
+            console.log('s:',item)
+            return item
+            
         },
         onButtonClick() {
             this.isSelecting = true;

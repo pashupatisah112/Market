@@ -11,6 +11,19 @@ import Vue from 'vue'
 import VueInternationalization from 'vue-i18n';
 import Locale from './vue-i18n-locales.generated';
 import firebase from "firebase/app";
+import VueHtmlToPaper from "vue-html-to-paper";
+
+// ...
+const options = {
+  name: "_blank",
+  specs: ["fullscreen=yes", "titlebar=yes", "scrollbars=yes"],
+  styles: [
+    "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css",
+    "https://unpkg.com/kidlat-css/css/kidlat.css"
+  ]
+};
+
+Vue.use(VueHtmlToPaper, options);
 
 
 const lang = localStorage.getItem('locale') || 'en'; 

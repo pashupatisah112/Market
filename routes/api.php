@@ -38,6 +38,7 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'Admin'],function(){
     Route::post('imageUpload','ProductController@imageUpload');
     Route::post('addPrimaryImage','ProductController@addPrimaryImage');
     Route::post('updateImage','ProductController@updateImage');
+    Route::post('getSecondaryImages','ProductController@getSecondaryImages');
 
     //featured
     Route::get('featured','FeaturedController@index');
@@ -52,9 +53,11 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'Admin'],function(){
     Route::post('replyComment','CommentController@replyComment');
     Route::post('deleteComment','CommentController@delete');
 
-    //sales
-    Route::get('sales','SalesController@index');
-    Route::post('changeDeliveryStatus','SalesController@changeDeliveryStatus');
+    //orders
+    Route::get('orders','OrderController@getOrders');
+    Route::post('getOrderDetail','OrderController@getOrderDetail');
+    Route::post('changeDeliveryStatus','OrderController@changeDeliveryStatus');
+    Route::post('deleteOrder','OrderController@deleteOrder');
 
     //analytics
     Route::get('getDailyData','AnalyticsController@getDailyData');

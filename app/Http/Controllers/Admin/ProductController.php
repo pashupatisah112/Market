@@ -103,8 +103,7 @@ class ProductController extends Controller
         $photo->product_id=$request->product_id;
         $photo->image=$request->image;
         $photo->save();
-        $product=Product::where('id',$request->product_id)->with('category')->with('subCategory')->with('company')->with('productType')->with('color')->with('size')->with('tag')->with('photo')->first();
-        return response()->json($product);
+        return response()->json($photo);
     }
     public function addPrimaryImage(Request $request)
     {
@@ -114,6 +113,11 @@ class ProductController extends Controller
         $image->save();
         $product=Product::where('id',$request->id)->with('photo')->first();
         return response()->json($request);
+    }
+    public function getSecondaryImages(Request $request)
+    {
+        $image=Photo::where('product_id',$request->id)->get();
+        return response()->json($image);
     }
     
 }
