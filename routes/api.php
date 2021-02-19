@@ -97,6 +97,9 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'User'],function(){
 
     //payments
     Route::post('verifyKhaltiPayment','PaymentController@verifyKhaltiPayment');
+
+    //history
+    Route::post('getPurchaseHistory','ProductController@getPurchaseHistory');
 });
 //Featured
 Route::get('getFeatured','User\ProductController@getFeatured');

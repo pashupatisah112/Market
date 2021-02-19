@@ -12,6 +12,8 @@ use App\ProductType;
 use App\Rating;
 use App\SubCategory;
 use App\Featured;
+use App\Order;
+use App\Sale;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -192,5 +194,16 @@ class ProductController extends Controller
     {
          $product=Product::where('company_id',$request->company_id)->select(['id','title','price','image','product_code','company_id'])->with('rating:product_id,rating')->get();
          return response()->json($product);
+    }
+    public function getPurchaseHistory(){
+        $orders=Order::where('user_id',Auth::id())->where('delivery_status','Delivered')->get();
+        $order_id=[];
+        foreach($orders as $order){
+            array_push($order_id,$order->id);
+        }
+        $sales=Sale::whereIn('order_id',$order_id)->with('product')->with('color')->with('size')->get();
+        return response()->json($sales);
+        
+        
     }
 }

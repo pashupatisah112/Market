@@ -94,7 +94,6 @@ export default {
                 .get("api/latestProducts")
                 .then(res => {
                     this.latest = res.data;
-                    console.log(res.data)
                 })
                 .catch(err => console.log(err.response));
         },

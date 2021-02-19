@@ -178,15 +178,12 @@
 </template>
 
 <script>
-import VueHtml2pdf from 'vue-html2pdf'
+
 import {
     mapMutations,
     mapState
 } from 'vuex';
 export default {
-    components: {
-        VueHtml2pdf
-    },
     data() {
         return {
             delivery_status: "",

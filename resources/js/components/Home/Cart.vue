@@ -1,10 +1,9 @@
 <template>
 <div>
     <v-card width="300">
-        <v-card-title>Your Cart</v-card-title>
+        <v-card-title>Cart</v-card-title>
         <v-container fluid>
             <v-row>
-                {{cartlist.id}}
                 <v-col cols="12">
                     <div v-if="cartlist.length>0">
                         <v-list two-line dense>
@@ -38,7 +37,7 @@
                         <v-btn rounded block color="blackTheme" class="text-capitalize white--text" @click="viewCart">View Cart</v-btn>
                         <v-btn rounded block color="blackTheme" class="text-capitalize white--text my-3" @click="viewCart">Checkout</v-btn>
                     </div>
-                    <hollow-dots-spinner class="mx-auto my-auto" v-else-if="cartlist.product.length < 1 && noCartText == ''" :animation-duration="1000" :dot-size="15" :dots-num="3" color="#ff1d5e" />
+                    <hollow-dots-spinner class="mx-auto my-auto" v-else-if="cartlist.length < 1 && noCartText == ''" :animation-duration="1000" :dot-size="15" :dots-num="3" color="#ff1d5e" />
                     <p v-else class="text--disabled mx-auto my-5 ml-5 position-absolute">
                         {{ noCartText }}
                     </p>
@@ -76,6 +75,7 @@ export default {
     },
     created() {
         this.getCart()
+        console.log(this.cartlist.length)
     },
     methods: {
         ...mapMutations(['getCartList', 'removeFromCartlist']),

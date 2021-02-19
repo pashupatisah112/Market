@@ -18,4 +18,7 @@ class Sale extends Model
     {
         return $this->belongsTo('App\Color');
     }
+    public function order(){
+        return $this->belongsTo('App\Order');
+    }
 }

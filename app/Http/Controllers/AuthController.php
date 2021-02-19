@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use App\User;
 use Laravel\Socialite\Facades\Socialite;
-
+use Illuminate\Auth\Events\Registered;
 
 
 class AuthController extends Controller
