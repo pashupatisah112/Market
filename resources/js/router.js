@@ -27,6 +27,7 @@ import Cart from "./components/Account/CartView";
 import PurchaseHistory from "./components/Account/History";
 import About from "./components/Other/About";
 import Contact from "./components/Other/Contact";
+import Search from './components/Home/Search';
 
 import Test from './components/Home/Test';
 
@@ -164,6 +165,11 @@ const routes = [
                 component: Contact
             },
             {
+                path: "search",
+                name: "Search",
+                component: Search
+            },
+            {
                 path: ":category/:subCategory",
                 name: "Category",
                 component: Category
@@ -173,6 +179,7 @@ const routes = [
                 name: "Detail",
                 component: Detail
             },
+           
         ]
     }
 ];

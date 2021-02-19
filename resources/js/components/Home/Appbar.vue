@@ -303,7 +303,7 @@ export default {
 
     },
     methods: {
-        ...mapMutations(['addWishlistItem', 'getCartListItem', 'setToken']),
+        ...mapMutations(['addWishlistItem', 'getCartListItem', 'setToken','setSearchItem']),
         getWishlistItem() {
             axios.get('api/getWishlistItem')
                 .then(res => {
@@ -329,7 +329,11 @@ export default {
                 if (this.searchItem == null) {
                     this.search = false
                 } else {
-                    console.log('search item')
+                    this.setSearchItem(this.searchItem)
+                    this.$router.push({
+                        name:'Search',
+                         params: { search: this.searchItem }
+                    })
                 }
 
             }

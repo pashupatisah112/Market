@@ -203,7 +203,9 @@ class ProductController extends Controller
         }
         $sales=Sale::whereIn('order_id',$order_id)->with('product')->with('color')->with('size')->get();
         return response()->json($sales);
-        
-        
+    }
+    public function getSearch(Request $request){
+        $product=Product::where('title','like',$request->text.'%')->select(['id','title','price','image','product_code'])->with('rating:product_id,rating')->get();
+        return response()->json($product);
     }
 }

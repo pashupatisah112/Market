@@ -19,7 +19,7 @@
                                         <v-col cols="12" align="center">
                                             <v-btn rounded color="white" class="text-capitalize mb-1" small @click="quickView(item)">Quick View</v-btn>
                                             <div style="background-color:rgba(0,0,0,0.7)" class="mb-n2">
-                                                <v-rating :value="getRating(item)" background-color="yellow" half-increments small color="orange"></v-rating>
+                                                <v-rating readonly :value="getRating(item)" background-color="yellow" half-increments small color="orange"></v-rating>
                                             </div>
                                         </v-col>
                                         </v-row>

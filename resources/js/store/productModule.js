@@ -21,7 +21,10 @@ export default {
         cartlist: [],
         cartlistItem:[],
         wishlist: [],
-        wishlistItem: []
+        wishlistItem: [],
+
+        //search
+        searchText:''
     },
     mutations: {
         applyWishlist(state, item) {
@@ -105,6 +108,9 @@ export default {
         },
         setupInvoiceTotal(state,total){
             state.invoiceTotal=total
+        },
+        setSearchItem(state,item){
+            state.searchText=item
         }
     },
     actions: {

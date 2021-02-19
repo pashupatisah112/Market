@@ -100,6 +100,10 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'User'],function(){
 
     //history
     Route::post('getPurchaseHistory','ProductController@getPurchaseHistory');
+
+    //search
+    Route::post('getSearch','ProductController@getSearch');
+
 });
 //Featured
 Route::get('getFeatured','User\ProductController@getFeatured');
