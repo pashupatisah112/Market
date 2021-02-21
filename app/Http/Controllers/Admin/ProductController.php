@@ -119,5 +119,13 @@ class ProductController extends Controller
         $image=Photo::where('product_id',$request->id)->get();
         return response()->json($image);
     }
-    
+    public function changeProductStatus(Request $request)
+    {
+        $prod=Product::find($request->product_id);
+        $prod->status=$request->status;
+        $prod->save();
+        $products=Product::where('id',$prod->id)->with('category')->with('subCategory')->with('company')->with('productType')->with('color')->with('size')->with('tag')->with('photo')->first();
+
+        return response()->json($products);
+    }
 }

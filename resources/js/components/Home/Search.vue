@@ -59,7 +59,7 @@
 import {
     HollowDotsSpinner
 } from "epic-spinners";
-import { mapState } from 'vuex'
+import { mapState,mapMutations,mapActions } from 'vuex'
 export default {
     components:{HollowDotsSpinner},
     data(){
@@ -70,13 +70,21 @@ export default {
     },
     computed:{
         ...mapState({
-            searchText:state=>state.product.searchText
+            searchText:state=>state.product.searchText,
+            wishlistItem: state => state.product.wishlistItem,
         })
     },
     mounted(){
         this.getSearch()
     },
     methods:{
+         ...mapActions(["goToDetails", "alreadyMessage"]),
+        ...mapMutations([
+            "pushToWishlist",
+            "addToCart",
+            "quickView",
+            "addToWishlist"
+        ]),
         getSearch(){
             axios.post('api/getSearch',{
                 'text':this.searchText

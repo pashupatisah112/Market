@@ -200,7 +200,7 @@
                 <v-text-field rounded filled dense placeholder="Search items here..." v-model="searchItem">
 
                     <template slot="append">
-                        <v-btn rounded small class="white--text text-capitalize mr-n4 mt-n1" color="blackTheme">Search</v-btn>
+                        <v-btn rounded small class="white--text text-capitalize mr-n4 mt-n1" color="blackTheme" @click="searchOptions">Search</v-btn>
                     </template>
                 </v-text-field>
             </v-expand-x-transition>

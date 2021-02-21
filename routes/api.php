@@ -39,6 +39,7 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'Admin'],function(){
     Route::post('addPrimaryImage','ProductController@addPrimaryImage');
     Route::post('updateImage','ProductController@updateImage');
     Route::post('getSecondaryImages','ProductController@getSecondaryImages');
+    Route::post('changeProductStatus','ProductController@changeProductStatus');
 
     //featured
     Route::get('featured','FeaturedController@index');
@@ -123,6 +124,11 @@ Route::post('fromTopBrands','User\ProductController@fromTopBrands');
 Route::get('getProductOffers','User\ProductController@getProductOffers');
 Route::get('getOffers','User\ProductController@getOffers');
 
+//sale
+Route::get('getSale','User\ProductController@getSale');
+
+
+//general
 Route::get('getCategories','User\ProductController@getCategories');
 Route::get('latestProducts','User\ProductController@getLatestProducts');
 Route::post('getProducts','User\ProductController@getProducts');

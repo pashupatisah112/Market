@@ -184,6 +184,20 @@
                 </v-card>
             </v-dialog>
             <!--end delete section-->
+
+            <!--status button-->
+            <v-tooltip top>
+                <template v-slot:activator="{ on: tooltip }">
+                    <v-btn icon v-on="{ ...tooltip }" @click="changeProductStatus(item)">
+                        <v-icon small class="mr-2">
+                            mdi-circle-edit-outline
+                        </v-icon>
+                    </v-btn>
+                </template>
+                <span>change Status</span>
+            </v-tooltip>
+            <!--status button-->
+
         </template>
         <!--end action-->
         <template v-slot:no-data>
@@ -212,13 +226,16 @@
                     <v-col cols="12">
                         <p class="text-h5">Title: {{view.title}}</p>
                         <h4>Price: {{view.price}}</h4>
-                        <h4>Color: <v-chip small v-for="item in view.color" :key="item.id" class="font-weight-light mx-1">{{item.color_name+', '}}</v-chip></h4>
-                        <h4>Size: <v-chip small v-for="item in view.size" :key="item.id" class="font-weight-light mx-1">{{item.size+', '}}</v-chip></h4>
+                        <h4>Color: <v-chip small v-for="item in view.color" :key="item.id" class="font-weight-light mx-1">{{item.color_name+', '}}</v-chip>
+                        </h4>
+                        <h4>Size: <v-chip small v-for="item in view.size" :key="item.id" class="font-weight-light mx-1">{{item.size+', '}}</v-chip>
+                        </h4>
                         <h4>Category: <span>{{view.category}}</span></h4>
                         <h4>Sub category: {{view.subCategory}}</h4>
                         <h4>Company: {{view.company}}</h4>
                         <h4>Product code: {{view.product_code}}</h4>
-                        <h4>Tags: <v-chip small v-for="item in view.tag" :key="item.id" class="font-weight-light mx-1">{{item.tag_name+', '}}</v-chip></h4>
+                        <h4>Tags: <v-chip small v-for="item in view.tag" :key="item.id" class="font-weight-light mx-1">{{item.tag_name+', '}}</v-chip>
+                        </h4>
                         <h4>Description: {{view.description}}</h4>
                         <p class="body-2" v-html="view.description"></p>
                     </v-col>
@@ -286,6 +303,27 @@
         </v-card>
     </v-dialog>
     <!--end image view button-->
+
+    <!-- status change dialog -->
+    <v-dialog v-model="confirmStatusChangeDialog" max-width="400" persistent>
+        <v-card>
+            <v-card-title>
+                Confirm Status Change
+            </v-card-title>
+            <v-card-text>
+                <v-form v-model="valid" ref="form">
+                    <v-select v-model="product_status" :rules="[validRules.required]" :items="statusList" label="Change Product Status" placeholder="Change Product Status" item-text="status" item-value="status" dense outlined class="mt-2 mb-n5"></v-select>
+                </v-form>
+            </v-card-text>
+            <v-card-actions>
+                <v-btn dark rounded small class="text-capitalize" @click="confirmStatusChangeDialog = false">Cancel</v-btn>
+                <v-spacer></v-spacer>
+                <v-btn dark rounded small class="text-capitalize" @click="confirmProductStatusChange">Confirm</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+    <!-- end status change dialog -->
+
 </v-container>
 </template>
 
@@ -298,9 +336,24 @@ import {
 export default {
     data() {
         return {
+            valid: true,
             view: [],
             productViewDialog: false,
             imageViewDialog: false,
+            confirmStatusChangeDialog: false,
+
+            selectedProduct: '',
+            product_status: '',
+            statusList: [{
+                id: 1,
+                status: 'Online'
+            }, {
+                id: 2,
+                status: 'Offline'
+            }, {
+                id: 3,
+                status: 'Sale'
+            }],
 
             valid: true,
             tagItem: [],
@@ -343,7 +396,7 @@ export default {
             isSecondarySelecting: false,
             selectedItem: '',
             selectedIndex: null,
-            multiple:[],
+            multiple: [],
 
             alertColor: "success",
             timeout: 2000,
@@ -383,6 +436,10 @@ export default {
                 {
                     text: "Sub-Category",
                     value: "sub_category.subCategory_name"
+                },
+                {
+                    text: "Status",
+                    value: "status"
                 },
                 {
                     text: "Actions",
@@ -604,7 +661,7 @@ export default {
                             })
                             .then(res => {
                                 this.selectedItem.photo[i] = res.data
-                                })
+                            })
                             .catch(err => {
                                 (this.dataUpdateMsg = "Problem Uploading Images"),
                                 (this.dataUpdateAlert = true);
@@ -651,24 +708,23 @@ export default {
         showImages(item) {
             this.selectedIndex = this.products.indexOf(item)
             this.selectedItem = item;
-            this.multiple=item.photo
-            console.log('multiple:',this.multiple)
+            this.multiple = item.photo
+            console.log('multiple:', this.multiple)
             this.imageViewDialog = true;
-
 
         },
         viewProduct(item) {
             this.view = item;
             this.productViewDialog = true;
-            
+
         },
         getImage(item) {
             return item.image;
         },
         getImg(item) {
-            console.log('s:',item)
+            console.log('s:', item)
             return item
-            
+
         },
         onButtonClick() {
             this.isSelecting = true;
@@ -762,6 +818,23 @@ export default {
         },
         removeTag(item) {
             this.enterSelectedTag.splice(this.enterSelectedTag.indexOf(item), 1)
+        },
+        changeProductStatus(item) {
+            this.selectedProduct = item
+            this.confirmStatusChangeDialog = true
+
+        },
+        confirmProductStatusChange() {
+            if (this.$refs.form.validate()) {
+                axios.post('api/changeProductStatus', {
+                    product_id: this.selectedProduct.id,
+                    status: this.product_status
+                }).then(res => {
+                    this.products.splice(this.products.indexOf(this.selectedProduct), 1, res.data)
+                    this.confirmStatusChangeDialog=false
+                }).catch(err => console.log(err.response))
+            }
+
         }
     }
 };

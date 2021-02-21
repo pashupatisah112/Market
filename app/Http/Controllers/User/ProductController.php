@@ -120,6 +120,11 @@ class ProductController extends Controller
         $product=Product::where('product_type_id',$coll->id)->select(['id','title','price','image','product_code'])->with('rating:product_id,rating')->get();
         return response()->json($product);
     }
+    public function getSale()
+    {
+        $product=Product::where('status','Sale')->select(['id','title','price','image','product_code'])->with('rating:product_id,rating')->get();
+        return response()->json($product);
+    }
     public function getFeatured()
     {
         $prod=Featured::with('product:id,title,product_code')->get();

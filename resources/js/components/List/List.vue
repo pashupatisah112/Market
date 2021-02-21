@@ -206,6 +206,9 @@ export default {
                 })
                 .then(res => {
                     this.productsList = res.data
+                    if(res.data.length<1){
+                        this.noProdText='No any related products founr. Try different filter.'
+                    }
                 })
                 .catch(err => console.log(err.response));
         },
