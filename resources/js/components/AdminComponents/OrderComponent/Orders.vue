@@ -10,7 +10,14 @@
         <!--orders item actions-->
         <template v-slot:item.actions="{ item }">
             <!--deliver button-->
-            <v-select v-model="delivery_status" :items="statusList" label="Change Delivery Status" item-text="status" item-value="status" dense outlined class="mt-2 mb-n5" @change="changeDeliveryStatus(item)"></v-select>
+            <v-tooltip top>
+                <template v-slot:activator="{ on, attrs }">
+                    <v-icon small class="mr-2" @click="changeDeliveryStatus(item)" v-bind="attrs" v-on="on">
+                        mdi-circle-edit-outline
+                    </v-icon>
+                </template>
+                <span>Change Status</span>
+            </v-tooltip>
             <!--deliver button-->
 
             <!--View sale-->
@@ -162,9 +169,11 @@
                 Confirm Status Change
             </v-card-title>
             <v-card-text>
-                Are you sure you want to change the delivery status to '{{
-                        delivery_status
-                    }}'?
+                <v-form v-model="valid" ref="form">
+                    <v-select v-model="delivery_status" :rules="[validRules.required]" :items="statusList" label="Change Delivery Status" item-text="status" item-value="status" dense outlined class="mt-2 mb-n5"></v-select>
+
+                </v-form>
+
             </v-card-text>
             <v-card-actions>
                 <v-btn dark rounded small class="text-capitalize" @click="statusConfirmDialog = false">Cancel</v-btn>
@@ -178,7 +187,6 @@
 </template>
 
 <script>
-
 import {
     mapMutations,
     mapState
@@ -186,6 +194,7 @@ import {
 export default {
     data() {
         return {
+            valid: true,
             delivery_status: "",
             orderViewDialog: false,
             selectedOrder: [],
@@ -243,6 +252,11 @@ export default {
     created() {
         this.initialize();
     },
+    computed: {
+        ...mapState({
+            validRules: state => state.validation.validRules
+        })
+    },
     methods: {
         ...mapMutations(['setupInvoiceOrder', 'setupInvoiceProduct', 'setupInvoiceTotal']),
         initialize() {
@@ -258,21 +272,24 @@ export default {
             this.statusConfirmDialog = true;
         },
         confirmDeliveryChange() {
-            axios
-                .post("api/changeDeliveryStatus", {
-                    id: this.selectedOrder.id,
-                    status: this.delivery_status
-                })
-                .then(res => {
-                    this.orders.splice(
-                        this.orders.indexOf(this.selectedOrder),
-                        1,
-                        res.data
-                    );
-                    this.statusConfirmDialog = false;
-                    this.delivery_status = ''
-                })
-                .catch(err => console.log(err.response));
+            if (this.$refs.form.validate()) {
+                axios
+                    .post("api/changeDeliveryStatus", {
+                        id: this.selectedOrder.id,
+                        status: this.delivery_status
+                    })
+                    .then(res => {
+                        this.orders.splice(
+                            this.orders.indexOf(this.selectedOrder),
+                            1,
+                            res.data
+                        );
+                        this.statusConfirmDialog = false;
+                        this.delivery_status = ''
+                    })
+                    .catch(err => console.log(err.response));
+            }
+
         },
         viewOrder(item) {
             this.selectedOrder = item;

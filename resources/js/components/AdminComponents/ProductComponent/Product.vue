@@ -34,7 +34,7 @@
                                                     ]"></v-text-field>
                                         </v-col>
                                         <v-col cols="4">
-                                            <v-text-field v-model="editedItem.product_code" label="Product product_code" dense :rules="[
+                                            <v-text-field v-model="editedItem.product_code" :error-messages="productCodeError" label="Product product_code" dense :rules="[
                                                         validRules.required
                                                     ]"></v-text-field>
                                         </v-col>
@@ -405,6 +405,7 @@ export default {
             deleteDialog: false,
 
             productDialog: false,
+            productCodeError:'',
             category: [],
             subCategory: [],
             productType: [],
@@ -630,7 +631,11 @@ export default {
                             this.$refs.form.reset();
                         })
                         .catch(err => {
-                            console.log(err.response);
+                            if(err.response.data.errors.product_code){
+                                this.productCodeError=err.response.data.errors.product_code
+                                console.log(err.response.data.errors);
+                            }
+                            console.log(err.response)
                         });
                 }
 

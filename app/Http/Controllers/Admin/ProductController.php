@@ -41,6 +41,9 @@ class ProductController extends Controller
     }    
     public function store(Request $request)
     {
+        $this->validate($request,[
+            'product_code'=> 'unique:products,product_code',
+        ]);
         $product=new Product;
         $product->title=$request->title;
         $product->price=$request->price;
