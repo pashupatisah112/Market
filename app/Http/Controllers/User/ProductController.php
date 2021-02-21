@@ -36,12 +36,12 @@ class ProductController extends Controller
     public function getProducts(Request $request)
     {
         $sub=SubCategory::where('subCategory_name',$request->subCat)->first();
-        $product=Product::where('sub_category_id',$sub->id)->select(['id','title','price','image','product_code'])->get();
+        $product=Product::where('sub_category_id',$sub->id)->select(['id','title','price','image','product_code'])->with('rating:product_id,rating')->get();
         return response()->json($product);
     }
     public function getSelectedCategory(Request $request)
     {
-        $category=Category::where('category_name',$request->category_name)->with('subCategory')->get();
+        $category=Category::where('category_name',$request->category_name)->with('subCategory')->first();
         return response()->json($category);
     }
     public function getProductDetails(Request $request)

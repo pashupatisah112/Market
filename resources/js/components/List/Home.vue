@@ -9,7 +9,7 @@ import FilterProduct from '../Common/filter';
 import List from './List';
 export default {
     components:{
-        FilterProduct,List
+        List
     },
     data(){
         return{
