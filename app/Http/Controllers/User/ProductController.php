@@ -104,14 +104,14 @@ class ProductController extends Controller
     public function getSimilarProducts(Request $request)
     {
         $product=Product::where('product_code',$request->code)->select(['sub_category_id','company_id'])->first();
-        $sugg=Product::where('sub_category_id',$product->sub_category_id)->where('company_id',$product->company_id)->select(['id','title','price','image','product_code'])->get();
+        $sugg=Product::where('sub_category_id',$product->sub_category_id)->where('company_id',$product->company_id)->select(['id','title','price','image','product_code'])->with('rating:product_id,rating')->limit(8)->get();
         return response()->json($sugg);
 
     }
     public function getCollection()
     {
         $coll=ProductType::where('product_type','Collection')->first();
-        $product=Product::where('product_type_id',$coll->id)->select(['id','title','price','image','product_code'])->with('rating:product_id,rating')->get();
+        $product=Product::where('product_type_id',$coll->id)->select(['id','title','price','image','product_code'])->with('rating:product_id,rating')->paginate(8);
         return response()->json($product);
     }
     public function getOffers()
@@ -212,5 +212,8 @@ class ProductController extends Controller
     public function getSearch(Request $request){
         $product=Product::where('title','like',$request->text.'%')->select(['id','title','price','image','product_code'])->with('rating:product_id,rating')->get();
         return response()->json($product);
+    }
+    public function makeOrder(Request $request){
+        
     }
 }

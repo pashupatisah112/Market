@@ -31,7 +31,7 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'Admin'],function(){
     //products
     Route::post('getProductTags','ProductController@getProductTags');
     Route::get('getProductSup','ProductController@productSup');
-    Route::get('products','ProductController@getProducts');
+    Route::post('myProducts','ProductController@myProducts');
     Route::post('products','ProductController@store');
     Route::delete('products/{product}','ProductController@delete');
     Route::put('products/{product}','ProductController@update');
@@ -83,19 +83,11 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'User'],function(){
     
 
     //rating
-    Route::post('getRatings','ProductController@getRatings');
     Route::post('giveRating','ProductController@giveRating');
 
-    //comments
-    Route::post('getComments','ProductController@getComments');
-    Route::post('makeComment','ProductController@makeComment');
-
-    //tags
-    Route::post('getTags','ProductController@getTags');
-
-    //similar
-    Route::post('getSimilarProducts','ProductController@getSimilarProducts');
-
+   //comments
+   Route::post('makeComment','ProductController@makeComment');
+    
     //payments
     Route::post('verifyKhaltiPayment','PaymentController@verifyKhaltiPayment');
 
@@ -105,7 +97,23 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'User'],function(){
     //search
     Route::post('getSearch','ProductController@getSearch');
 
+    //order
+    Route::post('makeOrder','ProductController@makeOrder');
+
 });
+ //comments
+ Route::post('getComments','User\ProductController@getComments');
+
+
+//tags
+Route::post('getTags','User\ProductController@getTags');
+
+//similar
+Route::post('getSimilarProducts','User\ProductController@getSimilarProducts');
+
+//rating
+Route::post('getRatings','User\ProductController@getRatings');
+
 //Featured
 Route::get('getFeatured','User\ProductController@getFeatured');
 Route::post('getSimilarFeatured','User\ProductController@getSimilarFeatured');

@@ -162,7 +162,9 @@ export default {
                             'token':payload.token,
                             'amount':payload.amount
                         })
-                        .then()
+                        .then(res=>{
+
+                        })
                         .catch(err=>console.log(err.response))
                     },
                     onError(error) {
@@ -217,6 +219,12 @@ export default {
         },
         buy() {
             if (this.$refs.form.validate()) {
+                if(this.paymentGroup=='Khalti'){
+                    this.onKhaltiClick()
+                }
+                else if(this.paymentGroup=='Cash on delivery'){
+                    
+                }
                 db.collection("notification").add({
                     user_name:this.auth.name,
                     type:'order',
@@ -225,7 +233,6 @@ export default {
                     read_at:null,
                 })
                 .then(
-                    console.log('ordered')
                 )
                 .catch(function (error) {
                     console.error("Error adding document: ", error);

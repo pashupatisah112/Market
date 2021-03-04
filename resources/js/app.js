@@ -11,7 +11,10 @@ import Vue from 'vue'
 import VueInternationalization from 'vue-i18n';
 import Locale from './vue-i18n-locales.generated';
 import firebase from "firebase/app";
+import JwPagination from 'jw-vue-pagination';
+Vue.component('jw-pagination', JwPagination);
 
+Vue.component('pagination', require('laravel-vue-pagination'));
 
 const lang = localStorage.getItem('locale') || 'en'; 
  

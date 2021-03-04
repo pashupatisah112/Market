@@ -45,7 +45,9 @@
             </v-col>
         </v-row>
         <hollow-dots-spinner class="mx-auto my-16" v-else :animation-duration="1000" :dot-size="20" :dots-num="3" color="#ff1d5e" />
-
+        <v-row justify="center" class="py-5">
+            <v-pagination v-model="pagination.page" :length="pagination.pages" circle @input="getOffers"></v-pagination>
+        </v-row>
     </v-container>
 </div>
 </template>
@@ -60,11 +62,19 @@ import {
     HollowDotsSpinner
 } from "epic-spinners";
 export default {
-    components:{HollowDotsSpinner},
+    components: {
+        HollowDotsSpinner
+    },
     data() {
         return {
             offers: [],
-            rating: 0
+            rating: 0,
+            pagination: {
+                page: 1,
+                pages: 4,
+                perPage: 0,
+                visible: 7
+            }
         };
     },
     computed: {

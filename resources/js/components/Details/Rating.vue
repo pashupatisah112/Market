@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex'
 export default {
     data() {
         return {
@@ -46,7 +47,13 @@ export default {
     mounted() {
         this.getRatings()
     },
+    computed:{
+        ...mapState({
+            token:state=>state.authentication.token
+        })
+    },
     methods: {
+        ...mapMutations(['setLoginDialog']),
         getRatings() {
             axios.post('api/getRatings', {
                     code: this.product_code
@@ -62,7 +69,8 @@ export default {
                 .catch(err => console.log(err.response))
         },
         giveRating() {
-            axios.post('api/giveRating', {
+            if(this.token){
+                axios.post('api/giveRating', {
                     code: this.product_code,
                     rated: this.rating
                 }).then(res => {
@@ -72,6 +80,11 @@ export default {
                     });
                 })
                 .catch(err => console.log(err.response))
+            }else{
+                this.rating=0
+               this.setLoginDialog()
+            }
+            
         },
         getValue(item){
             let count=100/this.rating_count
