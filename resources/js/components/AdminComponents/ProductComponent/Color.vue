@@ -2,7 +2,11 @@
 <v-container fluid>
 
     <!--course list-->
-    <v-data-table :headers="headers" :items="color" class="elevation-1">
+    <v-data-table :headers="headers" :items="color.data" class="elevation-1" :footer-props="{ itemsPerPageOptions: [5, 10, 15],itemsPerPageText:'Colors per page' }"
+            :server-items-length="color.total"
+            :loading="loading"
+            loading-text="Loading.....Please wait."
+            @pagination="paginate">
         <template v-slot:top>
             <v-toolbar flat color="white">
                 <v-card class="px-3 py-3 mb-2 mr-2" color="success">
@@ -96,7 +100,7 @@
         </template>
         <!--end action-->
         <template v-slot:no-data>
-            <v-btn color="primary" @click="initialize">Reset</v-btn>
+            <v-btn color="primary" @click="paginate">Reset</v-btn>
         </template>
     </v-data-table>
     <!--end course list-->
@@ -119,6 +123,7 @@ export default {
 
     data() {
         return {
+            loading:true,
             alertColor: 'success',
             timeout: 2000,
             dataUpdateMsg: '',
@@ -172,30 +177,26 @@ export default {
             val || this.close()
         },
     },
-
-    created() {
-        this.initialize()
-    },
-    mounted() {
-
-    },
     methods: {
-        initialize() {
-            axios.get('/api/color', {}).
-            then(res => this.color = res.data)
-                .catch(err => console.log(err.response))
-
+         paginate($event){
+            axios
+                .post("/api/getColors?page="+$event.page, {'per_page':$event.itemsPerPage}) //see the response to understand this-page urls
+                .then(res => {
+                    this.color = res.data;
+                    this.loading=false
+                })
+                .catch(err => console.log(err.response));
         },
 
         editItem(item) {
-            this.editedIndex = this.color.indexOf(item)
+            this.editedIndex = this.color.data.indexOf(item)
             this.editedItem = Object.assign({}, item)
             this.dialog = true
         },
 
         deleteItem(item) {
-            const index = this.color.indexOf(item)
-            this.color.splice(index, 1)
+            const index = this.color.data.indexOf(item)
+            this.color.data.splice(index, 1)
             axios.delete('/api/color/' + item.id)
                 .then(this.deleteDialog = false,
                     this.dataUpdateMsg = 'Course item deleted successfully',
@@ -221,14 +222,14 @@ export default {
                         'color_code':this.editedItem.color_code
                     })
                     .then(res => {
-                        if (Object.assign(this.color[this.editedIndex], res.data.color)) {
+                        if (Object.assign(this.color.data[this.editedIndex], res.data.color)) {
                             this.close()
                             this.dataUpdateMsg = 'Color item updated successfully'
                             this.dataUpdateAlert = true
                         }
                     })
                     .catch(err => console.log(err.response))
-                Object.assign(this.color[this.editedIndex], this.editedItem)
+                Object.assign(this.color.data[this.editedIndex], this.editedItem)
             } else {
 
                 axios.post('/api/color', {
@@ -236,7 +237,7 @@ export default {
                         'color_code':this.editedItem.color_code
                     })
                     .then(res => {
-                        if (this.color.push(res.data)) {
+                        if (this.color.data.push(res.data)) {
                             this.close()
                             this.dataUpdateMsg = 'New Color Added successfully',
                                 this.dataUpdateAlert = true

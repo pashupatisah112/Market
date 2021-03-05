@@ -36,7 +36,7 @@ class ProductController extends Controller
     public function getProducts(Request $request)
     {
         $sub=SubCategory::where('subCategory_name',$request->subCat)->first();
-        $product=Product::where('sub_category_id',$sub->id)->select(['id','title','price','image','product_code'])->with('rating:product_id,rating')->get();
+        $product=Product::where('sub_category_id',$sub->id)->select(['id','title','price','image','product_code'])->with('rating:product_id,rating')->paginate(12);
         return response()->json($product);
     }
     public function getSelectedCategory(Request $request)
@@ -117,12 +117,12 @@ class ProductController extends Controller
     public function getOffers()
     {
         $coll=ProductType::where('product_type','Offered')->first();
-        $product=Product::where('product_type_id',$coll->id)->select(['id','title','price','image','product_code'])->with('rating:product_id,rating')->get();
+        $product=Product::where('product_type_id',$coll->id)->select(['id','title','price','image','product_code'])->with('rating:product_id,rating')->paginate(8);
         return response()->json($product);
     }
     public function getSale()
     {
-        $product=Product::where('status','Sale')->select(['id','title','price','image','product_code'])->with('rating:product_id,rating')->get();
+        $product=Product::where('status','Sale')->select(['id','title','price','image','product_code'])->with('rating:product_id,rating')->paginate(12);
         return response()->json($product);
     }
     public function getFeatured()
@@ -176,7 +176,7 @@ class ProductController extends Controller
         $product=Product::where('product_type_id',$type->id)->select(['id','title','price','image','product_code'])->with('rating:product_id,rating')->limit(12)->get();
         return response()->json($product);
     }
-    public function getTopSellers()
+    public function getTopSellers(Request $request)
     {
         $ids=[];
         $brandId=[];
@@ -184,7 +184,7 @@ class ProductController extends Controller
         foreach($sales as $sale){
             array_push($ids,$sale->product_id);
         }
-        $products=Product::whereIn('id',$ids)->select(['id','title','price','image','product_code','company_id'])->with('rating:product_id,rating')->get();
+        $products=Product::whereIn('id',$ids)->select(['id','title','price','image','product_code','company_id'])->with('rating:product_id,rating')->paginate(12);
         foreach($products as $product){
             if(!in_array($product->company_id,$brandId)){
                 array_push($brandId,$product->company_id);
@@ -210,7 +210,7 @@ class ProductController extends Controller
         return response()->json($sales);
     }
     public function getSearch(Request $request){
-        $product=Product::where('title','like',$request->text.'%')->select(['id','title','price','image','product_code'])->with('rating:product_id,rating')->get();
+        $product=Product::where('title','like',$request->text.'%')->select(['id','title','price','image','product_code'])->with('rating:product_id,rating')->paginate(12);
         return response()->json($product);
     }
     public function makeOrder(Request $request){

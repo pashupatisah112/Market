@@ -1,7 +1,11 @@
 <template>
 <v-container fluid>
     <!--course list-->
-    <v-data-table :headers="headers" :items="comments" sort-by="calories" class="elevation-1">
+    <v-data-table :headers="headers" :items="comments.data" sort-by="calories" class="elevation-1" :footer-props="{ itemsPerPageOptions: [5, 10, 15],itemsPerPageText:'Comments per page' }"
+            :server-items-length="comments.total"
+            :loading="loading"
+            loading-text="Loading.....Please wait."
+            @pagination="paginate">
         <template v-slot:top>
             <v-toolbar flat color="white">
                 <v-toolbar-title>Comments Management</v-toolbar-title>
@@ -50,7 +54,7 @@
         </template>
         <!--end action-->
         <template v-slot:no-data>
-            <v-btn color="primary" @click="initialize">Reset</v-btn>
+            <v-btn color="primary" @click="paginate">Reset</v-btn>
         </template>
     </v-data-table>
     <!--end course list-->
@@ -85,6 +89,7 @@ export default {
 
     data() {
         return {
+            loading:true,
             //form
             valid:true,
             
@@ -132,18 +137,15 @@ export default {
         })
 
     },
-
-    created() {
-        this.initialize()
-    },
     methods: {
-        initialize() {
-            axios.get('/api/commentList', {}).
-            then(res =>{
-                 this.comments = res.data
-            })
-                .catch(err => console.log(err.response))
-
+        paginate($event){
+            axios
+                .post("/api/commentList?page="+$event.page, {'per_page':$event.itemsPerPage}) //see the response to understand this-page urls
+                .then(res => {
+                    this.comments = res.data;
+                    this.loading=false
+                })
+                .catch(err => console.log(err.response));
         },
         giveReply(item){
             this.selectedComment=item
@@ -155,7 +157,7 @@ export default {
                 replyText:this.reply,
                 comment_id:this.selectedComment.id
             }).then(res=>{
-                this.comments.splice(this.comments.indexOf(this.selectedComment),1,res.data)
+                this.comments.data.splice(this.comments.indexOf(this.selectedComment),1,res.data)
                 this.selectedComment=''
                 this.replyDialog=false
             }).catch(err=>console.log(err.response))
@@ -163,8 +165,8 @@ export default {
             
         },
         deleteItem(item) {
-            const index = this.comments.indexOf(item)
-            this.comments.splice(index, 1)
+            const index = this.comments.data.indexOf(item)
+            this.comments.data.splice(index, 1)
             axios.post('/api/deleteComment/',{
                 comment_id:item.id
             })

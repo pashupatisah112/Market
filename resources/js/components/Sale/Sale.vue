@@ -1,8 +1,8 @@
 <template>
 <div>
     <v-container fluid>
-        <v-row class="px-10" v-if="sale.length>0">
-             <v-col cols="12" lg="2" md="4" sm="6" v-for="item in sale" :key="item.id">
+        <v-row class="px-10" v-if="sale">
+             <v-col cols="12" lg="2" md="4" sm="6" v-for="item in sale.data" :key="item.id">
                     <v-card max-width="300" class="mx-auto" tile flat>
                         <v-hover v-slot="{ hover }">
                             <div style="overflow: hidden;">
@@ -40,8 +40,22 @@
                         </v-card-title>
                     </v-card>
                 </v-col>
+                <v-col cols="12" align="center">
+                <v-pagination
+                        v-model="page"
+                        :length="sale.last_page"
+                        prev-icon="mdi-menu-left"
+                        next-icon="mdi-menu-right"
+                        :total-visible="7"
+                        @input="input"
+                        @next="next"
+                        @previous="previous"
+                        class="my-5"
+                    ></v-pagination>
+            </v-col>
+        
         </v-row>
-        <hollow-dots-spinner class="mx-auto my-16" v-else-if="sale.length <1 && noProdText==''" :animation-duration="1000" :dot-size="20" :dots-num="3" color="#ff1d5e" />
+        <hollow-dots-spinner class="mx-auto my-16" v-else-if="sale.data.length <1 && noProdText==''" :animation-duration="1000" :dot-size="20" :dots-num="3" color="#ff1d5e" />
         <p v-else class="text-center text-secondary">{{noProdText}}</p>
     </v-container>
 </div>
@@ -58,7 +72,8 @@ export default {
         return {
             sale: [],
             noProdText:'',
-            rating:0
+            rating:0,
+            page:1,
         };
     },
     computed: {
@@ -67,18 +82,18 @@ export default {
         }),
     },
     mounted() {
-        this.getOffers();
+        this.getSale();
     },
     methods: {
         ...mapActions(['goToDetails', 'alreadyMessage']),
         ...mapMutations(["pushToWishlist", 'addToCart', 'quickView', 'addToWishlist']),
 
-        getOffers() {
+        getSale() {
             axios
-                .get("api/getSale")
+                .get("api/getSale?page="+this.page)
                 .then(res => {
                     this.sale = res.data
-                    if(res.data.length<1){
+                    if(res.data.data.length<1){
                         this.noProdText='No items is sale. Come back later.'
                     }
                 })
@@ -95,6 +110,26 @@ export default {
 
             }
             return rate / item.rating.length
+        },
+         input(e) {
+            this.page = e;
+            this.getSale();
+        },
+        next(e) {
+            axios
+                .get(this.sale.next_page_url)
+                .then(res => {
+                    this.sale = res.data;
+                })
+                .catch(err => console.log(err.response));
+        },
+        previous() {
+            axios
+                .get(this.sale.previous_page_url)
+                .then(res => {
+                    this.sale = res.data;
+                })
+                .catch(err => console.log(err.response));
         }
 
     }

@@ -4,8 +4,8 @@
         <v-row justify="center">
             <p class="text-h6 font-weight-bold">Product With Offers</p>
         </v-row>
-        <v-row class="px-10" v-if="this.offers.length>0">
-            <v-col cols="12" lg="3" md="4" sm="6" v-for="item in offers" :key="item.id">
+        <v-row class="px-10" v-if="offers">
+            <v-col cols="12" lg="3" md="4" sm="6" v-for="item in offers.data" :key="item.id">
                 <v-card max-width="300" class="mx-auto" tile flat>
                     <v-hover v-slot="{ hover }">
                         <div style="overflow: hidden;">
@@ -43,11 +43,22 @@
                     </v-card-title>
                 </v-card>
             </v-col>
+            <v-col cols="12" align="center">
+                <v-pagination
+                        v-model="page"
+                        :length="offers.last_page"
+                        prev-icon="mdi-menu-left"
+                        next-icon="mdi-menu-right"
+                        :total-visible="7"
+                        @input="input"
+                        @next="next"
+                        @previous="previous"
+                        class="my-5"
+                    ></v-pagination>
+            </v-col>
         </v-row>
         <hollow-dots-spinner class="mx-auto my-16" v-else :animation-duration="1000" :dot-size="20" :dots-num="3" color="#ff1d5e" />
-        <v-row justify="center" class="py-5">
-            <v-pagination v-model="pagination.page" :length="pagination.pages" circle @input="getOffers"></v-pagination>
-        </v-row>
+        
     </v-container>
 </div>
 </template>
@@ -67,14 +78,9 @@ export default {
     },
     data() {
         return {
-            offers: [],
+            offers: null,
             rating: 0,
-            pagination: {
-                page: 1,
-                pages: 4,
-                perPage: 0,
-                visible: 7
-            }
+           page:1
         };
     },
     computed: {
@@ -91,9 +97,10 @@ export default {
 
         getOffers() {
             axios
-                .get("api/getOffers")
+                .post("api/getOffers?page=" + this.page)
                 .then(res => {
                     this.offers = res.data
+                    console.log(this.offers)
                 })
                 .catch(err => console.log(err.response));
         },
@@ -108,6 +115,26 @@ export default {
 
             }
             return rate / item.rating.length
+        },
+         input(e) {
+            this.page = e;
+            this.getOffers();
+        },
+        next(e) {
+            axios
+                .get(this.offers.next_page_url)
+                .then(res => {
+                    this.offers = res.data;
+                })
+                .catch(err => console.log(err.response));
+        },
+        previous() {
+            axios
+                .get(this.offers.previous_page_url)
+                .then(res => {
+                    this.offers = res.data;
+                })
+                .catch(err => console.log(err.response));
         }
 
     }

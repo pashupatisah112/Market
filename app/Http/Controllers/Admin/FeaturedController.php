@@ -9,9 +9,10 @@ use Illuminate\Http\Request;
 
 class FeaturedController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-         $featured=Featured::all();
+        $items=$request->per_page;
+         $featured=Featured::paginate($items);
          return response()->json($featured);
     }
     public function store(Request $request)

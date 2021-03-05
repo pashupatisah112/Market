@@ -2,7 +2,11 @@
 <v-container fluid>
 
     <!--course list-->
-    <v-data-table :headers="headers" :items="types" class="elevation-1">
+    <v-data-table :headers="headers" :items="types.data" class="elevation-1" :footer-props="{ itemsPerPageOptions: [5, 10, 15],itemsPerPageText:'Types per page' }"
+            :server-items-length="types.total"
+            :loading="loading"
+            loading-text="Loading.....Please wait."
+            @pagination="paginate">
         <template v-slot:top>
             <v-toolbar flat color="white">
                 <v-toolbar-title>Product types</v-toolbar-title>
@@ -91,7 +95,7 @@
         </template>
         <!--end action-->
         <template v-slot:no-data>
-            <v-btn color="primary" @click="initialize">Reset</v-btn>
+            <v-btn color="primary" @click="paginate">Reset</v-btn>
         </template>
     </v-data-table>
     <!--end course list-->
@@ -118,6 +122,7 @@ export default {
 
     data() {
         return {
+            loading:true,
             valid: true,
             alertColor: 'success',
             timeout: 2000,
@@ -168,30 +173,25 @@ export default {
             val || this.close()
         },
     },
-
-    created() {
-        this.initialize()
-    },
-    mounted() {
-
-    },
     methods: {
-        initialize() {
-            axios.get('/api/types', {}).
-            then(res => this.types = res.data)
-                .catch(err => console.log(err.response))
-
+        paginate($event){
+            axios
+                .post("/api/getTypes?page="+$event.page, {'per_page':$event.itemsPerPage}) //see the response to understand this-page urls
+                .then(res => {
+                    this.types = res.data;
+                    this.loading=false
+                })
+                .catch(err => console.log(err.response));
         },
-
         editItem(item) {
-            this.editedIndex = this.types.indexOf(item)
+            this.editedIndex = this.types.data.indexOf(item)
             this.editedItem = Object.assign({}, item)
             this.dialog = true
         },
 
         deleteItem(item) {
-            const index = this.types.indexOf(item)
-            this.types.splice(index, 1)
+            const index = this.types.data.indexOf(item)
+            this.types.data.splice(index, 1)
             axios.delete('/api/types/' + item.id)
                 .then(this.deleteDialog = false,
                     this.dataUpdateMsg = 'Course item deleted successfully',
@@ -217,14 +217,14 @@ export default {
                             'product_type': this.editedItem.product_type,
                         })
                         .then(res => {
-                            if (Object.assign(this.types[this.editedIndex], res.data.types)) {
+                            if (Object.assign(this.types.data[this.editedIndex], res.data.types)) {
                                 this.close()
                                 this.dataUpdateMsg = 'Product Type updated successfully'
                                 this.dataUpdateAlert = true
                             }
                         })
                         .catch(err => console.log(err.response))
-                    Object.assign(this.types[this.editedIndex], this.editedItem)
+                    Object.assign(this.types.data[this.editedIndex], this.editedItem)
                 } else {
 
                     axios.post('/api/types', {

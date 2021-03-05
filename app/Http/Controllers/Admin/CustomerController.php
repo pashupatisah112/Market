@@ -8,8 +8,9 @@ use App\User;
 
 class CustomerController extends Controller
 {
-    public function getCustomers(){
-        $customers=User::where('role_id',2)->get();
+    public function getCustomers(Request $request){
+        $items=$request->per_page;
+        $customers=User::where('role_id',2)->paginate($items);
         return response()->json($customers);
     }
 }

@@ -57,8 +57,8 @@
                 </v-card>
             </v-expand-transition>
         </v-row>
-        <v-row justify="center" v-if="productsList.length>0">
-            <v-col cols="12" lg="2" md="4" sm="6" v-for="item in productsList" :key="item.id">
+        <v-row justify="center" v-if="productsList.data">
+            <v-col cols="12" lg="2" md="4" sm="6" v-for="item in productsList.data" :key="item.id">
                 <v-card max-width="300" class="mx-auto" tile flat>
                     <v-hover v-slot="{ hover }">
                         <div style="overflow: hidden;">
@@ -96,6 +96,19 @@
                     </v-card-title>
                 </v-card>
             </v-col>
+            <v-col cols="12" align="center">
+                <v-pagination
+                        v-model="page"
+                        :length="productsList.last_page"
+                        prev-icon="mdi-menu-left"
+                        next-icon="mdi-menu-right"
+                        :total-visible="7"
+                        @input="input"
+                        @next="next"
+                        @previous="previous"
+                        class="my-5"
+                    ></v-pagination>
+            </v-col>
         </v-row>
         <hollow-dots-spinner class="mx-auto my-16" v-else-if="productsList.length <1 && noProdText==''" :animation-duration="1000" :dot-size="20" :dots-num="3" color="#ff1d5e" />
         <p v-else class="text-center text-secondary">{{noProdText}}</p>
@@ -116,6 +129,7 @@ export default {
     components:{HollowDotsSpinner},
     data() {
         return {
+            page:1,
             productsList: [],
             noProdText:'',
             expand: false,
@@ -201,12 +215,12 @@ export default {
         ]),
         getProductsList() {
             axios
-                .post("api/getProducts", {
+                .post("api/getProducts?page=" + this.page, {
                     subCat: this.subCategory
                 })
                 .then(res => {
                     this.productsList = res.data
-                    if(res.data.length<1){
+                    if(res.data.data.length<1){
                         this.noProdText='No any related products founr. Try different filter.'
                     }
                 })
@@ -285,6 +299,26 @@ export default {
                 .then(res => this.productsList = res.data)
                 .catch(err => console.log(err.response))
         },
+        input(e) {
+            this.page = e;
+            this.getProductsList();
+        },
+        next(e) {
+            axios
+                .get(this.productsList.next_page_url)
+                .then(res => {
+                    this.productsList = res.data;
+                })
+                .catch(err => console.log(err.response));
+        },
+        previous() {
+            axios
+                .get(this.productsList.previous_page_url)
+                .then(res => {
+                    this.productsList = res.data;
+                })
+                .catch(err => console.log(err.response));
+        }
     }
 };
 </script>

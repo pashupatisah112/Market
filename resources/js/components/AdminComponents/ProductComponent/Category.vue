@@ -2,12 +2,16 @@
 <v-container fluid>
 
     <!--course list-->
-    <v-data-table :headers="headers" :items="categories" class="elevation-1">
+    <v-data-table :headers="headers" :items="categories.data" class="elevation-1" :footer-props="{ itemsPerPageOptions: [5, 10, 15],itemsPerPageText:'Category per page' }"
+            :server-items-length="categories.total"
+            :loading="loading"
+            loading-text="Loading.....Please wait."
+            @pagination="paginate">
         <template v-slot:top>
             <v-toolbar flat color="white">
                 <v-card class="px-3 py-3 mb-2 mr-2" color="success">
                     <v-card-actions>
-                        <v-icon x-large color="white">mdi-account-star</v-icon>
+                        {{categories.total}}
                     </v-card-actions>
                 </v-card>
                 <v-toolbar-title>Product Categories</v-toolbar-title>
@@ -96,7 +100,7 @@
         </template>
         <!--end action-->
         <template v-slot:no-data>
-            <v-btn color="primary" @click="initialize">Reset</v-btn>
+            <v-btn color="primary" @click="paginate">Reset</v-btn>
         </template>
     </v-data-table>
     <!--end course list-->
@@ -123,6 +127,7 @@ export default {
 
     data() {
         return {
+            loading:true,
             valid: true,
             alertColor: 'success',
             timeout: 2000,
@@ -176,30 +181,27 @@ export default {
         },
     },
 
-    created() {
-        this.initialize()
-    },
-    mounted() {
-
-    },
     methods: {
-        initialize() {
-            axios.get('/api/categories', {}).
-            then(res => this.categories = res.data)
-                .catch(err => console.log(err.response))
-
+        paginate($event){
+            axios
+                .post("/api/getCategories?page="+$event.page, {'per_page':$event.itemsPerPage}) //see the response to understand this-page urls
+                .then(res => {
+                    this.categories = res.data;
+                    this.loading=false
+                })
+                .catch(err => console.log(err.response));
         },
 
         editItem(item) {
-            this.editedIndex = this.categories.indexOf(item)
+            this.editedIndex = this.categories.data.indexOf(item)
             this.editedItem = Object.assign({}, item)
             this.dialog = true
         },
 
         deleteItem(item) {
-            const index = this.categories.indexOf(item)
-            this.categories.splice(index, 1)
-            axios.delete('/api/categories/' + item.id)
+            const index = this.categories.data.indexOf(item)
+            this.categories.data.splice(index, 1)
+            axios.delete('/api/deleteCategory/' + item.id)
                 .then(this.deleteDialog = false,
                     this.dataUpdateMsg = 'Course item deleted successfully',
                     this.dataUpdateAlert = true
@@ -220,11 +222,11 @@ export default {
         save() {
             if (this.$refs.form.validate()) {
                 if (this.editedIndex > -1) {
-                    axios.put('/api/categories/' + this.editedItem.id, {
+                    axios.put('/api/updateCategory/' + this.editedItem.id, {
                             'category_name': this.editedItem.category_name,
                         })
                         .then(res => {
-                            if (Object.assign(this.categories[this.editedIndex], res.data.categories)) {
+                            if (Object.assign(this.categories.data[this.editedIndex], res.data)) {
                                 this.close()
                                 this.dataUpdateMsg = 'Category item updated successfully'
                                 this.dataUpdateAlert = true
@@ -234,11 +236,11 @@ export default {
                     Object.assign(this.categories[this.editedIndex], this.editedItem)
                 } else {
 
-                    axios.post('/api/categories', {
+                    axios.post('/api/addCategory', {
                             'category_name': this.editedItem.category_name,
                         })
                         .then(res => {
-                            if (this.categories.push(res.data)) {
+                            if (this.categories.data.push(res.data)) {
                                 this.close()
                                 this.dataUpdateMsg = 'New Category Added successfully',
                                     this.dataUpdateAlert = true

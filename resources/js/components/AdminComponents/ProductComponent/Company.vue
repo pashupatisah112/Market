@@ -2,7 +2,11 @@
 <v-container fluid>
 
     <!--course list-->
-    <v-data-table :headers="headers" :items="company" class="elevation-1">
+    <v-data-table :headers="headers" :items="company.data" class="elevation-1" :footer-props="{ itemsPerPageOptions: [5, 10, 15],itemsPerPageText:'Companies per page' }"
+            :server-items-length="company.total"
+            :loading="loading"
+            loading-text="Loading.....Please wait."
+            @pagination="paginate">
         <template v-slot:top>
             <v-toolbar flat color="white">
                 <v-toolbar-title>Product company</v-toolbar-title>
@@ -92,7 +96,7 @@
         </template>
         <!--end action-->
         <template v-slot:no-data>
-            <v-btn color="primary" @click="initialize">Reset</v-btn>
+            <v-btn color="primary" @click="paginate">Reset</v-btn>
         </template>
     </v-data-table>
     <!--end course list-->
@@ -120,6 +124,7 @@ export default {
     data() {
         return {
             valid: true,
+            loading:true,
             alertColor: 'success',
             timeout: 2000,
             dataUpdateMsg: '',
@@ -178,34 +183,27 @@ export default {
             val || this.close()
         },
     },
-
-    created() {
-        this.initialize()
-    },
-    mounted() {
-
-    },
     methods: {
-        initialize() {
-            axios.get('/api/company', {}).
-            then(res =>{
-                this.company = res.data.company
-                this.subCategories=res.data.subCategories
-                console.log(this.company)
-            })
-                .catch(err => console.log(err.response))
-
+        paginate($event){
+            axios
+                .post("/api/getCompanies?page="+$event.page, {'per_page':$event.itemsPerPage}) //see the response to understand this-page urls
+                .then(res => {
+                    this.company = res.data;
+                    console.log('company:',this.company)
+                    this.loading=false
+                })
+                .catch(err => console.log(err.response));
         },
 
         editItem(item) {
-            this.editedIndex = this.company.indexOf(item)
+            this.editedIndex = this.company.data.indexOf(item)
             this.editedItem = Object.assign({}, item)
             this.dialog = true
         },
 
         deleteItem(item) {
-            const index = this.company.indexOf(item)
-            this.company.splice(index, 1)
+            const index = this.company.data.indexOf(item)
+            this.company.data.splice(index, 1)
             axios.delete('/api/company/' + item.id)
                 .then(this.deleteDialog = false,
                     this.dataUpdateMsg = 'Company item deleted successfully',
@@ -232,7 +230,7 @@ export default {
                             'sub_category_id':this.editedItem.sub_category_id
                         })
                         .then(res => {
-                            if (Object.assign(this.company[this.editedIndex], res.data.company)) {
+                            if (Object.assign(this.company.data[this.editedIndex], res.data.company)) {
                                 this.close()
                                 this.dataUpdateMsg = 'Company item updated successfully'
                                 this.dataUpdateAlert = true
@@ -247,7 +245,7 @@ export default {
                             'sub_category_id':this.editedItem.sub_category_id
                         })
                         .then(res => {
-                            if (this.company.push(res.data)) {
+                            if (this.company.data.push(res.data)) {
                                 this.close()
                                 this.dataUpdateMsg = 'New Company Added successfully',
                                     this.dataUpdateAlert = true

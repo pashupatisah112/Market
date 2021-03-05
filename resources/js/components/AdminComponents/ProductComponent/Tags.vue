@@ -2,7 +2,11 @@
 <v-container fluid>
 
     <!--course list-->
-    <v-data-table :headers="headers" :items="tags" class="elevation-1">
+    <v-data-table :headers="headers" :items="tags.data" class="elevation-1" :footer-props="{ itemsPerPageOptions: [5, 10, 15],itemsPerPageText:'Tags per page' }"
+            :server-items-length="tags.total"
+            :loading="loading"
+            loading-text="Loading.....Please wait."
+            @pagination="paginate">
         <template v-slot:top>
             <v-toolbar flat color="white">
                 <v-toolbar-title>Product tags</v-toolbar-title>
@@ -14,7 +18,7 @@
                         <v-tooltip top>
                             <template v-slot:activator="{ on:tooltip }">
                                 <v-btn class="mr-2 float-right" fab dark color="success" v-bind="attrs" v-on="{...dialog,...tooltip}">
-                                    <v-icon dark>mdi-plus</v-icon>
+                                    <v-icon dark>{{tags.total}}</v-icon>
                                 </v-btn>
                             </template>
                             <span>Add New</span>
@@ -91,7 +95,7 @@
         </template>
         <!--end action-->
         <template v-slot:no-data>
-            <v-btn color="primary" @click="initialize">Reset</v-btn>
+            <v-btn color="primary" @click="paginate">Reset</v-btn>
         </template>
     </v-data-table>
     <!--end course list-->
@@ -115,6 +119,7 @@ export default {
 
     data() {
         return {
+            loading:true,
             valid: true,
             alertColor: 'success',
             timeout: 2000,
@@ -123,7 +128,7 @@ export default {
             deleteDialog: false,
             details: [],
             dialog: false,
-            tags: [],
+            tags: '',
             headers: [{
                     text: '#',
                     align: 'start',
@@ -167,29 +172,27 @@ export default {
         },
     },
 
-    created() {
-        this.initialize()
-    },
-    mounted() {
-
-    },
     methods: {
-        initialize() {
-            axios.get('/api/tags', {}).
-            then(res => this.tags = res.data)
-                .catch(err => console.log(err.response))
+        paginate($event){
+            axios
+                .post("/api/getAllTags?page="+$event.page, {'per_page':$event.itemsPerPage}) //see the response to understand this-page urls
+                .then(res => {
+                    this.tags = res.data
+                    this.loading=false
 
+                })
+                .catch(err => console.log(err.response));
         },
 
         editItem(item) {
-            this.editedIndex = this.tags.indexOf(item)
+            this.editedIndex = this.tags.data.indexOf(item)
             this.editedItem = Object.assign({}, item)
             this.dialog = true
         },
 
         deleteItem(item) {
-            const index = this.tags.indexOf(item)
-            this.tags.splice(index, 1)
+            const index = this.tags.data.indexOf(item)
+            this.tags.data.splice(index, 1)
             axios.delete('/api/tags/' + item.id)
                 .then(this.deleteDialog = false,
                     this.dataUpdateMsg = 'Tag item deleted successfully',
@@ -215,7 +218,7 @@ export default {
                             'tag_name': this.editedItem.tag_name,
                         })
                         .then(res => {
-                            if (Object.assign(this.tags[this.editedIndex], res.data.tags)) {
+                            if (Object.assign(this.tags.data[this.editedIndex], res.data.tags)) {
                                 this.close()
                                 this.dataUpdateMsg = 'Tag item updated successfully'
                                 this.dataUpdateAlert = true
@@ -229,7 +232,7 @@ export default {
                             'tag_name': this.editedItem.tag_name,
                         })
                         .then(res => {
-                            if (this.tags.push(res.data)) {
+                            if (this.tags.data.push(res.data)) {
                                 this.close()
                                 this.dataUpdateMsg = 'New Tag Added successfully',
                                     this.dataUpdateAlert = true

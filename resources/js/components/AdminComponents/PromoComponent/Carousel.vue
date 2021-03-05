@@ -1,7 +1,11 @@
 <template>
 <v-container fluid>
     <!--course list-->
-    <v-data-table :headers="headers" :items="featured" sort-by="calories" class="elevation-1">
+    <v-data-table :headers="headers" :items="featured.data" sort-by="calories" class="elevation-1" :footer-props="{ itemsPerPageOptions: [5, 10, 15],itemsPerPageText:'Promo per page' }"
+            :server-items-length="featured.total"
+            :loading="loading"
+            loading-text="Loading.....Please wait."
+            @pagination="paginate">
         <template v-slot:top>
             <v-toolbar flat color="white">
                 <v-toolbar-title>Featured Product Management</v-toolbar-title>
@@ -109,7 +113,7 @@
         </template>
         <!--end action-->
         <template v-slot:no-data>
-            <v-btn color="primary" @click="initialize">Reset</v-btn>
+            <v-btn color="primary" @click="paginate">Reset</v-btn>
         </template>
     </v-data-table>
     <!--end course list-->
@@ -169,6 +173,7 @@ import firebase from 'firebase'
 export default {
     data() {
         return {
+            loading:true,
             //form
             valid: true,
 
@@ -253,7 +258,6 @@ export default {
     },
 
     created() {
-        this.initialize()
         this.getProducts()
     },
     methods: {
@@ -264,22 +268,25 @@ export default {
                 })
                 .catch(err => console.log(err.response))
         },
-        initialize() {
-            axios.get('/api/featured', {}).
-            then(res => this.featured = res.data)
-                .catch(err => console.log(err.response))
-
+        paginate($event){
+            axios
+                .post("/api/getFeatured?page="+$event.page, {'per_page':$event.itemsPerPage}) //see the response to understand this-page urls
+                .then(res => {
+                    this.featured = res.data;
+                    this.loading=false
+                })
+                .catch(err => console.log(err.response));
         },
 
         editItem(item) {
-            this.editedIndex = this.featured.indexOf(item)
+            this.editedIndex = this.featured.data.indexOf(item)
             this.editedItem = Object.assign({}, item)
             this.dialog = true
         },
 
         deleteItem(item) {
-            const index = this.featured.indexOf(item)
-            this.featured.splice(index, 1)
+            const index = this.featured.data.indexOf(item)
+            this.featured.data.splice(index, 1)
             axios.delete('/api/featured/' + item.id)
                 .then(this.deleteDialog = false,
                     this.dataUpdateMsg = 'Course item deleted successfully',
@@ -308,7 +315,7 @@ export default {
                         'description': this.editedItem.description,
                     })
                     .then(res => {
-                        if (Object.assign(this.featured[this.editedIndex], res.data.featured)) {
+                        if (Object.assign(this.featured.data[this.editedIndex], res.data.featured)) {
                             this.close()
                             this.dataUpdateMsg = 'Course item updated successfully'
                             this.dataUpdateAlert = true
@@ -320,7 +327,7 @@ export default {
                             this.errCourse = err.response.data.errors.course_name
                         }
                     })
-                Object.assign(this.featured[this.editedIndex], this.editedItem)
+                Object.assign(this.featured.data[this.editedIndex], this.editedItem)
             } else {
 
                 axios.post('/api/featured', {
@@ -330,7 +337,7 @@ export default {
                         'description': this.editedItem.description,
                     })
                     .then(res => {
-                        if (this.featured.push(res.data)) {
+                        if (this.featured.data.push(res.data)) {
                             this.close()
                             this.dataUpdateMsg = 'New Course Added successfully',
                                 this.dataUpdateAlert = true

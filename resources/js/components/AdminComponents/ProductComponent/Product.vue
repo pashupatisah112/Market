@@ -5,11 +5,11 @@
             :headers="headers"
             :items="products.data"
             class="elevation-1"
-            :footer-props="{ itemsPerPageOptions: [5, 10, 15] }"
+            :footer-props="{ itemsPerPageOptions: [5, 10, 15],itemsPerPageText:'Products per page' }"
             :server-items-length="products.total"
             :loading="loading"
             loading-text="Loading.....Please wait."
-            @pagination="next"
+            @pagination="paginate"
             
         >
             <template v-slot:top>
@@ -613,7 +613,7 @@ export default {
     data() {
         return {
             valid: true,
-            loading:false,
+            loading:true,
             total:0,
             view: [],
             productViewDialog: false,
@@ -779,7 +779,6 @@ export default {
     },
 
     created() {
-        //this.initialize();
         this.getProductSup();
     },
     mounted() {},
@@ -797,16 +796,6 @@ export default {
                     this.company = res.data.company;
                     this.productType = res.data.productType;
                     (this.size = res.data.size), (this.color = res.data.color);
-                })
-                .catch(err => console.log(err.response));
-        },
-        initialize() {
-            axios
-                .get("/api/products?page=" + this.page, {}) //see the response to understand this-page urls
-                .then(res => {
-                    this.products = res.data.data;
-                    this.total=res.data.total
-                    console.log(res.data);
                 })
                 .catch(err => console.log(err.response));
         },
@@ -1153,11 +1142,12 @@ export default {
                     .catch(err => console.log(err.response));
             }
         },
-        next($event){
+        paginate($event){
             axios
                 .post("/api/myProducts?page="+$event.page, {'per_page':$event.itemsPerPage}) //see the response to understand this-page urls
                 .then(res => {
                     this.products = res.data;
+                    this.loading=false
                 })
                 .catch(err => console.log(err.response));
         }

@@ -8,9 +8,10 @@ use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    public function commentList()
+    public function commentList(Request $request)
     {
-        $comment=Comment::with('user:id,name')->with('product:id,product_code')->get();
+        $items=$request->per_page;
+        $comment=Comment::with('user:id,name')->with('product:id,product_code')->paginate($items);
         return response()->json($comment);
     }
     public function replyComment(Request $request)

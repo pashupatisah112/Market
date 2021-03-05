@@ -1,7 +1,11 @@
 <template>
 <v-container fluid>
     <!--course list-->
-    <v-data-table :headers="headers" :items="orders">
+    <v-data-table :headers="headers" :items="orders.data" :footer-props="{ itemsPerPageOptions: [5, 10, 15],itemsPerPageText:'Orders per page' }"
+            :server-items-length="orders.total"
+            :loading="loading"
+            loading-text="Loading.....Please wait."
+            @pagination="paginate">
         <template v-slot:top>
             <v-toolbar flat>
                 <v-toolbar-title>Orders Management</v-toolbar-title>
@@ -71,7 +75,7 @@
         </template>
         <!--end action-->
         <template v-slot:no-data>
-            <v-btn color="primary" @click="initialize">Reset</v-btn>
+            <v-btn color="primary" @click="paginate">Reset</v-btn>
         </template>
     </v-data-table>
     <!--end course list-->
@@ -194,6 +198,7 @@ import {
 export default {
     data() {
         return {
+            loading:true,
             valid: true,
             delivery_status: "",
             orderViewDialog: false,
@@ -248,10 +253,6 @@ export default {
             orders: []
         };
     },
-
-    created() {
-        this.initialize();
-    },
     computed: {
         ...mapState({
             validRules: state => state.validation.validRules
@@ -259,11 +260,12 @@ export default {
     },
     methods: {
         ...mapMutations(['setupInvoiceOrder', 'setupInvoiceProduct', 'setupInvoiceTotal']),
-        initialize() {
+        paginate($event){
             axios
-                .get("/api/orders", {})
+                .post("/api/getOrders?page="+$event.page, {'per_page':$event.itemsPerPage}) //see the response to understand this-page urls
                 .then(res => {
                     this.orders = res.data;
+                    this.loading=false
                 })
                 .catch(err => console.log(err.response));
         },
@@ -279,8 +281,8 @@ export default {
                         status: this.delivery_status
                     })
                     .then(res => {
-                        this.orders.splice(
-                            this.orders.indexOf(this.selectedOrder),
+                        this.orders.data.splice(
+                            this.orders.data.indexOf(this.selectedOrder),
                             1,
                             res.data
                         );
@@ -329,8 +331,8 @@ export default {
         },
         deleteItem(item) {
             this.selectedOrder = item
-            const index = this.orders.indexOf(item);
-            this.orders.splice(index, 1);
+            const index = this.orders.data.indexOf(item);
+            this.orders.data.splice(index, 1);
             axios
                 .post("/api/deleteOrder/", {
                     'id': this.selectedOrder.id

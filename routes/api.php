@@ -17,7 +17,19 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['middleware'=>['auth:api'],'namespace'=>'Admin'],function(){
-    Route::resource('categories', 'CategoryController');
+    //category
+    Route::post('getCategories', 'GetController@getCategories');
+    Route::post('addCategory','CategoryController@addCategory');
+    Route::put('updateCategory','CategoryController@updateCategory');
+    Route::delete('deleteCategory/{category}','CategoryController@deleteCategory');
+
+    Route::post('getColors', 'GetController@getColors');
+    Route::post('getSubCategories', 'GetController@getSubCategories');
+    Route::post('getSizes', 'GetController@getSizes');
+    Route::post('getCompanies', 'GetController@getCompanies');
+    Route::post('getTypes', 'GetController@getTypes');
+    Route::post('getAllTags', 'GetController@getTags');
+
     Route::resource('subcategories', 'SubController');
     Route::resource('size', 'SizeController');
     Route::resource('color', 'ColorController');
@@ -26,7 +38,7 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'Admin'],function(){
     Route::resource('tags', 'TagController');
 
 
-    Route::get('customers','CustomerController@getCustomers');
+    Route::post('customers','CustomerController@getCustomers');
 
     //products
     Route::post('getProductTags','ProductController@getProductTags');
@@ -42,7 +54,7 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'Admin'],function(){
     Route::post('changeProductStatus','ProductController@changeProductStatus');
 
     //featured
-    Route::get('featured','FeaturedController@index');
+    Route::post('getFeatured','FeaturedController@index');
     Route::get('getProductsFeatured','FeaturedController@getProductsFeatured');
     Route::post('featured','FeaturedController@store');
     Route::delete('featured/{featured}','FeaturedController@delete');
@@ -50,12 +62,12 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'Admin'],function(){
     Route::post('addFeaturedImage','FeaturedController@addFeaturedImage');
 
     //Comments
-    Route::get('commentList','CommentController@commentList');
+    Route::post('commentList','CommentController@commentList');
     Route::post('replyComment','CommentController@replyComment');
     Route::post('deleteComment','CommentController@delete');
 
     //orders
-    Route::get('orders','OrderController@getOrders');
+    Route::post('getOrders','OrderController@getOrders');
     Route::post('getOrderDetail','OrderController@getOrderDetail');
     Route::post('changeDeliveryStatus','OrderController@changeDeliveryStatus');
     Route::post('deleteOrder','OrderController@deleteOrder');
@@ -125,12 +137,12 @@ Route::get('getCollection','User\ProductController@getCollection');
 Route::get('getTopProducts','User\ProductController@getTopProducts');
 Route::get('getTopCategory','User\ProductController@getTopCategory');
 Route::post('filterTopCategories','User\ProductController@filterTopCategories');
-Route::get('getTopSellers','User\ProductController@getTopSellers');
+Route::post('getTopSellers','User\ProductController@getTopSellers');
 Route::post('fromTopBrands','User\ProductController@fromTopBrands');
 
 //Offered
 Route::get('getProductOffers','User\ProductController@getProductOffers');
-Route::get('getOffers','User\ProductController@getOffers');
+Route::post('getOffers','User\ProductController@getOffers');
 
 //sale
 Route::get('getSale','User\ProductController@getSale');

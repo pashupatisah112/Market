@@ -9,8 +9,8 @@
                 <v-row justify="center" class="my-3">
                     <v-chip v-for="item in categories" :key="item.id" class="mx-2" @click="filterTop(item)" link>{{item.subCategory_name}}</v-chip>
                 </v-row>
-                <v-row class="px-10" v-if="this.topSeller.length>0">
-                    <v-col cols="12" lg="3" md="4" sm="6" v-for="item in topSeller" :key="item.id">
+                <v-row class="px-10" v-if="topSeller.data">
+                    <v-col cols="12" lg="3" md="4" sm="6" v-for="item in topSeller.data" :key="item.id">
                         <v-card max-width="300" class="mx-auto" tile flat>
                             <v-hover v-slot="{ hover }">
                                 <div style="overflow: hidden;">
@@ -49,6 +49,19 @@
                             </v-card-title>
                         </v-card>
                     </v-col>
+                    <v-col cols="12" align="center">
+                <v-pagination
+                        v-model="page"
+                        :length="topSeller.last_page"
+                        prev-icon="mdi-menu-left"
+                        next-icon="mdi-menu-right"
+                        :total-visible="7"
+                        @input="input"
+                        @next="next"
+                        @previous="previous"
+                        class="my-5"
+                    ></v-pagination>
+            </v-col>
                 </v-row>
                 <hollow-dots-spinner class="mx-auto my-16" v-else :animation-duration="1000" :dot-size="20" :dots-num="3" color="#ff1d5e" />
 
@@ -79,6 +92,7 @@ export default {
     },
     data() {
         return {
+            page:1,
             topSeller: [],
             categories: [],
             rating: 0,
@@ -108,7 +122,7 @@ export default {
         },
         getTopSellers() {
             axios
-                .get("api/getTopSellers")
+                .post("api/getTopSellers?page=" + this.page)
                 .then(res => {
                     this.topSeller = res.data.product
                     this.topBrands = res.data.company
@@ -139,6 +153,26 @@ export default {
                 company_id:item.id
             }).then(res=>this.topSeller=res.data)
             .catch(err=>console.log(err.response))
+        },
+        input(e) {
+            this.page = e;
+            this.getTopSellers();
+        },
+        next(e) {
+            axios
+                .get(this.topSeller.next_page_url)
+                .then(res => {
+                    this.topSeller = res.data.product;
+                })
+                .catch(err => console.log(err.response));
+        },
+        previous() {
+            axios
+                .get(this.topSeller.previous_page_url)
+                .then(res => {
+                    this.topSeller = res.data.product;
+                })
+                .catch(err => console.log(err.response));
         }
     }
 };

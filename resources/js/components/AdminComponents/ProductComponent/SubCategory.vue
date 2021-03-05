@@ -2,7 +2,11 @@
 <v-container fluid>
 
     <!--course list-->
-    <v-data-table :headers="headers" :items="subcategories" class="elevation-1">
+    <v-data-table :headers="headers" :items="subcategories.data" class="elevation-1" :footer-props="{ itemsPerPageOptions: [5, 10, 15],itemsPerPageText:'Sub-Category per page' }"
+            :server-items-length="subcategories.total"
+            :loading="loading"
+            loading-text="Loading.....Please wait."
+            @pagination="paginate">
         <template v-slot:top>
             <v-toolbar flat color="white">
                 <v-toolbar-title>Product SubCategories</v-toolbar-title>
@@ -92,7 +96,7 @@
         </template>
         <!--end action-->
         <template v-slot:no-data>
-            <v-btn color="primary" @click="initialize">Reset</v-btn>
+            <v-btn color="primary" @click="paginate">Reset</v-btn>
         </template>
     </v-data-table>
     <!--end course list-->
@@ -116,6 +120,7 @@ export default {
 
     data() {
         return {
+            loading:true,
             valid: true,
             alertColor: 'success',
             timeout: 2000,
@@ -174,33 +179,26 @@ export default {
             val || this.close()
         },
     },
-
-    created() {
-        this.initialize()
-    },
-    mounted() {
-
-    },
     methods: {
-        initialize() {
-            axios.get('/api/subcategories', {}).
-            then(res => {
-                    this.subcategories = res.data
-                    console.log(this.subcategories)
+        paginate($event){
+            axios
+                .post("/api/getSubCategories?page="+$event.page, {'per_page':$event.itemsPerPage}) //see the response to understand this-page urls
+                .then(res => {
+                    this.subcategories = res.data;
+                    this.loading=false
                 })
-                .catch(err => console.log(err.response))
-
+                .catch(err => console.log(err.response));
         },
 
         editItem(item) {
-            this.editedIndex = this.subcategories.indexOf(item)
+            this.editedIndex = this.subcategories.data.indexOf(item)
             this.editedItem = Object.assign({}, item)
             this.dialog = true
         },
 
         deleteItem(item) {
-            const index = this.subcategories.indexOf(item)
-            this.subcategories.splice(index, 1)
+            const index = this.subcategories.data.indexOf(item)
+            this.subcategories.data.splice(index, 1)
             axios.delete('/api/subcategories/' + item.id)
                 .then(this.deleteDialog = false,
                     this.dataUpdateMsg = 'Course item deleted successfully',
@@ -227,7 +225,7 @@ export default {
                             'subCategory_name': this.editedItem.subCategory_name
                         })
                         .then(res => {
-                            if (Object.assign(this.subcategories[this.editedIndex], res.data.subcategories)) {
+                            if (Object.assign(this.subcategories.data[this.editedIndex], res.data.subcategories)) {
                                 this.close()
                                 this.dataUpdateMsg = 'Category item updated successfully'
                                 this.dataUpdateAlert = true
@@ -242,7 +240,7 @@ export default {
                             'subCategory_name': this.editedItem.subCategory_name
                         })
                         .then(res => {
-                            if (this.subcategories.push(res.data)) {
+                            if (this.subcategories.data.push(res.data)) {
                                 this.close()
                                 this.dataUpdateMsg = 'New Category Added successfully',
                                     this.dataUpdateAlert = true

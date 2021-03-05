@@ -9,9 +9,10 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    public function getOrders()
+    public function getOrders(Request $request)
     {
-        $order=Order::with('user:id,name')->with('paymentGateway:id,gateway_name')->get();
+        $items=$request->per_page;
+        $order=Order::with('user:id,name')->with('paymentGateway:id,gateway_name')->paginate($items);
         return response()->json($order);
     }
     public function getOrderDetail(Request $request)

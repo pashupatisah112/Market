@@ -333,7 +333,7 @@ export default {
                     this.$router.push({
                         name:'Search',
                          params: { search: this.searchItem }
-                    })
+                    }).catch(()=>{});
                 }
 
             }

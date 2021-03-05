@@ -2,7 +2,11 @@
 <v-container fluid>
 
     <!--course list-->
-    <v-data-table :headers="headers" :items="size" class="elevation-1">
+    <v-data-table :headers="headers" :items="size.data" class="elevation-1" :footer-props="{ itemsPerPageOptions: [5, 10, 15],itemsPerPageText:'Category per page' }"
+            :server-items-length="size.total"
+            :loading="loading"
+            loading-text="Loading.....Please wait."
+            @pagination="paginate">
         <template v-slot:top>
             <v-toolbar flat color="white">
                 <v-toolbar-title>Product size</v-toolbar-title>
@@ -91,7 +95,7 @@
         </template>
         <!--end action-->
         <template v-slot:no-data>
-            <v-btn color="primary" @click="initialize">Reset</v-btn>
+            <v-btn color="primary" @click="paginate">Reset</v-btn>
         </template>
     </v-data-table>
     <!--end course list-->
@@ -118,6 +122,7 @@ export default {
 
     data() {
         return {
+            loading:true,
             valid: true,
             alertColor: 'success',
             timeout: 2000,
@@ -170,29 +175,26 @@ export default {
         },
     },
 
-    created() {
-        this.initialize()
-    },
-    mounted() {
-
-    },
     methods: {
-        initialize() {
-            axios.get('/api/size', {}).
-            then(res => this.size = res.data)
-                .catch(err => console.log(err.response))
-
+        paginate($event){
+            axios
+                .post("/api/getSizes?page="+$event.page, {'per_page':$event.itemsPerPage}) //see the response to understand this-page urls
+                .then(res => {
+                    this.size = res.data;
+                    this.loading=false
+                })
+                .catch(err => console.log(err.response));
         },
 
         editItem(item) {
-            this.editedIndex = this.size.indexOf(item)
+            this.editedIndex = this.size.data.indexOf(item)
             this.editedItem = Object.assign({}, item)
             this.dialog = true
         },
 
         deleteItem(item) {
-            const index = this.size.indexOf(item)
-            this.size.splice(index, 1)
+            const index = this.size.data.indexOf(item)
+            this.size.data.splice(index, 1)
             axios.delete('/api/size/' + item.id)
                 .then(this.deleteDialog = false,
                     this.dataUpdateMsg = 'Course item deleted successfully',
@@ -218,7 +220,7 @@ export default {
                             'size': this.editedItem.size,
                         })
                         .then(res => {
-                            if (Object.assign(this.size[this.editedIndex], res.data.size)) {
+                            if (Object.assign(this.size.data[this.editedIndex], res.data.size)) {
                                 this.close()
                                 this.dataUpdateMsg = 'Size item updated successfully'
                                 this.dataUpdateAlert = true
@@ -232,7 +234,7 @@ export default {
                             'size': this.editedItem.size,
                         })
                         .then(res => {
-                            if (this.size.push(res.data)) {
+                            if (this.size.data.push(res.data)) {
                                 this.close()
                                 this.dataUpdateMsg = 'New Size Added successfully',
                                     this.dataUpdateAlert = true
