@@ -198,6 +198,7 @@ export default {
     methods: {
         logout() {
             localStorage.removeItem('token');
+            localStorage.removeItem('role');
             this.$router.push('/adminLogin').then(res => console.log('Logged out')).catch(err => console.log(err));
 
         },

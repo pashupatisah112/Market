@@ -28,22 +28,23 @@ import PurchaseHistory from "./components/Account/History";
 import About from "./components/Other/About";
 import Contact from "./components/Other/Contact";
 import Search from './components/Home/Search';
+import NotFound from './components/Account/404';
 
 import Test from './components/Home/Test';
 
 const routes = [
-    // {
-    //     path: "/admin",
-    //     redirect: "/adminLogin"
-    // },
-    // {
-    //     path: "/adminLogin",
-    //     name: "AdminLogin",
-    //     component: AdminLogin
-    // },
+    {
+        path: "/padmin",
+        redirect: "/padmin/dashboard"
+    },
+    {
+        path: "/adminLogin",
+        name: "AdminLogin",
+        component: AdminLogin
+    },
 
     {
-        path: "/admin",
+        path: "/padmin",
         component: Admin,
         children: [
             {
@@ -83,21 +84,29 @@ const routes = [
             },
            
         ],
-        // beforeEnter: (to, from, next) => {
-        //     axios
-        //         .get("api/verify",{
-
-        //         })
-        //         .then(res => {
-        //             console.log('login data:',res.data)
-        //             // if (res.data.role_id == 1) {
-        //             //     next()
-        //             // } else {
-        //             //     next("/adminLogin");
-        //             // }
-        //         })
-        //         .catch(err => next("/adminLogin"));
-        // }
+        beforeEnter: (to, from, next) => {
+            if(localStorage.getItem('role')=='admin'){
+                next()
+            }else if(localStorage.getItem('role')=='user'){
+                next("/404")
+            }else{
+                next("/adminLogin")
+            }
+            // axios
+            //     .get("api/verify")
+            //     .then(res => {
+            //         console.log('login data:',res.data)
+            //         // if (res.data.role_id == 1) {
+            //         //     next()
+            //         // } else {
+            //         //     next("/adminLogin");
+            //         // }
+            //     })
+            //     .catch(err =>{
+            //         console.log(err.response)
+            //         //next("/adminLogin")
+            //     });
+        }
         
     },
     {
@@ -175,13 +184,19 @@ const routes = [
                 component: Category
             },
             {
-                path: ":code", //yaha arko param 'title' pni rakhda save hudaina refresh garda but 'code' matrai rakhda hunxa
+                path: "/detail/:code", //yaha arko param 'title' pni rakhda save hudaina refresh garda but 'code' matrai rakhda hunxa
                 name: "Detail",
                 component: Detail
             },
+            {
+                path: "404",
+                name: "Not Found",
+                component: NotFound
+            },
            
-        ]
-    }
+        ],
+    },
+    { path: "*", component: NotFound }
 ];
 const userRoutes = [];
 const router = new VueRouter({routes, userRoutes}); //global token check for authorization [mode: 'history',]add this to remo hashtag mode

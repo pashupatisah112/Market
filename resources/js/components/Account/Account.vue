@@ -76,6 +76,7 @@ export default {
         },
         logout() {
             localStorage.removeItem('token');
+            localStorage.removeItem('role');
             localStorage.clear()
             window.location.reload()
         },

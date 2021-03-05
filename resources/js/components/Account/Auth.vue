@@ -114,12 +114,16 @@ export default {
                         remember_me: this.remember_me
                     })
                     .then(res => {
-                        localStorage.setItem("token", res.data.token);
-                        this.unsetLoginDialog()
-                        this.setAuth(res.data.auth_user)
-                        this.setToken()
-                        window.location.reload()
-                            .catch(err => console.log(err));
+                        if (res.data.auth_user.role_id == 2) {
+                            localStorage.setItem("token", res.data.token);
+                            localStorage.setItem("role", res.data.user);
+                            this.unsetLoginDialog()
+                            this.setAuth(res.data.auth_user)
+                            this.setToken()
+                            window.location.reload()
+                        }else{
+                            this.loginError=="Unauthorized"
+                        }
                     })
                     .catch(err => {
                         this.loginError = err.response.data.status

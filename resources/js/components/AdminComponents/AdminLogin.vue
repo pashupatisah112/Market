@@ -20,26 +20,36 @@
 </template>
 
 <script>
-import  {mapState} from 'vuex';
+import {
+    mapState, mapMutations
+} from 'vuex';
 export default {
     data() {
         return {
             valid: true,
             adminEmail: '',
             adminPassword: '',
-            loginError:''
+            loginError: ''
         }
     },
     computed: {
         ...mapState({
-            validRules:state=>state.validation.validRules
+            validRules: state => state.validation.validRules,
+            token:state=>state.authentication.token,
+            auth:state=>state.authentication.auth
         })
     },
-    mounted(){
+    mounted() {
         this.checkToken()
     },
     methods: {
-        checkToken(){
+        ...mapMutations(['setAuth']),
+        checkToken() {
+            if(localStorage.getItem('role')=='admin'){
+                this.$router.push({
+                                name: 'AdminDashboard'
+                            })
+            }
         },
         adminLogin() {
             if (this.$refs.form.validate()) {
@@ -50,13 +60,21 @@ export default {
                         role_id: 1
                     })
                     .then(res => {
-                        localStorage.setItem("token", res.data.token);
-                        this.$router.push({
+                        if (res.data.admin.role_id == 1) {
+                            localStorage.setItem("token", res.data.token);
+                            localStorage.setItem("role", 'admin');
+                            this.setAuth(res.data.admin)
+                            this.$router.push({
                                 name: 'AdminDashboard'
                             })
+                        }else{
+                            this.loginError="Unauthorized"
+                            this.$refs.form.reset()
+                        }
+
                     })
                     .catch(err => {
-                        this.loginError=err.response.data.status
+                        this.loginError = err.response.data.status
                     });
             }
         }

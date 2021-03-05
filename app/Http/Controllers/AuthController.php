@@ -15,7 +15,7 @@ class AuthController extends Controller
 {
     public function verify(Request $request)
     {
-        return $request->user()->only('name','email','role_id');
+        return response()->json(Auth::user());
     }
     public function adminLogin(Request $request){
         $credentials=$request->only('email','password','role_id');
@@ -23,7 +23,7 @@ class AuthController extends Controller
                 $token=Str::random(80);
                 Auth::user()->api_token=$token;
                 Auth::user()->save();
-                return response()->json(['token'=>$token],203);
+                return response()->json(['token'=>$token,'admin'=>Auth::user()],203);
         }
         return response()->json(['status'=>'Email or Password is wrong.'],403);
     }

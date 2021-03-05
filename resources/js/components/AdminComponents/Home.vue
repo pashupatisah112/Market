@@ -16,7 +16,7 @@
 <script>
 import Drawer from './HomeComponent/Drawer';
 import Appbar from './HomeComponent/Appbar';
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 export default {
     components:{Drawer,Appbar},
     data() {
@@ -25,15 +25,19 @@ export default {
         }
     },
     computed:{
-    
+       ...mapState({
+           auth:state=>state.authentication.auth
+       })
     },
-    mounted() {
+    created() {
         this.checkAdmin()
     },
     methods: {
         checkAdmin(){
-            if(!localStorage.getItem('token')){
-                this.$router.push({name:'AdminLogin'})
+            if(localStorage.getItem('role')=='user'){
+                this.$router.push({name:'Home'})
+            }else{
+                this.$router.back()
             }
         }
     }
