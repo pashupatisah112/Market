@@ -173,15 +173,15 @@ Route::post('customer-login', 'AuthController@customerLogin');
 Route::post('admin-login', 'AuthController@adminLogin');
 Route::get('verify', 'AuthController@verify');
 
-
 Route::group(['middleware' => ['web']], function () {
-    //facebook
-Route::get('facebook/auth/redirect', 'AuthController@handleFacebookRedirect');
-Route::get('facebook/auth/callback', 'AuthController@handleFacebookCallback');
+    Route::get('social/auth/redirect/facebook', 'AuthController@redirectToProvider')->name('socialite');
+Route::get('social/auth/facebook', 'AuthController@handleProviderCallback');
+Route::post('authenticate', 'AuthController@authenticateUser');
+});
+
 
 //google
 Route::get('google/auth/redirect', 'AuthController@handleGoogleRedirect');
 Route::get('google/auth/callback', 'AuthController@handleGoogleCallback');
 
-
-});
+?>

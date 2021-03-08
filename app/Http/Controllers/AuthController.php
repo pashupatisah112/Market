@@ -70,21 +70,76 @@ class AuthController extends Controller
         $user->save();
         return response()->json(['token'=>$token,'auth_user'=>$user]);
     }
-    public function handleFacebookRedirect()
+    public function redirectToProvider()
     {
         return Socialite::driver('facebook')->redirect();
     }
-    public function handleFacebookCallback()
+    public function handleProviderCallback()
     {
         $user = Socialite::driver('facebook')->user();
+       
+
+        // $authUser = $this->findOrCreateUser($user);
+
+        // auth()->login($authUser, true);
+
         return $user;
     }
-    public function handleGoogleRedirect()
+
+    /**
+     * Return user if exists; create and return if doesn't
+     *
+     * @param $socialLiteUser
+     * @return User
+     */
+    private function findOrCreateUser($socialLiteUser)
     {
-        return Socialite::driver('google')->redirect();
+
+        $user = User::firstOrNew([
+            'email' => $socialLiteUser->email,
+        ], [
+            'facebook_id' => $socialLiteUser->id,
+            'name' => $socialLiteUser->name
+        ]);
+
+
+        return $user;
     }
-    public function handleGoogleCallback()
+
+    public function authenticateUser()
     {
-        $user = Socialite::driver('google')->user();
+        /**
+         * If there is a user already logged in, then we shouldn't 
+         * login him out!
+         */
+        if (auth()->check()) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'User already logged in'
+            ]);
+        }
+
+        $id = request('id');
+
+        $user = User::where('facebook_id', $id)->first();
+
+        if (count($user) && auth()->loginUsingId($user->id)) {
+            return response()->json([
+                'status' => true,
+                'user'   => $user
+            ]);
+        }
+
+        return response()->json([
+            'status' => false
+        ]);
     }
+    // public function handleGoogleRedirect()
+    // {
+    //     return Socialite::driver('google')->redirect();
+    // }
+    // public function handleGoogleCallback()
+    // {
+    //     $user = Socialite::driver('google')->user();
+    // }
 }

@@ -26,14 +26,19 @@
                                 <p class="caption mt-n2">Forgot password? <span class="line-hover">Click Here</span></p>
                                 <v-row justify="center">
 
-                                    <v-btn small class="text-capitalize mb-2 mx-auto" dark color="#ea4335" rounded @click="googleLogin">
+                                    <!-- <v-btn small class="text-capitalize mb-2 mx-auto" dark color="#ea4335" rounded @click="googleLogin">
                                         <v-icon class="mr-3" small>mdi-google</v-icon>
                                         Login using google
-                                    </v-btn>
-                                    <v-btn small rounded class="text-capitalize mb-2" dark color="#3b5998" @click="facebookLogin">
+                                    </v-btn> -->
+                                    <!-- <v-btn small rounded class="text-capitalize mb-2" dark color="#3b5998" @click="facebookLogin">
                                         <v-icon class="mr-3" small>mdi-facebook</v-icon>
                                         Login with facebook
-                                    </v-btn>
+                                    </v-btn> -->
+                                     <!-- <GoogleLogin :params="params" :onSuccess="onSuccess" :logoutButton=true>Login</GoogleLogin> -->
+
+                                    <v-facebook-login app-id="345745223374461" v-model="model" @sdk-init="handleSdkInit">
+                                    </v-facebook-login>
+                                    
                                 </v-row>
                             </div>
 
@@ -71,13 +76,17 @@
 
 <script>
 import Policy from '../Other/Policy';
+import VFacebookLogin from 'vue-facebook-login-component';
+ import GoogleLogin from 'vue-google-login';
 import {
     mapState,
     mapMutations
 } from 'vuex';
 export default {
     components: {
-        Policy
+        Policy,
+        VFacebookLogin,
+        GoogleLogin
     },
     data() {
         return {
@@ -93,6 +102,16 @@ export default {
             name: '',
             phone: null,
             auth: null,
+
+            //facebook login
+            FB: {},
+            model: {},
+            scope: {},
+
+            //google login
+            params: {
+                    client_id: "esmartorder-306815"
+                },
         }
     },
     computed: {
@@ -121,8 +140,8 @@ export default {
                             this.setAuth(res.data.auth_user)
                             this.setToken()
                             window.location.reload()
-                        }else{
-                            this.loginError=="Unauthorized"
+                        } else {
+                            this.loginError == "Unauthorized"
                         }
                     })
                     .catch(err => {
@@ -131,7 +150,7 @@ export default {
             }
         },
         facebookLogin() {
-            axios.get('api/facebook/auth/redirect')
+            axios.get('api/social/auth/redirect/facebook')
                 .then(res => console.log(res.data))
                 .catch(err => console.log(err.response))
         },
@@ -164,6 +183,24 @@ export default {
                         this.emailError = err.response.data.errors.email[0]
                     })
             }
+        },
+        getUserData(e){
+            console.log(e)
+            console.log(this.model)
+        },
+        onSuccess(googleUser) {
+            console.log('google:',googleUser);
+
+            // This only gets the user information: id, name, imageUrl and email
+            console.log(googleUser.getBasicProfile());
+        },
+        handleSdkInit({
+            FB,
+            scope
+        }) {
+            this.FB = FB
+            this.scope = scope
+            console.log('fb:', this.FB)
         },
 
     }
