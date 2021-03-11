@@ -80,7 +80,7 @@ class AuthController extends Controller
         Mail::to($request->email)->send(new ConfirmEmail($request->code));
         return $request->code;
     }
-    public function facebookLogin(Request $request)
+    public function socialLogin(Request $request)
     {
         $users = User::where('email', $request->email)->first();
         if ($users === null) {

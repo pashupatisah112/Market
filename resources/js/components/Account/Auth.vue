@@ -26,10 +26,10 @@
                                 <p class="caption mt-n2">Forgot password? <span class="line-hover" @click="forgotPassword">Click Here</span></p>
                                 <v-row justify="center">
 
-                                    <!-- <v-btn small class="text-capitalize mb-2 mx-auto" dark color="#ea4335" rounded @click="googleLogin">
+                                    <v-btn small class="text-capitalize mb-2 mx-auto" dark color="#ea4335" rounded @click="googleLogin">
                                         <v-icon class="mr-3" small>mdi-google</v-icon>
                                         Login using google
-                                    </v-btn> -->
+                                    </v-btn>
                                     <v-btn small rounded class="text-capitalize mb-2" dark color="#3b5998" @click="facebookLogin">
                                         <v-icon class="mr-3" small>mdi-facebook</v-icon>
                                         Login with facebook
@@ -188,7 +188,7 @@ export default {
                 .then((result) => {
 
                     var user = result.user;
-                    axios.post('api/facebookLogin', {
+                    axios.post('api/socialLogin', {
                         'name': user.displayName,
                         'email': user.email,
                         'password': Math.random().toString(36).substring(1 - 9),
@@ -215,9 +215,35 @@ export default {
                 });
         },
         googleLogin() {
-            axios.get('api/google/auth/redirect')
-                .then(res => console.log(res.data))
-                .catch(err => console.log(err.response))
+            var provider = new firebase.auth.GoogleAuthProvider();
+            firebase.auth()
+                .signInWithPopup(provider)
+                .then((result) => {
+                    var user = result.user;
+                    axios.post('api/socialLogin', {
+                        'name': user.displayName,
+                        'email': user.email,
+                        'password': Math.random().toString(36).substring(1 - 9),
+                        'role_id': 2,
+                    }).then(res => {
+                        localStorage.setItem("token", res.data.token);
+                        localStorage.setItem("role", res.data.user);
+                        this.unsetLoginDialog()
+                        this.setAuth(res.data.auth_user)
+                        this.setToken()
+                        window.location.reload()
+                    }).catch(err => console.log(err.response))
+                }).catch((error) => {
+                    // Handle Errors here.
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    // The email of the user's account used.
+                    var email = error.email;
+                    // The firebase.auth.AuthCredential type that was used.
+                    var credential = error.credential;
+                    // ...
+                });
+
         },
         register() {
             if (this.$refs.form.validate()) {
@@ -292,20 +318,6 @@ export default {
         },
         forgotPassword() {
 
-        },
-        onSuccess(googleUser) {
-            console.log('google:', googleUser);
-
-            // This only gets the user information: id, name, imageUrl and email
-            console.log(googleUser.getBasicProfile());
-        },
-        handleSdkInit({
-            FB,
-            scope
-        }) {
-            this.FB = FB
-            this.scope = scope
-            console.log('fb:', this.FB)
         },
 
     }
