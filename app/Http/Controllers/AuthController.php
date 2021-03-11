@@ -80,49 +80,28 @@ class AuthController extends Controller
         Mail::to($request->email)->send(new ConfirmEmail($request->code));
         return $request->code;
     }
-    public function redirectToProvider()
+    public function facebookLogin(Request $request)
     {
-        return Socialite::driver('facebook')->redirect();
-    }
-    public function handleProviderCallback()
-    {
-        $user = Socialite::driver('facebook')->user();
-       
-
-        // $authUser = $this->findOrCreateUser($user);
-
-        // auth()->login($authUser, true);
-
-        return $user;
-    }
-
-    /**
-     * Return user if exists; create and return if doesn't
-     *
-     * @param $socialLiteUser
-     * @return User
-     */
-    private function findOrCreateUser($socialLiteUser)
-    {
-
-        $user = User::firstOrNew([
-            'email' => $socialLiteUser->email,
-        ], [
-            'facebook_id' => $socialLiteUser->id,
-            'name' => $socialLiteUser->name
-        ]);
-
-
-        return $user;
-    }
-
+        $users = User::where('email', $request->email)->first();
+        if ($users === null) {
+            $user=new User;
+            $token=Str::random(80);
+            $user->name=$request->name;
+            $user->email=$request->email;
+            $user->password=Hash::make($request->password);
+            $user->api_token=$token;
+            $user->role_id=$request->role_id;
+            $user->save();
+            return response()->json(['token'=>$token,'auth_user'=>$user]);
+        } else {
+        //     $credentials=$request->only('email');
+        //    if(Auth::attempt($credentials)){
+                $token=Str::random(80);
+                $users->api_token=$token;
+                $users->save();
+                $auth_user=$users;
+                return response()->json(['token'=>$token,'auth_user'=>$auth_user],203);
         
-    // public function handleGoogleRedirect()
-    // {
-    //     return Socialite::driver('google')->redirect();
-    // }
-    // public function handleGoogleCallback()
-    // {
-    //     $user = Socialite::driver('google')->user();
-    // }
+        }
+    }
 }

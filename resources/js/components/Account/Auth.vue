@@ -23,21 +23,17 @@
                                 <v-btn rounded block dark @click="login" class="mb-2">Login</v-btn>
 
                                 <p class="caption line-hover" @click="registerMode=true">Create your account</p>
-                                <p class="caption mt-n2">Forgot password? <span class="line-hover">Click Here</span></p>
+                                <p class="caption mt-n2">Forgot password? <span class="line-hover" @click="forgotPassword">Click Here</span></p>
                                 <v-row justify="center">
 
                                     <!-- <v-btn small class="text-capitalize mb-2 mx-auto" dark color="#ea4335" rounded @click="googleLogin">
                                         <v-icon class="mr-3" small>mdi-google</v-icon>
                                         Login using google
                                     </v-btn> -->
-                                    <!-- <v-btn small rounded class="text-capitalize mb-2" dark color="#3b5998" @click="facebookLogin">
+                                    <v-btn small rounded class="text-capitalize mb-2" dark color="#3b5998" @click="facebookLogin">
                                         <v-icon class="mr-3" small>mdi-facebook</v-icon>
                                         Login with facebook
-                                    </v-btn> -->
-                                    <!-- <GoogleLogin :params="params" :onSuccess="onSuccess" :logoutButton=true>Login</GoogleLogin> -->
-
-                                    <!-- <v-facebook-login app-id="345745223374461" v-model="model" @sdk-init="handleSdkInit">
-                                    </v-facebook-login> -->
+                                    </v-btn>
 
                                 </v-row>
                             </div>
@@ -89,6 +85,13 @@
 
         </v-card>
     </v-dialog>
+    <!-- <v-dialog v-model="forgotPasswordDialog" max-width="400">
+        <v-card>
+            <v-card-title>Recover Your Password<v-card-title>
+                    <v-card-subtitle>Choose your login method</v-card-subtitle>
+                    <v-card-text></v-card-text>
+        </v-card>
+    </v-dialog> -->
     <policy></policy>
 </div>
 </template>
@@ -97,6 +100,7 @@
 import Policy from '../Other/Policy';
 import VFacebookLogin from 'vue-facebook-login-component';
 import GoogleLogin from 'vue-google-login';
+import firebase from "firebase/app";
 import {
     mapState,
     mapMutations
@@ -176,9 +180,39 @@ export default {
             }
         },
         facebookLogin() {
-            axios.get('api/social/auth/redirect/facebook')
-                .then(res => console.log(res.data))
-                .catch(err => console.log(err.response))
+            //test user bata login gar for testing
+            var provider = new firebase.auth.FacebookAuthProvider();
+            firebase
+                .auth()
+                .signInWithPopup(provider)
+                .then((result) => {
+
+                    var user = result.user;
+                    axios.post('api/facebookLogin', {
+                        'name': user.displayName,
+                        'email': user.email,
+                        'password': Math.random().toString(36).substring(1 - 9),
+                        'role_id': 2,
+                    }).then(res => {
+                        localStorage.setItem("token", res.data.token);
+                        localStorage.setItem("role", res.data.user);
+                        this.unsetLoginDialog()
+                        this.setAuth(res.data.auth_user)
+                        this.setToken()
+                        window.location.reload()
+                    }).catch(err => console.log(err.response))
+
+                    console.log(user)
+                })
+                .catch((error) => {
+                    // Handle Errors here.
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    // The email of the user's account used.
+                    var email = error.email;
+                    // The firebase.auth.AuthCredential type that was used.
+                    var credential = error.credential;
+                });
         },
         googleLogin() {
             axios.get('api/google/auth/redirect')
@@ -187,7 +221,7 @@ export default {
         },
         register() {
             if (this.$refs.form.validate()) {
-                this.loading=true
+                this.loading = true
                 axios.post('/api/register', {
                         'name': this.name,
                         'email': this.email,
@@ -199,7 +233,7 @@ export default {
                         localStorage.setItem("token", res.data.token);
                         this.auth = res.data.auth_user
                         this.unsetLoginDialog()
-                        this.loading=false
+                        this.loading = false
                         db.collection("notification").add({
                             user_name: this.name,
                             type: 'user',
@@ -230,12 +264,11 @@ export default {
             }).then(res => {
                 this.initMode = false
                 this.validationMode = true
-                this.loading=false
+                this.loading = false
             }).catch(err => {
-                this.emailError=err.response.data.errors.email[0]
-                this.loading=false
+                this.emailError = err.response.data.errors.email[0]
+                this.loading = false
             })
-            //console.log(this.verificationCode)
         },
         sendPhoneCode() {
             this.generateCode()
@@ -256,6 +289,9 @@ export default {
         getUserData(e) {
             console.log(e)
             console.log(this.model)
+        },
+        forgotPassword() {
+
         },
         onSuccess(googleUser) {
             console.log('google:', googleUser);
