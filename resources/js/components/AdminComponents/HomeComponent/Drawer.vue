@@ -30,37 +30,37 @@ export default {
             items: [{
                     title: 'Dashboard',
                     icon: 'mdi-view-dashboard',
-                    to: '/admin/dashboard',
+                    to: '/padmin/dashboard',
                 },
                 {
                     title: 'Customers',
                     icon: 'mdi-account-star',
-                    to: '/admin/customers'
+                    to: '/padmin/customers'
                 },
                 {
                     title: 'Product',
                     icon: 'mdi-car-lifted-pickup',
-                    to: '/admin/products'
+                    to: '/padmin/products'
                 },
                 {
                     title: 'Product sup',
                     icon: 'mdi-gamepad-round',
-                    to: '/admin/products-sup'
+                    to: '/padmin/products-sup'
                 },
                 {
                     title: 'Promo',
                     icon: 'mdi-google-ads',
-                    to: '/admin/carousel'
+                    to: '/padmin/carousel'
                 },
                 {
                     title: 'Orders',
                     icon: 'mdi-cart-arrow-down',
-                    to: '/admin/orders'
+                    to: '/padmin/orders'
                 },
                 {
                     title: 'Comments',
                     icon: 'mdi-account-group',
-                    to: '/admin/comments'
+                    to: '/padmin/comments'
                 },
 
             ],

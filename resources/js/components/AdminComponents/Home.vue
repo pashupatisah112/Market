@@ -34,11 +34,11 @@ export default {
     },
     methods: {
         checkAdmin(){
-            if(localStorage.getItem('role')=='user'){
-                this.$router.push({name:'Home'})
-            }else{
-                this.$router.back()
-            }
+            // if(localStorage.getItem('role')=='user'){
+            //     this.$router.push({name:'Home'})
+            // }else{
+            //     this.$router.back()
+            // }
         }
     }
 }

@@ -169,6 +169,7 @@ Route::post('getProductDetails','User\ProductController@getProductDetails');
 
 //Auth
 Route::post('register', 'AuthController@register');
+Route::post('sendConfirmEmail', 'AuthController@sendConfirmEmail');
 Route::post('customer-login', 'AuthController@customerLogin');
 Route::post('admin-login', 'AuthController@adminLogin');
 Route::get('verify', 'AuthController@verify');

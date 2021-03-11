@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Hash;
 use App\User;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ConfirmEmail;
+
 
 
 class AuthController extends Controller
@@ -70,6 +73,13 @@ class AuthController extends Controller
         $user->save();
         return response()->json(['token'=>$token,'auth_user'=>$user]);
     }
+    public function sendConfirmEmail(Request $request){
+        $this->validate($request,[
+            'email'=> 'unique:users,email',
+        ]);
+        Mail::to($request->email)->send(new ConfirmEmail($request->code));
+        return $request->code;
+    }
     public function redirectToProvider()
     {
         return Socialite::driver('facebook')->redirect();
@@ -106,34 +116,7 @@ class AuthController extends Controller
         return $user;
     }
 
-    public function authenticateUser()
-    {
-        /**
-         * If there is a user already logged in, then we shouldn't 
-         * login him out!
-         */
-        if (auth()->check()) {
-            return response()->json([
-                'status'  => false,
-                'message' => 'User already logged in'
-            ]);
-        }
-
-        $id = request('id');
-
-        $user = User::where('facebook_id', $id)->first();
-
-        if (count($user) && auth()->loginUsingId($user->id)) {
-            return response()->json([
-                'status' => true,
-                'user'   => $user
-            ]);
-        }
-
-        return response()->json([
-            'status' => false
-        ]);
-    }
+        
     // public function handleGoogleRedirect()
     // {
     //     return Socialite::driver('google')->redirect();

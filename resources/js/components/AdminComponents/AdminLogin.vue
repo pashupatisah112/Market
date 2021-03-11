@@ -45,11 +45,11 @@ export default {
     methods: {
         ...mapMutations(['setAuth']),
         checkToken() {
-            if(localStorage.getItem('role')=='admin'){
-                this.$router.push({
-                                name: 'AdminDashboard'
-                            })
-            }
+            // if(localStorage.getItem('role')=='admin'){
+            //     this.$router.push({
+            //                     name: 'AdminDashboard'
+            //                 })
+            // }
         },
         adminLogin() {
             if (this.$refs.form.validate()) {

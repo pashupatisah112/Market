@@ -34,11 +34,11 @@
                                         <v-icon class="mr-3" small>mdi-facebook</v-icon>
                                         Login with facebook
                                     </v-btn> -->
-                                     <!-- <GoogleLogin :params="params" :onSuccess="onSuccess" :logoutButton=true>Login</GoogleLogin> -->
+                                    <!-- <GoogleLogin :params="params" :onSuccess="onSuccess" :logoutButton=true>Login</GoogleLogin> -->
 
-                                    <v-facebook-login app-id="345745223374461" v-model="model" @sdk-init="handleSdkInit">
-                                    </v-facebook-login>
-                                    
+                                    <!-- <v-facebook-login app-id="345745223374461" v-model="model" @sdk-init="handleSdkInit">
+                                    </v-facebook-login> -->
+
                                 </v-row>
                             </div>
 
@@ -47,16 +47,35 @@
                                     <v-card style="height:100%" flat>
                                         <div class="pa-5">
                                             <p class="text-center font-weight-bold">Create Account</p>
-                                            <v-form ref="form" v-model="valid">
+                                            <v-form ref="form" v-model="valid" v-if="initMode">
+                                                <div v-if="emailMode">
+                                                    <v-text-field :rules="[validRules.required,validRules.email]" :error-messages="emailError" placeholder="Email" prepend-icon="mdi-email" v-model="email" rounded dense solo filled></v-text-field>
+                                                    <v-btn rounded dark block @click="sendEmailCode" :loading="loading" class="text-capitalize my-2">Get Code</v-btn>
+                                                    <p class="caption line-hover" @click="emailMode=false">Register using phone number</p>
+                                                </div>
+                                                <div v-else>
+                                                    <v-text-field :rules="[validRules.required,validRules.length10,validRules.numberAll]" placeholder="Phone" prepend-icon="mdi-cellphone" v-model="phone" rounded dense solo filled></v-text-field>
+                                                    <v-btn rounded dark block @click="sendPhoneCode" :loading="loading" class="text-capitalize my-2">Get Code</v-btn>
+                                                    <p class="caption line-hover" @click="emailMode=true">Register using email</p>
+                                                </div>
+                                            </v-form>
+
+                                            <v-form ref="form" v-model="valid" v-if="validationMode">
+                                                <p class="caption text-center" v-if="emailMode">Enter 6 digit code sent to {{this.email}}</p>
+                                                <p class="caption text-center" v-else>Enter 6 digit code sent to {{this.phone}}</p>
+                                                <v-text-field :rules="[validRules.required,validRules.length6]" :error-messages="verificationError" placeholder="6 digits code here" v-model="verifyingCode" rounded dense solo filled></v-text-field>
+                                                <v-btn rounded dark block @click="verifyCode" class="text-capitalize my-2">Submit Code</v-btn>
+                                                <p class="caption line-hover" @click="resendCode">Resend Code</p>
+                                            </v-form>
+
+                                            <v-form ref="form" v-model="valid" v-if="registeringMode">
                                                 <v-text-field :rules="[validRules.required]" placeholder="Full Name" prepend-icon="mdi-account" v-model="name" rounded dense solo filled></v-text-field>
-                                                <v-text-field v-if="emailMode" :rules="[validRules.required,validRules.email]" :error-messages="emailError" placeholder="Email" prepend-icon="mdi-email" append-icon="mdi-phone-remove" @click:append="emailMode=false" v-model="email" rounded dense solo filled></v-text-field>
-                                                <v-text-field v-else :rules="[validRules.required,validRules.length10,validRules.numberAll]" placeholder="Phone" prepend-icon="mdi-cellphone" append-icon="mdi-email-off" @click:append="emailMode=true" v-model="phone" rounded dense solo filled></v-text-field>
                                                 <v-text-field :rules="[validRules.required,validRules.lengthMin8]" placeholder="Password" :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" @click:append="show1 = !show1" :type="show1 ? 'text' : 'password'" prepend-icon="mdi-lock" v-model="password" rounded dense solo filled></v-text-field>
                                                 <v-row>
                                                     <v-checkbox :rules="[v => !!v || 'You must agree to continue!']" class="mt-n2 ml-8" color="green" value="red" hide-details></v-checkbox>
                                                     <p class="text--secondary body-2">Agree to <span class="line-hover" @click="termsDialog=true">Terms and Conditions</span></p>
                                                 </v-row>
-                                                <v-btn rounded dark block @click="register" class="text-capitalize my-2">Create Account</v-btn>
+                                                <v-btn rounded dark block @click="register" :loading="loading" class="text-capitalize my-2">Create Account</v-btn>
                                             </v-form>
                                             <p class="caption line-hover" @click="registerMode=false">Login to your account</p>
                                         </div>
@@ -77,7 +96,7 @@
 <script>
 import Policy from '../Other/Policy';
 import VFacebookLogin from 'vue-facebook-login-component';
- import GoogleLogin from 'vue-google-login';
+import GoogleLogin from 'vue-google-login';
 import {
     mapState,
     mapMutations
@@ -91,8 +110,11 @@ export default {
     data() {
         return {
             show1: false,
+            initMode: true,
             registerMode: false,
+            registeringMode: false,
             emailMode: true,
+            validationMode: false,
             valid: true,
             remember_me: false,
             email: null,
@@ -102,6 +124,10 @@ export default {
             name: '',
             phone: null,
             auth: null,
+            verificationCode: '',
+            verificationError: '',
+            verifyingCode: '',
+            loading: false,
 
             //facebook login
             FB: {},
@@ -110,8 +136,8 @@ export default {
 
             //google login
             params: {
-                    client_id: "esmartorder-306815"
-                },
+                client_id: "esmartorder-306815"
+            },
         }
     },
     computed: {
@@ -161,6 +187,7 @@ export default {
         },
         register() {
             if (this.$refs.form.validate()) {
+                this.loading=true
                 axios.post('/api/register', {
                         'name': this.name,
                         'email': this.email,
@@ -171,6 +198,8 @@ export default {
                     .then(res => {
                         localStorage.setItem("token", res.data.token);
                         this.auth = res.data.auth_user
+                        this.unsetLoginDialog()
+                        this.loading=false
                         db.collection("notification").add({
                             user_name: this.name,
                             type: 'user',
@@ -184,12 +213,52 @@ export default {
                     })
             }
         },
-        getUserData(e){
+        generateCode() {
+            var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            var charactersLength = characters.length;
+            for (var i = 0; i < 6; i++) {
+                this.verificationCode += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+        },
+        sendEmailCode() {
+            this.loading = true
+            this.generateCode()
+
+            axios.post('api/sendConfirmEmail', {
+                'code': this.verificationCode,
+                'email': this.email
+            }).then(res => {
+                this.initMode = false
+                this.validationMode = true
+                this.loading=false
+            }).catch(err => {
+                this.emailError=err.response.data.errors.email[0]
+                this.loading=false
+            })
+            //console.log(this.verificationCode)
+        },
+        sendPhoneCode() {
+            this.generateCode()
+            this.initMode = false
+            this.validationMode = true
+        },
+        verifyCode() {
+            if (this.verificationCode == this.verifyingCode) {
+                this.registeringMode = true
+                this.validationMode = false
+            } else {
+                this.verificationError = 'Your code did not match. Try Again'
+            }
+        },
+        resendCode() {
+
+        },
+        getUserData(e) {
             console.log(e)
             console.log(this.model)
         },
         onSuccess(googleUser) {
-            console.log('google:',googleUser);
+            console.log('google:', googleUser);
 
             // This only gets the user information: id, name, imageUrl and email
             console.log(googleUser.getBasicProfile());
