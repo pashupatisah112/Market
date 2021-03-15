@@ -1,9 +1,9 @@
 <template>
 <div>
-    <v-navigation-drawer app permanent absolute dark width="240px" src="https://cdn.vuetifyjs.com/images/backgrounds/bg-2.jpg">
+    <v-navigation-drawer app permanent absolute dark width="240px">
         <v-list dense nav class="py-0">
             <v-list-item two-line :class="miniVariant && 'px-0'">
-                <v-img src="../images/assets/logo.png"></v-img>
+                <v-img src="../images/logo.png" max-width="200" height="50"></v-img>
             </v-list-item>
 
             <v-divider></v-divider>

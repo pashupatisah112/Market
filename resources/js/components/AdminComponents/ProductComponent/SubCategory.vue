@@ -129,6 +129,7 @@ export default {
             deleteDialog: false,
             details: [],
             dialog: false,
+            categories:[],
             headers: [{
                     text: '#',
                     align: 'start',
@@ -168,11 +169,13 @@ export default {
         formTitle() {
             return this.editedIndex === -1 ? 'New Category' : 'Edit Category'
         },
-        ...mapState(['categories']),
         ...mapState({
             'validRules': state => state.validation.validRules
         }),
 
+    },
+    mounted(){
+        this.getCategories()
     },
     watch: {
         dialog(val) {
@@ -185,6 +188,7 @@ export default {
                 .post("/api/getSubCategories?page="+$event.page, {'per_page':$event.itemsPerPage}) //see the response to understand this-page urls
                 .then(res => {
                     this.subcategories = res.data;
+                    console.log('sub:',this.subcategories)
                     this.loading=false
                 })
                 .catch(err => console.log(err.response));
@@ -204,6 +208,13 @@ export default {
                     this.dataUpdateMsg = 'Course item deleted successfully',
                     this.dataUpdateAlert = true
                 )
+        },
+        getCategories() {
+            axios.get('api/getCategories')
+                .then(res => {
+                    this.categories = res.data
+                })
+                .catch(err => console.log(err.response))
         },
 
         focusMessage() {

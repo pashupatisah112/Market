@@ -29,7 +29,7 @@ class GetController extends Controller
     public function getSubCategories(Request $request)
     {
         $items=$request->per_page;
-        $sub=SubCategory::paginate($items);
+        $sub=SubCategory::with('category')->paginate($items);
         return response()->json($sub);
     }
     public function getSizes(Request $request)
@@ -41,7 +41,7 @@ class GetController extends Controller
     public function getCompanies(Request $request)
     {
         $items=$request->per_page;
-        $company=Company::paginate($items);
+        $company=Company::with('subCategory')->paginate($items);
         return response()->json($company);
     }
     public function getTypes(Request $request)

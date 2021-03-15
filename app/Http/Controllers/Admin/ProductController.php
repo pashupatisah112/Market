@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Category;
 use App\Color;
+use App\ColorProduct;
 use App\Company;
 use App\Http\Controllers\Controller;
 use App\ProductType;
@@ -12,7 +13,9 @@ use App\Product;
 use App\Size;
 use App\Tag;
 use App\Photo;
+use App\ProductSize;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -44,12 +47,12 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $this->validate($request,[
-            'product_code'=> 'unique:products,product_code',
+            'code'=> 'unique:products,product_code',
         ]);
         $product=new Product;
         $product->title=$request->title;
         $product->price=$request->price;
-        $request->product_code=$request->product_code;
+        $product->product_code=$request->code;
         $product->product_type_id=$request->product_type_id;
         $product->category_id=$request->category_id;
         $product->sub_category_id=$request->subCategory_id;
@@ -67,7 +70,9 @@ class ProductController extends Controller
             $ta->product_id=$product->id;
             $ta->save();
         }
-        return response()->json($product);
+        $prod=Product::where('id',$product->id)->with('category')->with('subCategory')->with('company')->with('productType')->with('color')->with('size')->with('tag')->with('photo')->first();
+
+        return response()->json($request);
         
     }
     public function update(Request $request, $id)
@@ -75,7 +80,7 @@ class ProductController extends Controller
         $product=Product::find($id);
         $product->title=$request->title;
         $product->price=$request->price;
-        $request->product_code=$request->product_code;
+        $product->product_code=$request->code;
         $product->product_type_id=$request->product_type_id;
         $product->category_id=$request->category_id;
         $product->sub_category_id=$request->subCategory_id;
@@ -83,17 +88,38 @@ class ProductController extends Controller
         $product->description=$request->description;
         
         $product->save();
+
+        DB::table('product_size')->where('product_id',$id)->delete();
+        DB::table('color_product')->where('product_id',$id)->delete();
+        DB::table('tags')->where('product_id',$id)->delete();
         
-        $product->color()->sync($request->color_name);
-        $product->size()->sync($request->size);
-        //  $tags=$request->tag_name;
-        // foreach($tags as $tag){
-        //     $ta=new Tag;
-        //     $ta->tag_name=$tag;
-        //     $ta->product_id=$product->id;
-        //     $ta->save();
-        // }
-        return response()->json($product);
+        $colors=json_decode($request->color_name);
+        foreach($colors as $color){
+            $color=new ColorProduct;
+            $color->product_id=$product->id;
+            $color->color_id=$color;
+            $color->save();
+        }
+        $sizes=json_decode($request->size);
+        foreach($sizes as $size){
+            $size=new ProductSize;
+            $size->product_id=$product->id;
+            $size->size_id=$size;
+            $size->save();
+        }
+        // $product->color()->sync($request->color_name);
+        // $product->size()->sync($request->size);
+        $tags=$request->tag_name;
+        foreach($tags as $tag){
+            $ta=new Tag;
+            $ta->tag_name=$tag;
+            $ta->product_id=$product->id;
+            $ta->save();
+        }
+
+        $prod=Product::where('id',$id)->with('category')->with('subCategory')->with('company')->with('productType')->with('color')->with('size')->with('tag')->with('photo')->first();
+
+        return response()->json($request);
         }
     public function delete($id)
     {
@@ -108,7 +134,8 @@ class ProductController extends Controller
         $photo->product_id=$request->product_id;
         $photo->image=$request->image;
         $photo->save();
-        return response()->json($photo);
+        $product=Product::where('id',$request->product_id)->with('category')->with('subCategory')->with('company')->with('productType')->with('color')->with('size')->with('tag')->with('photo')->first();
+        return response()->json($product);
     }
     public function addPrimaryImage(Request $request)
     {
@@ -116,8 +143,8 @@ class ProductController extends Controller
         $image=Product::find($request->product_id);
         $image->image=$request->file;
         $image->save();
-        $product=Product::where('id',$request->id)->with('photo')->first();
-        return response()->json($request);
+        $product=Product::where('id',$request->product_id)->with('category')->with('subCategory')->with('company')->with('productType')->with('color')->with('size')->with('tag')->with('photo')->first();
+        return response()->json($product);
     }
     public function getSecondaryImages(Request $request)
     {
@@ -132,5 +159,10 @@ class ProductController extends Controller
         $products=Product::where('id',$prod->id)->with('category')->with('subCategory')->with('company')->with('productType')->with('color')->with('size')->with('tag')->with('photo')->first();
 
         return response()->json($products);
+    }
+    public function deleteSecImage(Request $request)
+    {
+        Photo::find($request->secId)->delete();
+        return 'Image Deleted';
     }
 }

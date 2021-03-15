@@ -8,6 +8,6 @@ class Color extends Model
 {
     public function product()
     {
-        return $this->hasMany('App\Product');
+        return $this->belongsToMany('App\Product');
     }
 }

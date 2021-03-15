@@ -20,7 +20,7 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'Admin'],function(){
     //category
     Route::post('getCategories', 'GetController@getCategories');
     Route::post('addCategory','CategoryController@addCategory');
-    Route::put('updateCategory','CategoryController@updateCategory');
+    Route::put('updateCategory/{category}','CategoryController@updateCategory');
     Route::delete('deleteCategory/{category}','CategoryController@deleteCategory');
 
     Route::post('getColors', 'GetController@getColors');
@@ -52,6 +52,7 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'Admin'],function(){
     Route::post('updateImage','ProductController@updateImage');
     Route::post('getSecondaryImages','ProductController@getSecondaryImages');
     Route::post('changeProductStatus','ProductController@changeProductStatus');
+    Route::post('deleteSecImage','ProductController@deleteSecImage');
 
     //featured
     Route::post('getFeatured','FeaturedController@index');
@@ -174,16 +175,5 @@ Route::post('sendConfirmEmail', 'AuthController@sendConfirmEmail');
 Route::post('customer-login', 'AuthController@customerLogin');
 Route::post('admin-login', 'AuthController@adminLogin');
 Route::get('verify', 'AuthController@verify');
-
-Route::group(['middleware' => ['web']], function () {
-    Route::get('social/auth/redirect/facebook', 'AuthController@redirectToProvider')->name('socialite');
-Route::get('social/auth/facebook', 'AuthController@handleProviderCallback');
-Route::post('authenticate', 'AuthController@authenticateUser');
-});
-
-
-//google
-Route::get('google/auth/redirect', 'AuthController@handleGoogleRedirect');
-Route::get('google/auth/callback', 'AuthController@handleGoogleCallback');
 
 ?>

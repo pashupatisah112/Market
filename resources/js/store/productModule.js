@@ -6,7 +6,6 @@ import Vue from 'vue';
 
 export default {
     state: {
-        categories: [],
 
         //invoice
         invoiceOrder:[],
@@ -111,7 +110,7 @@ export default {
         },
         setSearchItem(state,item){
             state.searchText=item
-        }
+        },
     },
     actions: {
         goToDetails(state,item) {

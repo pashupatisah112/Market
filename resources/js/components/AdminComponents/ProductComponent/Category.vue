@@ -118,7 +118,7 @@
 
 <script>
 import {
-    mapState
+    mapState, mapMutations
 } from 'vuex';
 import {
     mapFields
@@ -136,6 +136,7 @@ export default {
             deleteDialog: false,
             details: [],
             dialog: false,
+            categories:[],
             headers: [{
                     text: '#',
                     align: 'start',
@@ -168,10 +169,9 @@ export default {
         formTitle() {
             return this.editedIndex === -1 ? 'New Category' : 'Edit Category'
         },
-        ...mapState(['categories']),
-        ...mapFields(['categories']),
+        
         ...mapState({
-            'validRules': state => state.validation.validRules
+            'validRules': state => state.validation.validRules,
         }),
 
     },
@@ -186,7 +186,8 @@ export default {
             axios
                 .post("/api/getCategories?page="+$event.page, {'per_page':$event.itemsPerPage}) //see the response to understand this-page urls
                 .then(res => {
-                    this.categories = res.data;
+                    this.categories=res.data
+                    console.log(this.categories)
                     this.loading=false
                 })
                 .catch(err => console.log(err.response));
@@ -200,7 +201,7 @@ export default {
 
         deleteItem(item) {
             const index = this.categories.data.indexOf(item)
-            this.categories.data.splice(index, 1)
+            this.categories.splice(index, 1)
             axios.delete('/api/deleteCategory/' + item.id)
                 .then(this.deleteDialog = false,
                     this.dataUpdateMsg = 'Course item deleted successfully',
@@ -226,25 +227,22 @@ export default {
                             'category_name': this.editedItem.category_name,
                         })
                         .then(res => {
-                            if (Object.assign(this.categories.data[this.editedIndex], res.data)) {
+                            this.categories.data.splice(this.editedIndex,1, res.data)
                                 this.close()
                                 this.dataUpdateMsg = 'Category item updated successfully'
                                 this.dataUpdateAlert = true
-                            }
                         })
                         .catch(err => console.log(err.response))
-                    Object.assign(this.categories[this.editedIndex], this.editedItem)
                 } else {
 
                     axios.post('/api/addCategory', {
                             'category_name': this.editedItem.category_name,
                         })
                         .then(res => {
-                            if (this.categories.data.push(res.data)) {
+                            this.categories.data.push(res.data) 
                                 this.close()
                                 this.dataUpdateMsg = 'New Category Added successfully',
-                                    this.dataUpdateAlert = true
-                            }
+                                this.dataUpdateAlert = true
                         }).catch(err => console.log(err.response))
                 }
             }

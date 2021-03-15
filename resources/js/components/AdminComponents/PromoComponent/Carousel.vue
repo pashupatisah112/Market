@@ -127,7 +127,7 @@
     <!--end snackbar-->
 
     <!--image view dialog-->
-    <v-dialog v-model="imageViewDialog" max-width="800px" persistent>
+    <v-dialog v-model="imageViewDialog" max-width="1200px" persistent>
         <v-card>
             <v-btn icon @click="imageViewDialog = false" class="float-right">
                 <v-icon>mdi-close</v-icon>
@@ -140,11 +140,11 @@
                     <v-col cols="12" align="center">
                         <v-img :src="getImage(selectedItem)" :aspect-ratio="9/16" alt="Primary img"></v-img>
                         <div>
-                            <div v-if="selectedItem.image==null">
+                            <div v-if="selectedItem.image">
                                 <v-btn icon outlined x-large @click="onButtonClick" :loading="isSelecting" class="mt-2">
                                     <v-icon>mdi-image-plus</v-icon>
                                 </v-btn>
-                                <input ref="uploader" class="d-none" type="file" accept="image/*" @change="onFileChanged" />
+                                <input ref="uploader" class="d-none" type="file" accept="image/*" @change="onFileAdded" />
                                 <p>Add image</p>
                             </div>
                             <div v-else>
@@ -370,13 +370,14 @@ export default {
 
             this.$refs.uploader.click();
         },
-        onFileChanged(e) {
+        onFileAdded(e) {
             let file = e.target.files[0]
             console.log(file.name)
             var storageRef = firebase.storage().ref('productImage/' + file.name); //prductImages is folder created in firebase in storage/files section
              this.uploadTask = storageRef.put(file)
              this.addFeaturedImage();
         },
+
         addFeaturedImage() {
             this.uploadTask.on('state_changed', function (snapshot) {
 
@@ -403,6 +404,22 @@ export default {
                         });
                 })
             })
+        },
+        onFileChanged(e){
+             let file = e.target.files[0];
+            //deletes the file
+            var refImage = firebase.storage().refFromURL(this.selectedItem.photo);
+            refImage.delete().then(() => {
+                // File deleted successfully
+            }).catch((error) => {
+                // Uh-oh, an error occurred!
+            });
+
+            var storageRef = firebase
+                .storage()
+                .ref("productImage/" + file.name); //prductImages is folder created in firebase in storage/files section
+            this.uploadTask = storageRef.put(file);
+            this.addFeaturedImage();
         },
         getImage(selectedItem) {
             return selectedItem.photo;
