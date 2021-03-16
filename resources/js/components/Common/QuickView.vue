@@ -18,15 +18,15 @@
                                 <h4 class="text-left mb-2">Rs.{{quickViewItem.price}}</h4>
                                 <v-form v-model="valid" ref="form">
                                     <div class="mx-auto">
-                                        <p class="float-left mr-7">Size</p>
-                                        <v-select v-model="cartSize" :rules="[validRules.required]" :items="quickViewItem.size" item-text="size" item-value="id" item label="Choose Size" dense outlined></v-select>
+                                        <p class="float-left mr-7">{{$t('words.detail.size')}}</p>
+                                        <v-select v-model="cartSize" :rules="[validRules.required]" :items="quickViewItem.size" item-text="size" item-value="id" item :label="$t(placeSize())" dense outlined></v-select>
                                     </div>
                                     <div class="mx-auto">
-                                        <p class="float-left mr-6">Color</p>
-                                        <v-select v-model="cartColor" :rules="[validRules.required]" :items="quickViewItem.color" label="Choose Color" item-text="color_name" item-value="id" dense outlined></v-select>
+                                        <p class="float-left mr-6">{{$t('words.detail.color')}}</p>
+                                        <v-select v-model="cartColor" :rules="[validRules.required]" :items="quickViewItem.color" :label="$t(placeSize())" item-text="color_name" item-value="id" dense outlined></v-select>
                                     </div>
                                     <div class="mx-auto">
-                                        <p class="float-left mr-5">Count</p>
+                                        <p class="float-left mr-5">{{$t('words.detail.count')}}</p>
                                         <v-btn-toggle>
                                             <v-btn @click="countMinus" icon>
                                                 <v-icon>mdi-minus</v-icon>
@@ -45,7 +45,7 @@
                         </v-row>
 
                         <v-row justify="center" class="my-2">
-                            <v-btn @click="addToCart" class="text-capitalize white--text" color="blackTheme" rounded>Add to Cart</v-btn>
+                            <v-btn @click="addToCart" class="text-capitalize white--text" color="blackTheme" rounded>{{$t('words.detail.addToCart')}}</v-btn>
                         </v-row>
                     </v-col>
                 </v-row>
@@ -127,6 +127,12 @@ export default {
                 this.setLoginDialog()
             }
 
+        },
+         placeColor(){
+            return 'words.detail.chooseColor'
+        },
+        placeSize(){
+            return 'words.detail.chooseSize'
         }
     }
 }

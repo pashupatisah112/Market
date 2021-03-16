@@ -171,7 +171,27 @@ export default {
                 noCart:"No cart items added",
                 total:"Total",
                 checkout:"Checkout",
-                viewCart:"View Cart"
+                viewCart:"View Cart",
+                yourCart:"Your Cart",
+                product:"Product",
+                quantity:"Quantity",
+                amount:"Amount",
+                cartTotal:"Cart Total",
+                subTotal:"Subtotal",
+                deliveryAddress:"Delivery address",
+                pleaseChoose:"Please choose",
+                location:"Location",
+                actualLocation:"Your actual location",
+                contactNum:"Contact Number",
+                yourNumber:"Your Contact Number",
+                deliveryCharge:"Delivery Charge",
+                confirmOrder:"Confirm Order",
+                orderNote:"Note: If your outside kathmandu valley delivery charges may apply and may take 7-10 days for delivey. Customers inside valley will have free delivery charge and may get your order within 3 days",
+                thanksNote:"Thank you for shopping with us.",
+                paymentMethod:"Choose Payment Method",
+                cancel:"Cancel",
+                buyNow:"Buy Now"
+
             },
             auth: {
                 customerLogin: "Customer Login",
@@ -242,20 +262,20 @@ export default {
                 contact: "Contact",
                 terms: "Terms"
             },
-            Filter: {
+            filter: {
                 filter: "Filter",
                 sort: "Sort By",
                 price: "Price",
                 brands: "Brands",
                 default: "Default",
-                Popularity: "Popularity",
+                popularity: "Popularity",
                 rating: "Average Rating",
                 newest: "Newest",
                 priceAsc: "Price: Low To High",
                 priceDes: "Price: High To Low",
                 any: "Any",
-                Rs: "रु",
-                Above: "माथि"
+                rs: "Rs",
+                above: "Above"
             },
             category:{
                "Men's Fashion":"Men's Fashion",
@@ -298,7 +318,26 @@ export default {
                 noCart:"कुनै कार्ट आईटमहरू छैनन्",
                 total:"कुल",
                 checkout:"चेकआउट",
-                viewCart:"कार्ट हेर्नुहोस्"
+                viewCart:"कार्ट हेर्नुहोस्",
+                yourCart:"तपाईंको कार्ट",
+                product:"उत्पादन",
+                quantity:"मात्रा",
+                amount:"रकम",
+                cartTotal:"कार्ट कुल",
+                subTotal:"उप कुल",
+                deliveryAddress:"उप कुल",
+                pleaseChoose:"कृपया छनौट गर्नुहोस्",
+                location:"स्थान",
+                actualLocation:"तपाईंको वास्तविक स्थान",
+                contactNum:"सम्पर्क नम्बर",
+                yourNumber:"तपाईंको सम्पर्क नम्बर",
+                deliveryCharge:"वितरण शुल्क",
+                confirmOrder:"अर्डर पुष्टि गर्नुहोस्",
+                orderNote:"यदि तपाई काठमाडौं उपत्यका बाहिर हुनुहुन्छ भने सामान डेलिभरी हुन ७-१० दिन लाग्छ र डेलिभरी शुल्क लाग्न सक्नेछ तर यदि तपाई काठमाडौं उपत्यका भित्र हुनुहुन्छ भने नि:शुल्क डेलिभरी पाउनुहुन्छ र सामान डेलिभरी हुन १-३ दिन मात्र लाग्छ।",
+                thanksNote:"हामीसँग किनमेल गर्नु भएकोमा धन्यवाद।",
+                paymentMethod:"भुक्तानी विधि छनौट गर्नुहोस्",
+                cancel:"रद्द गर्नुहोस्",
+                buyNow:"अहिले खरिद गर"
             },
             auth: {
                 customerLogin: "ग्राहक लगइन",
@@ -370,19 +409,19 @@ export default {
                 terms: "सर्तहरू",
                 usefulLinks:"उपयोगी लिङ्कहरू"
             },
-            Filter: {
+            filter: {
                 filter: "फिल्टर",
                 sort: "द्वारा क्रमबद्ध गर्नुहोस्",
                 price: "मूल्य",
                 brands: "ब्रान्ड",
                 default: "पूर्वनिर्धारित",
-                Popularity: "लोकप्रियता",
+                popularity: "लोकप्रियता",
                 rating: "औसत रेटिंग",
                 newest: "सबैभन्दा नयाँ",
                 priceAsc: "मूल्य: कमदेखि उच्च",
                 priceDes: "मूल्य: उच्च देखि कम",
                 any: "कुनै",
-                Rs: "रु",
+                rs: "रु",
                 Above: "माथि"
             },
         }

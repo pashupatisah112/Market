@@ -16,7 +16,7 @@
                 <v-spacer></v-spacer>
                 <v-btn dark rounded @click="expand = !expand">
                     <v-icon>mdi-filter-variant</v-icon>
-                    Filter
+                    {{$t('words.filter.filter')}}
                 </v-btn>
             </v-col>
 
@@ -27,19 +27,19 @@
                             <!-- sorting option -->
                             <v-col cols="12" lg="2" md="6">
                                 <p class="body-1 font-weight-bold">
-                                    Sort By
+                                    {{$t('words.filter.sort')}}
                                 </p>
                                 <v-row v-for="(item, index) in sorts" :key="index" class="py-2 px-2">
-                                    <v-btn text class="body-2 text-capitalize" small @click="sortBy(item)">{{ item.title }}</v-btn>
+                                    <v-btn text class="body-2 text-capitalize" small @click="sortBy(item)">{{$t( item.title )}}</v-btn>
                                 </v-row>
                             </v-col>
                             <!-- end sorting option -->
 
                             <!-- range filter -->
                             <v-col cols="12" lg="2" md="6">
-                                <p class="body-1 font-weight-bold">Price</p>
+                                <p class="body-1 font-weight-bold">{{$t('words.filter.price')}}</p>
                                 <v-row v-for="(item, index) in prices" :key="index" class="py-2 px-2">
-                                    <v-btn text class="body-2 text-capitalize" small @click="priceFilter(item)">{{ item.range }}</v-btn>
+                                    <v-btn text class="body-2 text-capitalize" small @click="priceFilter(item)">{{$t('words.filter.rs')+'.'+item.low+' - '+$t('words.filter.rs')+'.'+item.high}}</v-btn>
                                 </v-row>
                             </v-col>
                             <!-- end range filter -->
@@ -47,7 +47,7 @@
                             <!-- company filter -->
                             <v-col cols="12" lg="6" md="6">
                                 <p class="body-1 font-weight-bold">
-                                    Brands
+                                    {{$t('words.filter.brands')}}
                                 </p>
                                 <v-chip class="mx-2" color="green" outlined v-for="item in companies" :key="item.id" @click="companyFilter(item)">{{ item.company_name }}</v-chip>
                             </v-col>
@@ -59,16 +59,16 @@
         </v-row>
         <v-row justify="center" v-if="productsList.data">
             <v-col cols="12" lg="2" md="4" sm="6" v-for="item in productsList.data" :key="item.id">
-                <v-card max-width="300" class="mx-auto" tile flat>
+                <v-card max-width="200" class="mx-auto" tile flat>
                     <v-hover v-slot="{ hover }">
                         <div style="overflow: hidden;">
-                            <v-img :src="getImage(item)" max-width="300" height="350" style="transition: transform .4s;" :class="{ 'on-hover': hover }">
+                            <v-img :src="getImage(item)" max-width="200" height="250" style="transition: transform .4s;" :class="{ 'on-hover': hover }">
                                 <v-slide-y-reverse-transition hide-on-leave>
                                     <div v-if="hover" class="d-flex transition-fast-in-fast-out v-card--reveal" style="height: 30%;">
                                         <v-row justify="center">
                                             <v-col align="center" cols="12">
-                                                <v-btn rounded color="white" class="text-capitalize mb-1" small @click="quickView(item)">Quick View</v-btn>
-                                                <div style="background-color:rgba(0,0,0,0.7)" class="mb-n2">
+                                                <v-btn rounded color="white" class="text-capitalize mb-1" small @click="quickView(item)">{{$t('words.general.quickView')}}</v-btn>
+                                                <div style="background-color:rgba(0,0,0,0.7)" class="mb-3">
                                                     <v-rating :value="getRating(item)" readonly background-color="yellow" half-increments small color="orange"></v-rating>
                                                 </div>
                                             </v-col>
@@ -136,52 +136,52 @@ export default {
             selectedCategory: [],
             rating: 4,
             sorts: [{
-                    title: "Default"
+                    title: "words.filter.default"
                 },
                 {
-                    title: "Popularity"
+                    title: "words.filter.popularity"
                 },
                 {
-                    title: "Average Rating"
+                    title: "words.filter.rating"
                 },
                 {
-                    title: "Newest"
+                    title: "words.filter.newest"
                 },
                 {
-                    title: "Price: Low to High"
+                    title: "words.filter.priceAsc"
                 },
                 {
-                    title: "Price: High to Low"
+                    title: "words.filter.priceDes"
                 }
             ],
             colors: [],
             prices: [{
-                    range: "Any",
+                    range: "words.filter.any",
                     low: 0,
                     high: 50000
                 },
                 {
-                    range: "Rs.0 - Rs.1000",
+                    range: "words.filter.rs.0 - words.filter.rs.1000",
                     low: 0,
                     high: 1000
                 },
                 {
-                    range: "Rs.1000 - Rs.2000",
+                    range: "words.filter.rs.1000 - words.filter.rs.2000",
                     low: 1000,
                     high: 2000
                 },
                 {
-                    range: "Rs.2000 - Rs.3000",
+                    range: "words.filter.rs.2000 - words.filter.rs.3000",
                     low: 2000,
                     high: 3000
                 },
                 {
-                    range: "Rs.3000 - Rs.5000",
+                    range: "words.filter.rs.3000 - words.filter.rs.5000",
                     low: 3000,
                     high: 5000
                 },
                 {
-                    range: "Rs.5000 + above",
+                    range: "words.filter.rs.5000 + words.filter.above",
                     low: 5000,
                     high: 50000
                 }

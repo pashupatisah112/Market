@@ -1,18 +1,18 @@
 <template>
 <div>
     <v-container fluid>
-        <v-row class="px-10" v-if="sale">
+        <v-row v-if="sale">
              <v-col cols="12" lg="2" md="4" sm="6" v-for="item in sale.data" :key="item.id">
-                    <v-card max-width="300" class="mx-auto" tile flat>
+                    <v-card max-width="200" class="mx-auto" tile flat>
                         <v-hover v-slot="{ hover }">
                             <div style="overflow: hidden;">
-                                <v-img :src="getImage(item)" max-width="300" height="350" style="transition: transform .4s;" :class="{ 'on-hover': hover }">
+                                <v-img :src="getImage(item)" max-width="200" height="250" style="transition: transform .4s;" :class="{ 'on-hover': hover }">
                                     <v-slide-y-reverse-transition hide-on-leave>
                                         <div v-if="hover" class="d-flex transition-fast-in-fast-out v-card--reveal" style="height: 30%;">
                                             <v-row justify="center">
                                                 <v-col align="center" cols="12">
-                                                    <v-btn rounded color="white" class="text-capitalize mb-1" small @click="quickView(item)">Quick View</v-btn>
-                                                    <div style="background-color:rgba(0,0,0,0.7)" class="mb-n2">
+                                                    <v-btn rounded color="white" class="text-capitalize mb-1" small @click="quickView(item)">{{$t('words.general.quickView')}}</v-btn>
+                                                    <div style="background-color:rgba(0,0,0,0.7)" class="mb-3">
                                                         <v-rating :value="getRating(item)" readonly background-color="yellow" half-increments small color="orange"></v-rating>
                                                     </div>
                                                 </v-col>

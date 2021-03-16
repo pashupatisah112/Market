@@ -30,21 +30,14 @@
                     </template>
                 </v-text-field>
                 <v-row justify="center">
-                    <v-btn icon color="footer">
+                    <v-btn icon color="footer" href="https://www.facebook.com/eSmartOrder" target="_blank">
                         <v-icon>mdi-facebook</v-icon>
                     </v-btn>
 
-                    <v-btn icon color="footer">
+                    <v-btn icon color="footer" href="https://www.instagram.com/esmartorder/" target="_blank">
                         <v-icon>mdi-instagram</v-icon>
                     </v-btn>
 
-                    <v-btn icon color="footer">
-                        <v-icon>mdi-twitter</v-icon>
-                    </v-btn>
-
-                    <v-btn icon color="footer">
-                        <v-icon>mdi-pinterest</v-icon>
-                    </v-btn>
                 </v-row>
             </v-col>
         </v-row>

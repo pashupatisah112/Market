@@ -18,17 +18,11 @@
             <v-spacer></v-spacer>
 
             <div class="hidden-sm-and-down">
-                <v-btn icon small>
+                <v-btn icon small href="https://www.facebook.com/eSmartOrder" target="_blank">
                     <v-icon dense size="18" color="white">mdi-facebook</v-icon>
                 </v-btn>
-                <v-btn icon small>
-                    <v-icon dense size="18" color="white">mdi-twitter</v-icon>
-                </v-btn>
-                <v-btn icon small>
-                    <v-icon dense size="18" color="white">mdi-linkedin</v-icon>
-                </v-btn>
-                <v-btn icon small>
-                    <v-icon dense size="18" color="white">mdi-pinterest</v-icon>
+                <v-btn icon small href="https://www.instagram.com/esmartorder/" target="_blank">
+                    <v-icon dense size="18" color="white">mdi-instagram</v-icon>
                 </v-btn>
             </div>
 

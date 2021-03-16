@@ -32,7 +32,7 @@
                     <v-form v-model="valid" ref="form" style="width:75%">
                         <v-textarea v-model="commentBox" rows="1" :rules="[validRules.required]" class="mx-5 mt-5 " rounded auto-grow dense full-width :placeholder="$t(placeAsk())" outlined></v-textarea>
                     </v-form>
-                    <v-btn dark rounded @click="makeComment" class="mt-5">Submit</v-btn>
+                    <v-btn dark rounded @click="makeComment" class="mt-5">{{$t('words.detail.submit')}}</v-btn>
                 </v-row>
             </v-col>
         </v-row>

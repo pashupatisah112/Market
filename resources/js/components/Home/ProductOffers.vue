@@ -1,22 +1,22 @@
 <template>
 <div>
-    <v-container fluid>
+    <v-container>
         <v-row justify="center">
             <h2 class="mt-5 text-uppercase">{{ $t('words.general.productOffers') }}</h2>
         </v-row>
         <v-row class=" mt-5" justify="center" v-if="this.offers.length>0">
             <v-slide-group v-model="slide" center-active show-arrows>
                 <v-slide-item v-for="item in offers" :key="item.id" v-slot="{ toggle }">
-                    <v-card max-width="300" class="ma-4" tile flat >
+                    <v-card max-width="200" class="ma-4" tile flat >
                         <v-hover v-slot="{ hover }">
                             <div style="overflow: hidden;">
-                                <v-img :src="getImage(item)" width="300" height="350" style="transition: transform .4s;" :class="{ 'on-hover': hover }" @click="toggle">
+                                <v-img :src="getImage(item)" width="200" height="250" style="transition: transform .4s;" :class="{ 'on-hover': hover }" @click="toggle">
                                     <v-slide-y-reverse-transition hide-on-leave>
                                         <div v-if="hover" class="d-flex transition-fast-in-fast-out v-card--reveal" style="height: 30%;">
                                             <v-row justify="center">
                                                 <v-col cols="12" align="center"> 
-                                                    <v-btn rounded color="white" class="text-capitalize mb-1" small @click="quickView(item)">Quick View</v-btn>
-                                                    <div style="background-color:rgba(0,0,0,0.7)" class="mb-n2">
+                                                    <v-btn rounded color="white" class="text-capitalize mb-1" small @click="quickView(item)">{{$t('words.general.quickView')}}</v-btn>
+                                                    <div style="background-color:rgba(0,0,0,0.7)" class="mb-3">
                                                         <v-rating readonly :value="getRating(item)" background-color="yellow" half-increments small color="orange"></v-rating>
                                                     </div>
                                                 </v-col>

@@ -10,7 +10,7 @@
 
             <v-btn dark rounded @click="expand=!expand">
                 <v-icon>mdi-filter-variant</v-icon>
-                Filter
+                {{$t('words.fil.sort')}}
             </v-btn>
             <v-expand-transition>
                 <v-card style="width:100%;" v-show="expand" color="background" flat>
@@ -18,18 +18,18 @@
                         <v-row>
                             <!-- sorting option -->
                             <v-col cols="12" lg="2" md="6">
-                                <p class="body-1 font-weight-bold">Sort By</p>
+                                <p class="body-1 font-weight-bold">{{$t('words.filter.sort')}}</p>
                                 <v-row v-for="(item,index) in sorts" :key="index" class="py-2 px-2">
-                                    <v-btn text class="body-2 text-capitalize" small>{{item.title}}</v-btn>
+                                    <v-btn text class="body-2 text-capitalize" small>{{$t(item.title)}}</v-btn>
                                 </v-row>
                             </v-col>
                             <!-- end sorting option -->
 
                             <!-- range filter -->
                             <v-col cols="12" lg="2" md="6">
-                                <p class="body-1 font-weight-bold">Price</p>
+                                <p class="body-1 font-weight-bold">{{$t('words.filter.price')}}</p>
                                 <v-row v-for="(item,index) in prices" :key="index" class="py-2 px-2">
-                                    <v-btn text class="body-2 text-capitalize" small>{{item.range}}</v-btn>
+                                    <v-btn text class="body-2 text-capitalize" small>{{$t(item.range)}}</v-btn>
                                 </v-row>
                             </v-col>
                             <!-- end range filter -->
@@ -48,7 +48,7 @@
 
                             <!-- company filter -->
                             <v-col cols="12" lg="6" md="6">
-                                <p class="body-1 font-weight-bold">Brands</p>
+                                <p class="body-1 font-weight-bold">{{$t('words.filter.brand')}}</p>
                                 <v-chip class="mx-2" color="green" outlined v-for="item in companies" :key="item.id">{{item.company_name}}</v-chip>
                             </v-col>
                             <!-- end company filter -->
@@ -70,18 +70,18 @@ export default {
             expand: false,
             selectedCategory: [],
             sorts: [{
-                    title: 'Default'
+                    title: 'words.filter.default'
                 }, {
-                    title: 'Popolarity'
+                    title: 'words.filter.popularity'
                 }, {
-                    title: 'Average Rating'
+                    title: 'words.filter.rating'
                 }, {
-                    title: 'Newest'
+                    title: 'words.filter.newest'
                 },
                 {
-                    title: 'Price:Low to Hign'
+                    title: 'words.filter.priceAsc'
                 }, {
-                    title: 'Price: High to Low'
+                    title: 'words.filter.priceDes'
                 }
             ],
             colors: [],

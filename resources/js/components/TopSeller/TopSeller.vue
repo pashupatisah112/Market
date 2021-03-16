@@ -1,6 +1,6 @@
 <template>
 <div>
-    <v-container fluid>
+    <v-container>
         <v-row justify="center">
             <p class="text-h4">{{$t('words.general.topSeller')}}</p>
         </v-row>
@@ -9,18 +9,18 @@
                 <v-row justify="center" class="my-3">
                     <v-chip v-for="item in categories" :key="item.id" class="mx-2" @click="filterTop(item)" link>{{item.subCategory_name}}</v-chip>
                 </v-row>
-                <v-row class="px-10" v-if="topSeller.data">
+                <v-row v-if="topSeller.data">
                     <v-col cols="12" lg="3" md="4" sm="6" v-for="item in topSeller.data" :key="item.id">
-                        <v-card max-width="300" class="mx-auto" tile flat>
+                        <v-card max-width="200" class="mx-auto" tile flat>
                             <v-hover v-slot="{ hover }">
                                 <div style="overflow: hidden;">
-                                    <v-img :src="getImage(item)" width="300" height="350" style="transition: transform .4s;" :class="{ 'on-hover': hover }">
+                                    <v-img :src="getImage(item)" width="200" height="250" style="transition: transform .4s;" :class="{ 'on-hover': hover }">
                                         <v-slide-y-reverse-transition hide-on-leave>
                                             <div v-if="hover" class="d-flex transition-fast-in-fast-out v-card--reveal" style="height: 30%;">
                                                 <v-row justify="center">
                                                     <v-col align="center" cols="12">
-                                                        <v-btn rounded color="white" class="text-capitalize mb-1" small @click="quickView(item)">Quick View</v-btn>
-                                                        <div style="background-color:rgba(0,0,0,0.7)" class="mb-n2">
+                                                        <v-btn rounded color="white" class="text-capitalize mb-1" small @click="quickView(item)">{{$t('words.general.quickView')}}</v-btn>
+                                                        <div style="background-color:rgba(0,0,0,0.7)" class="mb-3">
                                                             <v-rating :value="getRating(item)" background-color="yellow" half-increments small color="orange"></v-rating>
                                                         </div>
                                                     </v-col>

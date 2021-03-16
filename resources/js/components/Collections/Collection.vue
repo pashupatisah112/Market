@@ -1,10 +1,10 @@
 <template>
     <div>
-        <v-container fluid>
+        <v-container>
             <v-row justify="center">
                 <p class="text-h6 font-weight-bold">{{$t('words.general.productCollect')}}</p>
             </v-row>
-            <v-row class="px-10" v-if="collections.data" justify="center">
+            <v-row v-if="collections.data" justify="center">
                 <v-col
                     cols="12"
                     lg="3"
@@ -37,11 +37,11 @@
                                                         class="text-capitalize mb-1"
                                                         small
                                                         @click="quickView(item)"
-                                                        >Quick View</v-btn
+                                                        >{{$t('words.general.quickView')}}</v-btn
                                                     >
                                                     <div
                                                         style="background-color:rgba(0,0,0,0.7)"
-                                                        class="mb-n2"
+                                                        class="mb-3"
                                                     >
                                                         <v-rating
                                                             :value="

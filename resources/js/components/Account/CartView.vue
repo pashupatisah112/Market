@@ -5,7 +5,7 @@
             <div @click="onKhaltiClick">khalti</div>
         </vue-khalti>
         <v-row justify="center">
-            <p class="text-h4">Your cart</p>
+            <p class="text-h4">{{$t('words.general.yourCart')}}</p>
         </v-row>
         <v-row>
             <v-col cols="8">
@@ -14,22 +14,22 @@
                         <thead>
                             <tr>
                                 <th class="text-left">
-                                    Product
+                                    {{ $t('words.general.product')}}
                                 </th>
                                 <th class="text-left">
-                                    Color
+                                    {{$t('words.detail.color')}}
                                 </th>
                                 <th class="text-left">
-                                    Size
+                                    {{$t('words.detail.size')}}
                                 </th>
                                 <th class="text-left">
-                                    Price
+                                    {{$t('words.filter.price')}}
                                 </th>
                                 <th class="text-left">
-                                    Quantity
+                                    {{$t('words.general.quantity')}}
                                 </th>
                                 <th class="text-left">
-                                    Amount
+                                    {{$t('words.general.amount')}}
                                 </th>
                             </tr>
                         </thead>
@@ -63,37 +63,39 @@
             <v-col cols="4">
                 <v-card outlined flat>
                     <v-card-title>
-                        CART TOTALS
+                        {{$t('words.general.cartTotal')}}
                     </v-card-title>
 
-                    <v-card-text>
-                        Subtotal: Rs. {{total}}
+                     <v-card-text>
+                        {{$t('words.general.subTotal')}}: {{$t('words.filter.rs')}}. {{total}}
                     </v-card-text>
 
                     <v-divider class="mx-5"></v-divider>
-
+                    
                     <v-card-text>
                         <v-form v-model="valid" ref="form">
-                            <p>Delivery addresss:</p>
-                            <v-select dense :items="addresses" placeholder="Please choose" outlined :rules="[validRules.required]" class="mt-n3" @change="setupDeliveryCharge"></v-select>
-                            <p>Location:</p>
-                            <v-text-field placeholder="Your actual location" v-model="location" outlined dense :rules="[validRules.required]" class="mt-n3"></v-text-field>
-                            <p>Location:</p>
-                            <v-text-field placeholder="Your contact number" v-model="contact" outlined dense :rules="[validRules.required,validRules.length10]" class="mt-n3"></v-text-field>
-                            <p>Delivery Charge: {{delivery_charge}}</p>
+                             <p>{{$t('words.general.deliveryAddress')}}:</p>
+                            <v-select dense :items="addresses" :placeholder="$t(placeChoose())" outlined :rules="[validRules.required]" class="mt-n3" @change="setupDeliveryCharge"></v-select>
+                            
+                            <p>{{$t('words.general.location')}}:</p>
+                            <v-text-field :placeholder="$t(placeLocation())" v-model="location" outlined dense :rules="[validRules.required]" class="mt-n3"></v-text-field>
+                            
+                            <p>{{$t('words.general.contactNum')}}:</p>
+                            <v-text-field :placeholder="$t(placeContact())" v-model="contact" outlined dense :rules="[validRules.required,validRules.length10]" class="mt-n3"></v-text-field>
+                            <p>{{$t('words.general.deliveryCharge')}}: {{delivery_charge}}</p>
                         </v-form>
 
                         <v-divider></v-divider>
-
-                        <p class="font-weight-bold">Total: {{net_total}}</p>
+                    
+                        <p class="font-weight-bold">{{$t('words.general.total')}}: {{net_total}}</p>
 
                         <v-divider></v-divider>
                         <v-card-actions>
-                            <v-btn rounded color="blackTheme" class=" mx-auto text-capitalize white--text" @click="confirmOrder()">Confirm order</v-btn>
+                            <v-btn rounded color="blackTheme" class=" mx-auto text-capitalize white--text" @click="confirmOrder()">{{$t('words.general.confirmOrder')}}</v-btn>
                         </v-card-actions>
 
-                        <p class="font-weight-bold">Note: If your outside kathmandu valley delivery charges may apply and may take 7-10 days for delivey. Customers inside valley will have free delivery charge and may get your order within 3 days</p>
-                        <p class="text-center">Thank you for shopping with us.</p>
+                        <p class="font-weight-bold">{{$t('words.general.orderNote')}}</p>
+                        <p class="text-center">{{$t('words.general.thanksNote')}}</p>
                     </v-card-text>
 
                 </v-card>
@@ -103,7 +105,7 @@
         <!-- payment method dialog -->
         <v-dialog v-model="paymentDialog" persistent width="400px">
             <v-card>
-                <v-card-title>Choose Payment Method</v-card-title>
+                <v-card-title>{{$t('words.general.paymentMethod')}}</v-card-title>
                 <v-card-text>
                     <v-form v-model="valid" ref="form">
                         <v-radio-group v-model="paymentGroup" :rules="[validRules.required]">
@@ -115,9 +117,9 @@
                     </v-form>
                 </v-card-text>
                 <v-card-actions>
-                    <v-btn rounded @click="paymentDialog=false" dark>Cancel</v-btn>
+                    <v-btn rounded @click="paymentDialog=false" dark>{{$t('words.general.cancel')}}</v-btn>
                     <v-spacer></v-spacer>
-                    <v-btn rounded dark @click="buy">Buy Now</v-btn>
+                    <v-btn rounded dark @click="buy">{{$t('words.general.buyNow')}}</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -246,6 +248,15 @@ export default {
             checkout.show({
                 amount: 1000
             });
+        },
+        placeChoose(){
+            return 'words.general.pleaseChoose'
+        },
+        placeLocation(){
+            return 'words.general.actualLocation'
+        },
+        placeContact(){
+            return 'words.general.yourNumber'
         }
     }
 }
