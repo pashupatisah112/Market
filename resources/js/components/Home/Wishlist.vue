@@ -2,10 +2,10 @@
     <div>
         <v-card width="400" min-height="200">
             <v-row class="px-5">
-                <v-card-title class="float-left">Your Wishlist</v-card-title>
+                <v-card-title class="float-left">{{$t('words.general.yourWishlist')}}</v-card-title>
                 <v-spacer></v-spacer>
                 <v-card-subtitle class="float-right" v-if="wishlist.length > 0"
-                    >View Similar</v-card-subtitle
+                    >{{$t('words.general.viewSimilar')}}</v-card-subtitle
                 >
             </v-row>
 

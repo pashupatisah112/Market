@@ -1,7 +1,7 @@
 <template>
 <div>
     <v-card width="300">
-        <v-card-title>Cart</v-card-title>
+        <v-card-title>{{$t('words.general.cart')}}</v-card-title>
         <v-container fluid>
             <v-row>
                 <v-col cols="12">
@@ -30,12 +30,12 @@
 
                         <v-divider></v-divider>
                         <v-row class="mt-2 px-5">
-                            <P class="text-h6">TOTAL:</P>
+                            <P class="text-h6">{{$t('words.general.total')}}:</P>
                             <v-spacer></v-spacer>
                             <p class="text-h6">Rs.{{cartTotal}}</p>
                         </v-row>
-                        <v-btn rounded block color="blackTheme" class="text-capitalize white--text" @click="viewCart">View Cart</v-btn>
-                        <v-btn rounded block color="blackTheme" class="text-capitalize white--text my-3" @click="viewCart">Checkout</v-btn>
+                        <v-btn rounded block color="blackTheme" class="text-capitalize white--text" @click="viewCart">{{$t('words.general.viewCart')}}</v-btn>
+                        <v-btn rounded block color="blackTheme" class="text-capitalize white--text my-3" @click="viewCart">{{$t('words.general.checkout')}}</v-btn>
                     </div>
                     <hollow-dots-spinner class="mx-auto my-auto" v-else-if="cartlist.length < 1 && noCartText == ''" :animation-duration="1000" :dot-size="15" :dots-num="3" color="#ff1d5e" />
                     <p v-else class="text--disabled mx-auto my-5 ml-5 position-absolute">

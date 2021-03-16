@@ -13,7 +13,7 @@
                                 <v-icon>mdi-close</v-icon>
                             </v-btn>
                             <div class="pa-5">
-                                <p class="text-center font-weight-bold">Customer Login</p>
+                                <p class="text-center font-weight-bold">{{ $t('words.auth.customerLogin') }}</p>
                                 <v-form ref="form" v-model="valid">
                                     <v-text-field :rules="[validRules.required,validRules.email]" :error-messages="loginError" placeholder="Email" prepend-icon="mdi-email" v-model="email" rounded dense solo filled></v-text-field>
                                     <v-text-field :rules="[validRules.required,validRules.lengthMin8]" placeholder="Password" :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" @click:append="show1 = !show1" :type="show1 ? 'text' : 'password'" prepend-icon="mdi-lock" v-model="password" rounded dense solo filled></v-text-field>

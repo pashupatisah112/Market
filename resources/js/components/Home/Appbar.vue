@@ -139,7 +139,7 @@
                     </v-menu>
 
                     <v-btn text class="text-capitalize" to="/top-sellers">
-                        Top selling
+                        {{ $t('words.header.topSelling') }}
                     </v-btn>
 
                     <v-btn text class="text-capitalize" to="/collections">
@@ -147,18 +147,18 @@
                     </v-btn>
 
                     <v-btn text class="text-capitalize" to="/offers">
-                        Offers
+                        {{ $t('words.header.offers') }}
                     </v-btn>
 
                     <v-btn text class="text-capitalize" to="/sale">
-                        Sale
+                        {{ $t('words.header.sale') }}
                     </v-btn>
                 </div>
 
                 <v-spacer></v-spacer>
                 <div>
                     <v-expand-x-transition>
-                        <v-text-field rounded filled dense placeholder="Search items here..." v-show="search" v-model="searchItem" class="mt-7 mr-2"></v-text-field>
+                        <v-text-field rounded filled dense :placeholder="$t(place())" v-show="search" v-model="searchItem" class="mt-7 mr-2"></v-text-field>
                     </v-expand-x-transition>
                 </div>
                 <div class="hidden-md-and-down">
@@ -200,7 +200,7 @@
                 <v-text-field rounded filled dense placeholder="Search items here..." v-model="searchItem">
 
                     <template slot="append">
-                        <v-btn rounded small class="white--text text-capitalize mr-n4 mt-n1" color="blackTheme" @click="searchOptions">Search</v-btn>
+                        <v-btn rounded small class="white--text text-capitalize mr-n4 mt-n1" color="blackTheme" @click="searchOptions">{{ $t('words.header.sale') }}</v-btn>
                     </template>
                 </v-text-field>
             </v-expand-x-transition>
@@ -363,6 +363,10 @@ export default {
                 this.setToken()
             }
         },
+        place(){
+            //{{ $t('words.header.sale') }}
+            return 'words.header.search';
+        }
     }
-}
+}    
 </script>

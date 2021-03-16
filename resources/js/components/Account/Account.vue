@@ -8,7 +8,7 @@
         <template v-slot:activator="{ on, attrs }">
             <v-btn dark v-bind="attrs" v-on="on" small text depressed color="transparent" class=" text-capitalize mx-auto">
                 <v-icon>mdi-account</v-icon>
-                Account
+                {{ $t('words.header.account') }}
             </v-btn>
         </template>
         <v-card width="200" tile>
@@ -18,7 +18,7 @@
                     <v-list-item dense @click="viewCart()">
                         <v-list-item-content>
                             <v-list-item-subtitle>
-                                <v-icon class="mr-2">mdi-cart</v-icon>My Cart
+                                <v-icon class="mr-2">mdi-cart</v-icon>{{ $t('words.header.myCart') }}
                             </v-list-item-subtitle>
                         </v-list-item-content>
                     </v-list-item>
@@ -26,7 +26,7 @@
                     <v-list-item dense>
                         <v-list-item-content>
                             <v-list-item-subtitle @click="viewHistory">
-                                <v-icon class="mr-2">mdi-history</v-icon>Purchase history
+                                <v-icon class="mr-2">mdi-history</v-icon>{{ $t('words.header.purchaseHistory') }}
                             </v-list-item-subtitle>
                         </v-list-item-content>
                     </v-list-item>
@@ -34,7 +34,7 @@
                     <v-list-item dense @click="logout">
                         <v-list-item-content>
                             <v-list-item-subtitle>
-                                <v-icon class="mr-2">mdi-logout</v-icon>Logout
+                                <v-icon class="mr-2">mdi-logout</v-icon>{{ $t('words.header.logout') }}
                             </v-list-item-subtitle>
                         </v-list-item-content>
                     </v-list-item>

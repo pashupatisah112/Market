@@ -3,7 +3,7 @@
     <v-container>
         <v-row class="px-5">
             <v-col cols="12">
-                <p class="font-weight-bold">Related Tags</p>
+                <p class="font-weight-bold">{{$t('words.detail.relatedTags')}}</p>
                 <v-chip class="ma-2" v-for="item in tags.tag" :key="item.id">
                     {{item.tag_name}}
                 </v-chip>

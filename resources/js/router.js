@@ -184,7 +184,7 @@ const routes = [
                 component: Category
             },
             {
-                path: "/detail/:code", //yaha arko param 'title' pni rakhda save hudaina refresh garda but 'code' matrai rakhda hunxa
+                path: "/product/:code/details", //yaha arko param 'title' pni rakhda save hudaina refresh garda but 'code' matrai rakhda hunxa
                 name: "Detail",
                 component: Detail
             },

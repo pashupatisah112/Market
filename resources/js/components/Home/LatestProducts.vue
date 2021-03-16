@@ -2,7 +2,7 @@
 <div>
     <v-container fluid class="px-10">
         <v-row justify="center">
-            <h2 class="mt-5">LATEST PRODUCTS</h2>
+            <h2 class="mt-5 text-text-uppercase">{{ $t('words.general.latestProducts') }}</h2>
         </v-row>
         <v-row class=" mt-5" v-if="this.latest.length>0">
                 <v-col cols="12" lg="2" md="4" sm="6" v-for="item in latest" :key="item.id">

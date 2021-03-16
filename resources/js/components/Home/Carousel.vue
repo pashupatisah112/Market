@@ -8,7 +8,7 @@
                 {{item.description}}
             </v-card-text>
             <v-card-actions>
-                <v-btn rounded outlined dark width="150" class="text-capitalize" @click="goToDetails(item.product)">Discover More</v-btn>
+                <v-btn rounded outlined dark width="150" class="text-capitalize" @click="goToDetails(item.product)">{{ $t('words.general.discoverMore') }}</v-btn>
             </v-card-actions>
         </v-card>
     </v-carousel-item>

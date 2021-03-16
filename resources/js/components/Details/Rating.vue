@@ -2,14 +2,14 @@
 <div>
     <v-container fluid>
         <v-row justify="center">
-            <p v-if="rating==0">Rate this product:</p>
+            <p v-if="rating==0">{{$t('words.detail.rateProduct')}}:</p>
             <p v-else>Your rating:</p>
             <v-rating v-model="rating" @input="giveRating" class="mt-n3" background-color="yellow" half-increments color="orange"></v-rating>
 
             <v-col cols="5" align="center">
                 <p class="text-h3">{{this.avg}}</p>
                 <v-rating v-model="avg" background-color="yellow" readonly half-increments small color="orange"></v-rating>
-                <p>{{this.rating_count}} people rated this</p>
+                <p>{{this.rating_count}} {{$t('words.detail.peopleRated')}}</p>
             </v-col>
             <v-col cols="7">
                 <div v-if="this.rating_count>0">
@@ -25,7 +25,7 @@
                     </v-list-item>
                 </div>
 
-                <p v-else class="font-weight-bold mx-auto">Not Rated yet</p>
+                <p v-else class="font-weight-bold mx-auto">{{$t('words.detail.notRated')}}</p>
             </v-col>
         </v-row>
     </v-container>

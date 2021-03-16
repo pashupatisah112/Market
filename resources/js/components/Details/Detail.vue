@@ -24,19 +24,19 @@
                 <v-row>
                     <v-col>
                         <p class="text-h5">{{product.title}}</p>
-                        <h4>Rs. {{product.price}}</h4>
+                        <h4>{{$t('words.general.rs')}}. {{product.price}}</h4>
                         <p class="body-2">short description</p>
                         <v-form v-model="valid" ref="form">
                             <div style="width:300px" class="mx-auto">
-                                <p class="float-left mr-7">Size</p>
-                                <v-select v-model="cartSize" :rules="[validRules.required]" :items="product.size" item-text="size" item-value="id" item label="Choose Size" dense outlined></v-select>
+                                <p class="float-left mr-7">{{$t('words.detail.size')}}</p>
+                                <v-select v-model="cartSize" :rules="[validRules.required]" :items="product.size" item-text="size" item-value="id" :label="$t(placeSize())" dense outlined></v-select>
                             </div>
                             <div style="width:300px" class="mx-auto">
-                                <p class="float-left mr-6">Color</p>
-                                <v-select v-model="cartColor" :rules="[validRules.required]" :items="product.color" label="Choose Color" item-text="color_name" item-value="id" dense outlined></v-select>
+                                <p class="float-left mr-6">{{$t('words.detail.color')}}</p>
+                                <v-select v-model="cartColor" :rules="[validRules.required]" :items="product.color" :label="$t(placeColor())" item-text="color_name" item-value="id" dense outlined></v-select>
                             </div>
                             <div style="width:300px" class="mx-auto">
-                                <p class="float-left mr-5">Count</p>
+                                <p class="float-left mr-5">{{$t('words.detail.count')}}</p>
                                 <v-btn-toggle>
                                     <v-btn @click="countMinus" icon>
                                         <v-icon>mdi-minus</v-icon>
@@ -55,8 +55,8 @@
                 </v-row>
 
                 <v-row justify="center" class="mt-8">
-                    <v-btn class="text-capitalize white--text mx-2" color="blackTheme" rounded @click="addToCart">Add to Cart</v-btn>
-                    <v-btn class="text-capitalize white--text mx-2" color="blackTheme" rounded>Buy Now</v-btn>
+                    <v-btn class="text-capitalize white--text mx-2" color="blackTheme" rounded @click="addToCart">{{$t('words.detail.addToCart')}}</v-btn>
+                    <v-btn class="text-capitalize white--text mx-2" color="blackTheme" rounded>{{$t('words.detail.buyNow')}}</v-btn>
 
                 </v-row>
 
@@ -81,7 +81,7 @@
         </v-row>
         <v-row class="px-10">
             <v-card flat>
-                <v-card-title>Description</v-card-title>
+                <v-card-title>{{$t('words.detail.description')}}</v-card-title>
                 <v-card-text v-html="product.description">
 
                 </v-card-text>
@@ -188,6 +188,12 @@ export default {
                 }
                 
             }
+        },
+        placeColor(){
+            return 'words.detail.chooseColor'
+        },
+        placeSize(){
+            return 'words.detail.chooseSize'
         }
 
     }

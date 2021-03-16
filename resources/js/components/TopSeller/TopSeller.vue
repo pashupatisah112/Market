@@ -2,7 +2,7 @@
 <div>
     <v-container fluid>
         <v-row justify="center">
-            <p class="text-h4">Top Sellers</p>
+            <p class="text-h4">{{$t('words.general.topSeller')}}</p>
         </v-row>
         <v-row>
             <v-col cols="12" lg="10">
@@ -67,7 +67,7 @@
 
             </v-col>
             <v-col cols="12" lg="2">
-                <p class="text-h6 text-center">Top Brands</p>
+                <p class="text-h6 text-center">{{$t('words.general.topBrand')}}</p>
                 <v-chip v-for="item in topBrands" :key="item.id" class="mx-2" @click="fromTopBrands(item)" link>{{item.company_name}}</v-chip>
 
             </v-col>

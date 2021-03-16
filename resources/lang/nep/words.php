@@ -2,19 +2,91 @@
 //run this command after adding new words 'php artisan vue-i18n:generate'
 
 return [
+    'general'=>[
+        'latestProducts'=>'भर्खरका उत्पादहरू',
+        'quickView'=>'द्रुत दृश्य',
+        'rs'=>'रु',
+        'topSellingProducts'=>'शीर्ष बेच्ने उत्पादनहरू',
+        'productOffers'=>'प्रस्ताव अफरको साथ',
+        
+        'topSeller'=>'शीर्ष विक्रेताहरू',
+        'topBrand'=>'शीर्ष ब्रान्डहरू',
+        'productCollect'=>'उत्पाद संग्रह',
+        'sale'=>'बिक्री',
+    ],
+    'auth'=>[
+        'customerLogin'=>'ग्राहक लगइन',
+        'rememberMe'=>'मलाई सम्झनुहोस्',
+        'createAccount'=>'तपाईँका खाता बनाउनुहोस्',
+        'forgotPassword'=>'पासवर्ड भुल्नु भयो?',
+        'clickHere'=>'यहाँ क्लिक गर्नुहोस्',
+        'loginGoogle'=>'गुगल प्रयोग गरेर लगईन गर्नुहोस्',
+        'loginFacebook'=>'फेसबुकको साथ लगइन गर्नुहोस्',
+        'getCode'=>'कोड प्राप्त गर्नुहोस्',
+        'registerPhone'=>'फोन नम्बर प्रयोग गरेर दर्ता गर्नुहोस्',
+        'loginAccount'=>'तपाईको खातामा लगईन गर्नुहोस्',
+        'createAccount'=>'खाता सिर्जना गर्नुहोस्',
+        'enterCode'=>'यस जीमेलमा पठाइएको digit अंकको कोड प्रविष्ट गर्नुहोस् ',
+        'submitCode'=>'कोड बुझाउनुहोस्',
+        'resendCode'=>'कोड पुन: पठाउनुहोस्',
+        'loginAccount'=>'तपाईको खातामा लगईन गर्नुहोस्',
+        'agreeTerms'=>'नियम र सर्तहरूमा सहमत गर्नुहोस्',
+    ],
     'header' => [
+        'contact'    => '9815790619',
         'lang'        => 'भाषा',
         'login' => 'लग - इन',
-        'home'       => 'घर',
-        'categories'    => 'श्रेणी',
+        'home'       => 'मुख्य',
+        'categories'    => 'प्रकार',
         'collections' => 'संग्रह',
         'about' => 'बारेमा',
         'contact' => 'सम्पर्क',
-        'buttons' => [
-            'new'         => 'Create new',
-            'edit'        => 'Update',
-            'delete'      => 'Delete'
-        ]
-    ]
- ];
- ?>
+        'topSellig'=>'शीर्ष बिक्री भइरहेको',
+        'offers'=>'प्रस्तावहरू',
+        'sale'=>'बिक्री',
+        ],
+        'detail'=>[
+            'addToCart'=>'कार्टमा हाल',
+            'buyNow'=>'अहिले खरिद',
+            'ratingReviews'=>'रेटिंग र समीक्षा',
+            'RateProduct'=>'यस उत्पादनको मूल्या Rate्कन गर्नुहोस्',
+            'notRated'=>'अझै मूल्याated्कन गरिएको छैन',
+            'peopleRated'=>'मानिसहरूले यसलाई मूल्या rated्कन गरे',
+            'noReviews'=>'अझै पूनरावलोकन भएको छैन',
+            'submit'=>'बुझाउनुहोस्',
+            'description'=>'वर्णन',
+            'relatedTags'=>'सम्बन्धित ट्यागहरू',
+            'similarProduct'=>'समान उत्पादनहरू',
+        ],
+        'footer'=>[
+            'address'=>'ठेगाना',
+            'phone'=>'फोन',
+            'email'=>'ईमेल',
+            'joinNewsletter'=>'अब हाम्रो न्यूजलेटरमा शामिल हुनुहोस् ',
+            'getEmail'=>'हाम्रो पछिल्लो पसल र विशेष प्रस्तावहरूको बारेमा ईमेल अपडेटहरू प्राप्त गर्नुहोस्',
+            'subscribe'=>'सदस्यता लिनुहोस्',
+            'about'=>'हाम्रोबारे',
+            'privacyPolicy'=>'गोपनीयता नीति',
+            'contact'=>'सम्पर्क',
+            'terms'=>'सर्तहरू'
+        ],
+        'Filter'=>[
+            'filter'=>'फिल्टर',
+            'sort'=>'द्वारा क्रमबद्ध गर्नुहोस्',
+            'price'=>'मूल्य',
+            'brands'=>'ब्रान्ड',
+            'default'=>'पूर्वनिर्धारित',
+            'Popularity'=>'लोकप्रियता',
+            'rating'=>'औसत रेटिंग',
+            'newest'=>'सबैभन्दा नयाँ',
+            'priceAsc'=>'मूल्य: कमदेखि उच्च',
+            'priceDes'=>'मूल्य: उच्च देखि कम',
+            'any'=>'कुनै',
+            'Rs.0'=>'रु.1०००',
+            'Rs.1000'=>'रु.2०००',
+            'Rs.2000'=>'रु.3000',
+            'Rs.3000'=>'रु.5000',
+            'Rs.5000 +'=>'रु.5000 + माथि'
+        ],
+];
+?>

@@ -2,7 +2,7 @@
 <div>
     <v-container fluid>
         <v-row justify="center">
-            <p class="text-h6 font-weight-bold">Product With Offers</p>
+            <p class="text-h6 font-weight-bold">{{$t('words.general.productOffers')}}</p>
         </v-row>
         <v-row class="px-10" v-if="offers">
             <v-col cols="12" lg="3" md="4" sm="6" v-for="item in offers.data" :key="item.id">

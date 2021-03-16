@@ -3,7 +3,7 @@
     <v-container fluid>
         <v-row>
             <v-col cols="12">
-                <p class="caption mx-5" v-if="this.comments.length<1">No reviews yet....</p>
+                <p class="caption mx-5" v-if="this.comments.length<1">{{$t('words.detail.noReviews')}}....</p>
 
                 <div v-else>
                     <div v-for="item in comments" :key="item.id">
@@ -30,7 +30,7 @@
 
                 <v-row>
                     <v-form v-model="valid" ref="form" style="width:75%">
-                        <v-textarea v-model="commentBox" rows="1" :rules="[validRules.required]" class="mx-5 mt-5 " rounded auto-grow dense full-width placeholder="Ask or write something..." outlined></v-textarea>
+                        <v-textarea v-model="commentBox" rows="1" :rules="[validRules.required]" class="mx-5 mt-5 " rounded auto-grow dense full-width :placeholder="$t(placeAsk())" outlined></v-textarea>
                     </v-form>
                     <v-btn dark rounded @click="makeComment" class="mt-5">Submit</v-btn>
                 </v-row>
@@ -86,6 +86,9 @@ export default {
                     })
                 }).catch(err => console.log(err.response))
             }
+        },
+        placeAsk(){
+            return 'words.detail.ask'
         }
     }
 }

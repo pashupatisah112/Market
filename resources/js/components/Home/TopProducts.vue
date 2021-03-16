@@ -2,7 +2,7 @@
 <div>
     <v-container fluid class="px-10">
         <v-row justify="center">
-            <h2 class="mt-5">TOP SELLING PRODUCTS</h2>
+            <h2 class="mt-5 text-uppercase">{{ $t('words.general.topSellingProducts') }}</h2>
         </v-row>
         <v-row justify="center" class="mt-5">
             <v-chip v-for="item in categories" :key="item.id" class="mx-2" @click="filterTop(item)" link>{{item.subCategory_name}}</v-chip>

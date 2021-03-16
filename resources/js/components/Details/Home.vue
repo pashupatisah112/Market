@@ -14,7 +14,7 @@
                 <suggestion></suggestion>
             </v-col>
             <v-col cols="12" lg="4" md="4">
-                <p class="font-weight-bold">Ratings and Reviews</p>
+                <p class="font-weight-bold">{{$t('words.detail.ratingReviews')}}</p>
 
                 <rating></rating>
 

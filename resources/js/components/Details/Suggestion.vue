@@ -2,7 +2,7 @@
 <div>
     <v-container fluid>
         <v-row class="px-5">
-            <p class="font-weight-bold">Similar Products</p>
+            <p class="font-weight-bold">{{$t('words.detail.similarProduct')}}</p>
             <v-col cols="12" lg="3" md="4" sm="6" v-for="item in suggest" :key="item.id">
                 <v-card max-width="300" class="mx-auto" tile flat>
                     <v-hover v-slot="{ hover }">

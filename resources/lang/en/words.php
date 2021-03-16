@@ -2,6 +2,36 @@
 //run this command after adding new words 'php artisan vue-i18n:generate'
 
 return [
+    'general'=>[
+        'latestProducts'=>'Latest Products',
+        'quickView'=>'Quick View',
+        'rs'=>'Rs',
+        'topSellingProducts'=>'Top Selling Products',
+        'productOffers'=>'Product With Offers',
+        
+        'topSeller'=>'Top Sellers',
+        'topBrand'=>'Top Brands',
+        'productCollect'=>'Product Collections',
+        'sale'=>'Sale',
+    ],
+    'auth'=>[
+        'customerLogin'=>'Customer Login',
+        'rememberMe'=>'Remember Me',
+        'createAccount'=>'Create Your Account',
+        'forgotPassword'=>'Forgot Password?',
+        'clickHere'=>'Click Here',
+        'loginGoogle'=>'Login Using Google',
+        'loginFacebook'=>'Login With Facebook',
+        'getCode'=>'Get Code',
+        'registerPhone'=>'Register using phone number',
+        'loginAccount'=>'Login to your account',
+        'createAccount'=>'Create Account',
+        'enterCode'=>'Enter 6 digit code sent to ',
+        'submitCode'=>'Submit Code',
+        'resendCode'=>'Resend Code',
+        'loginAccount'=>'Login to your Account',
+        'agreeTerms'=>'Agree to terms and conditions',
+    ],
     'header' => [
         'contact'    => '9815790619',
         'lang'        => 'Language',
@@ -11,11 +41,52 @@ return [
         'collections' => 'Collections',
         'about' => 'About',
         'contact' => 'Contact',
-        'buttons' => [
-            'new'         => 'Create new',
-            'edit'        => 'Update',
-            'delete'      => 'Delete'
-        ]
-    ]
+        'topSellig'=>'Top Selling',
+        'offers'=>'Offers',
+        'sale'=>'Sale',
+        ],
+        'detail'=>[
+            'addToCart'=>'Add To Cart',
+            'buyNow'=>'Buy Now',
+            'ratingReviews'=>'Rating and Reviews',
+            'RateProduct'=>'Rate this product',
+            'notRated'=>'Not Rated Yet',
+            'peopleRated'=>'people rated this',
+            'noReviews'=>'No reviews yet',
+            'submit'=>'Submit',
+            'description'=>'Description',
+            'relatedTags'=>'Related Tags',
+            'similarProduct'=>'Similar Products',
+        ],
+        'footer'=>[
+            'address'=>'Address',
+            'phone'=>'Phone',
+            'email'=>'Email',
+            'joinNewsletter'=>'Join Our Newsletter Now',
+            'getEmail'=>'Get E-mail updates about our latest shop and special offers',
+            'subscribe'=>'Subscribe',
+            'about'=>'About Us',
+            'privacyPolicy'=>'Privacy Policy',
+            'contact'=>'Contact',
+            'terms'=>'Terms'
+        ],
+        'Filter'=>[
+            'filter'=>'Filter',
+            'sort'=>'Sort By',
+            'price'=>'Price',
+            'brands'=>'Brands',
+            'default'=>'Default',
+            'Popularity'=>'Popularity',
+            'rating'=>'Average Rating',
+            'newest'=>'Newest',
+            'priceAsc'=>'Price: Low To High',
+            'priceDes'=>'Price: High To Low',
+            'any'=>'Any',
+            'Rs.0'=>'Rs.1000',
+            'Rs.1000'=>'Rs.2000',
+            'Rs.2000'=>'Rs.3000',
+            'Rs.3000'=>'Rs.5000',
+            'Rs.5000 +'=>'Rs.5000 + Above'
+        ],
 ];
 ?>

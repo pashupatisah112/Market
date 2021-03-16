@@ -2,7 +2,7 @@
 <div>
     <v-container fluid>
         <v-row justify="center">
-            <h2 class="mt-5">PRODUCTS WITH OFFERS</h2>
+            <h2 class="mt-5 text-uppercase">{{ $t('words.general.productOffers') }}</h2>
         </v-row>
         <v-row class=" mt-5" justify="center" v-if="this.offers.length>0">
             <v-slide-group v-model="slide" center-active show-arrows>

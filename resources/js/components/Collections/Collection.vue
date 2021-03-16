@@ -2,7 +2,7 @@
     <div>
         <v-container fluid>
             <v-row justify="center">
-                <p class="text-h6 font-weight-bold">Product Collections</p>
+                <p class="text-h6 font-weight-bold">{{$t('words.general.productCollect')}}</p>
             </v-row>
             <v-row class="px-10" v-if="collections.data" justify="center">
                 <v-col
