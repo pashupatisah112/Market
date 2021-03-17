@@ -114,13 +114,13 @@ export default {
                 .catch(err => console.log(err.response));
         },
         removeFromWishlist(item) {
-            this.pullFromWishlist(item);
 
             axios
                 .post("api/removeFromWishlist", {
                     product_id: item.id
                 })
                 .then(res => {
+                    this.pullFromWishlist(item);
                     this.$toast.success({
                         title: "Wishlist",
                         message: "Removed from your wishlist."

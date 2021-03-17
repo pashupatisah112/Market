@@ -26,10 +26,14 @@ class CartController extends Controller
     public function getCartListItem()
     {
         $ids=[];
-        $carts=Cart::where('user_id',Auth::id())->get();
+        $carts=Cart::where('user_id',Auth::id())->with('product')->get();
         foreach($carts as $cart){
-            array_push($ids,$cart->id);
+            foreach($cart->product as $product){
+                array_push($ids,$product->id);
+            }
+            
         }
+        array_unique($ids);
         return response()->json($ids);
     }
     public function addToCart(Request $request)
@@ -42,7 +46,8 @@ class CartController extends Controller
         $cart->color_id=$request->color;
         $cart->save();
         $cart->product()->sync($request->product_id);
-        return response()->json($cart);
+        $c=Cart::where('id',$cart->id)->with('product:id,title,price,image,product_code')->first();
+        return response()->json($c);
     }
     public function removeFromCartlist(Request $request)
     {

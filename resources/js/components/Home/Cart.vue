@@ -18,7 +18,7 @@
                                 </v-list-item-content>
 
                                 <v-list-item-action>
-                                    <v-btn icon small @click="removeFromCartlist(item)">
+                                    <v-btn icon small @click="removeCart(item)">
                                         <v-icon>
                                             mdi-close
                                         </v-icon>
@@ -78,7 +78,7 @@ export default {
         console.log(this.cartlist.length)
     },
     methods: {
-        ...mapMutations(['getCartList', 'removeFromCartlist']),
+        ...mapMutations(['getCartList', 'removeFromCartlist','pullFromCartListItem']),
         ...mapActions(['goToDetails']),
         viewCart() {
             this.$router.push({
@@ -86,13 +86,14 @@ export default {
             })
         },
         getImage(item) {
-            return "../storage/" + item.image
+            return item.image
         },
         getCart(state) {
             axios.get("api/getCart")
                 .then(res => {
                     this.getCartList(res.data.product)
                     this.cartTotal = res.data.total
+                    console.log(this.getCartList)
                     if (res.data.product.length < 1) {
                         this.noCartText = 'No cart items added.'
                     }
@@ -100,6 +101,10 @@ export default {
                 .catch(err => console.log(err.response))
 
         },
+        removeCart(item){
+            this.removeFromCartlist(item)
+            console.log(item)
+        }
     }
 }
 </script>

@@ -53,9 +53,9 @@ export default {
             }
             
         },
-        pullFromWishList(state, item) {
-            state.wishlistItem.splice(state.wishlistItem.indexOf(item.id));
-            state.wishlist.splice(state.wishlist.indexOf(item));
+        pullFromWishlist(state, item) {
+            state.wishlistItem.splice(state.wishlistItem.indexOf(item.id),1);
+            state.wishlist.splice(state.wishlist.indexOf(item),1);
         },
         quickView(state,item){
             Axios.post('api/getQuickViewItem',{
@@ -70,8 +70,9 @@ export default {
         },
     
         addToCartlist(state,item){
-            state.cartlist.push(item)
-            state.cartlistItem.push(item.id)
+            console.log('cart:',item)
+               state.cartlist.push(item)
+               state.cartlistItem.push(item.product[0].id)
         },
         getCartList(state,item) {
             state.cartlist=item
@@ -81,17 +82,19 @@ export default {
             Axios.get('api/getCartListItem')
             .then(res=>{
                 state.cartlistItem=res.data
+                console.log('store-cartlistitem;',state.cartlistItem)
             })
             .catch(err=>console.log(err.response))
         },
+
         removeFromCartlist(state,item){
-            console.log(item.cart[0].id)
+            console.log(item.product[0].id)
             Axios.post('api/removeFromCartlist',{
-                cart_id:item.cart[0].id
+                cart_id:item.id
             })
             .then(res=>{
-                state.cartlistItem.splice(state.cartlistItem.indexOf(item.cart[0].id))
-                state.cartlist.splice(state.cartlist.indexOf(item))
+                state.cartlistItem.splice(state.cartlistItem.indexOf(item.product[0].id),1)
+                state.cartlist.splice(state.cartlist.indexOf(item),1)
                 Vue.prototype.$toast.success({
                     title: "Cart",
                     message: "Product removed from cartlist."

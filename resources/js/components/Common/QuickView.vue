@@ -16,12 +16,12 @@
                             <v-col cols="12" align="center">
                                 <p class="text-h5 text-left">{{quickViewItem.title}}</p>
                                 <h4 class="text-left mb-2">Rs.{{quickViewItem.price}}</h4>
-                                <v-form v-model="valid" ref="form">
-                                    <div class="mx-auto">
+                                <v-form v-model="valid" ref="form" >
+                                    <div class="mx-auto" v-if="quickViewItem.size.length>0">
                                         <p class="float-left mr-7">{{$t('words.detail.size')}}</p>
                                         <v-select v-model="cartSize" :rules="[validRules.required]" :items="quickViewItem.size" item-text="size" item-value="id" item :label="$t(placeSize())" dense outlined></v-select>
                                     </div>
-                                    <div class="mx-auto">
+                                    <div class="mx-auto" v-if="quickViewItem.color.length>0">
                                         <p class="float-left mr-6">{{$t('words.detail.color')}}</p>
                                         <v-select v-model="cartColor" :rules="[validRules.required]" :items="quickViewItem.color" :label="$t(placeSize())" item-text="color_name" item-value="id" dense outlined></v-select>
                                     </div>
@@ -81,7 +81,7 @@ export default {
             token: state => state.authentication.token
         }),
     },
-    mounted() {},
+    
     methods: {
         ...mapMutations(['closeQuickView', 'addToCartlist','setLoginDialog']),
         countPlus() {
@@ -113,6 +113,7 @@ export default {
                                 total: this.count * this.quickViewItem.price
                             }).then(res => {
                                 this.addToCartlist(res.data)
+                                this.closeQuickView()
                                 this.$toast.success({
                                     title: "Cart",
                                     message: "Product added to your cart."
