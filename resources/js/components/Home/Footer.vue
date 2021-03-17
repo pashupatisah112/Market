@@ -24,11 +24,14 @@
             <v-col cols="12" lg="4" md="6" sm="6" class="footer-color">
                 <h4 class="white--text">{{ $t('words.footer.joinNewsletter') }}</h4>
                 <p class="caption">{{ $t('words.footer.getEmail') }}</p>
-                <v-text-field flat tile solo rounded placeholder="Enter your email">
-                    <template slot="append">
-                        <v-btn rounded class="white--text text-capitalize mr-n4" color="blackTheme">{{ $t('words.footer.subscribe') }}</v-btn>
-                    </template>
-                </v-text-field>
+                <v-form ref="form" v-model="valid">
+                    <v-text-field flat tile solo rounded placeholder="Enter your email" v-model="newsletter" :rules="[validRules.required,validRules.email]">
+                        <template slot="append">
+                            <v-btn rounded class="white--text text-capitalize mr-n4" color="blackTheme" @click="joinNewsletter">{{ $t('words.footer.subscribe') }}</v-btn>
+                        </template>
+                    </v-text-field>
+                </v-form>
+
                 <v-row justify="center">
                     <v-btn icon color="footer" href="https://www.facebook.com/eSmartOrder" target="_blank">
                         <v-icon>mdi-facebook</v-icon>
@@ -63,3 +66,42 @@
     </v-container>
 </div>
 </template>
+
+<script>
+import firebase from "firebase/app";
+import {
+    mapState
+} from 'vuex'
+export default {
+    data() {
+        return {
+            valid: "true",
+            newsletter: '',
+        }
+    },
+    computed: {
+        ...mapState({
+            validRules: state => state.validation.validRules
+        })
+    },
+    methods: {
+        joinNewsletter() {
+            if (this.$refs.form.validate()) {
+                db.collection("newsletter").doc(this.newsletter).set({
+                        email: this.newsletter,
+                    })
+                    .then(() => {
+                        this.newsletter=''
+                        this.$toast.success({
+                        title: "Newsletter",
+                        message: "Thanks you for subscribing our newsletter."
+                    });
+                    })
+                    .catch((error) => {
+                        console.error("Error writing document: ", error);
+                    });
+            }
+        }
+    }
+}
+</script>
