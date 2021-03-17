@@ -1,13 +1,16 @@
 <template>
 <div>
     <v-container fluid>
+        <v-row justify="center">
+             <p class="font-weight-bold text-center">{{$t('words.detail.similarProduct')}}</p>
+        </v-row>
         <v-row class="px-5">
-            <p class="font-weight-bold">{{$t('words.detail.similarProduct')}}</p>
-            <v-col cols="12" lg="3" md="4" sm="6" v-for="item in suggest" :key="item.id">
-                <v-card max-width="300" class="mx-auto" tile flat>
+            
+            <v-col cols="12" lg="2" md="4" sm="6" v-for="item in suggest" :key="item.id">
+                <v-card max-width="200" class="mx-auto" tile flat>
                     <v-hover v-slot="{ hover }">
                         <div style="overflow: hidden;">
-                            <v-img :src="getImage(item)" max-width="300" height="350" style="transition: transform .4s;" :class="{ 'on-hover': hover }">
+                            <v-img :src="getImage(item)" max-width="200" height="250" style="transition: transform .4s;" :class="{ 'on-hover': hover }">
                                 <v-slide-y-reverse-transition hide-on-leave>
                                     <div v-if="hover" class="d-flex transition-fast-in-fast-out v-card--reveal" style="height: 30%;">
                                         <v-row justify="center">

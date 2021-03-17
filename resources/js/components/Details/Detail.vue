@@ -60,23 +60,6 @@
 
                 </v-row>
 
-                <v-row justify="center" class="mt-5">
-                    <v-col cols="6">
-                        <v-btn icon color="blackTheme">
-                            <v-icon>mdi-cards-heart</v-icon>
-                        </v-btn>
-                        <v-btn icon color="blackTheme">
-                            <v-icon>mdi-facebook</v-icon>
-                        </v-btn>
-                        <v-btn icon color="blackTheme">
-                            <v-icon>mdi-twitter</v-icon>
-                        </v-btn>
-                        <v-btn icon color="blackTheme">
-                            <v-icon>mdi-instagram</v-icon>
-                        </v-btn>
-                    </v-col>
-                </v-row>
-
             </v-col>
         </v-row>
         <v-row class="px-10">
@@ -101,7 +84,7 @@ import {
 export default {
     data() {
         return {
-            product: [],
+            product: {color:[],size:[]},
             valid:true,
             count: 1,
             imageView: false,

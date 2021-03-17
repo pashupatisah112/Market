@@ -4,25 +4,25 @@
         <v-row>
             <v-col cols="12" lg="8" md="8">
                 <detail></detail>
-
-                <v-divider></v-divider>
-
-                <tag></tag>
-
-                <v-divider></v-divider>
-
-                <suggestion></suggestion>
             </v-col>
             <v-col cols="12" lg="4" md="4">
                 <p class="font-weight-bold">{{$t('words.detail.ratingReviews')}}</p>
 
                 <rating></rating>
-
                 <v-divider></v-divider>
-
-                <comment></comment>
-
+                <tag></tag>
             </v-col>
+        </v-row>
+        <v-row>
+            <v-col cols="12" lg="8" md="8">
+                <v-divider></v-divider>
+                <comment></comment>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col cols="12">
+             <suggestion></suggestion>
+             </v-col>
         </v-row>
     </v-container>
 

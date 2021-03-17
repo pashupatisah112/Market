@@ -14,7 +14,7 @@ export default {
 
         //quickview variables
         quickViewDialog: true,
-        quickViewItem:{},
+        quickViewItem:{color:[],size:[]},//clearing error
         //end
 
         cartlist: [],
