@@ -20,7 +20,7 @@
                                 class="mt-n4"
                             >
                                 <v-list-item-avatar tile size="60">
-                                    <v-img src="../images/sample.png"></v-img>
+                                    <v-img :src="getImage(item)"></v-img>
                                 </v-list-item-avatar>
 
                                 <v-list-item-content>
@@ -129,7 +129,7 @@ export default {
                 .catch(err => console.log(err.response));
         },
         getImage(item){
-            return "../storage/"+item.image
+            return item.image
         }
     }
 };

@@ -191,10 +191,10 @@
         </v-row>
         <v-row class="hidden-lg-and-up px-5">
             <v-expand-x-transition>
-                <v-text-field rounded filled dense placeholder="Search items here..." v-model="searchItem">
+                <v-text-field rounded filled dense :placeholder="$t(place())" v-model="yourSearch" :error-messages="searchError">
 
                     <template slot="append">
-                        <v-btn rounded small class="white--text text-capitalize mr-n4 mt-n1" color="blackTheme" @click="searchOptions">{{ $t('words.header.sale') }}</v-btn>
+                        <v-btn rounded small class="white--text text-capitalize mr-n4 mt-n1" color="blackTheme" @click="makeSearch">{{ $t('words.header.searchBtn') }}</v-btn>
                     </template>
                 </v-text-field>
             </v-expand-x-transition>
@@ -239,6 +239,8 @@ export default {
             searchItem: null,
             selectedLang: '',
             categories: [],
+            yourSearch:null,
+            searchError:'',
 
             menus: [{
                     title: 'Home',
@@ -324,6 +326,7 @@ export default {
                     this.search = false
                 } else {
                     this.setSearchItem(this.searchItem)
+                    this.searchItem=null
                     this.$router.push({
                         name:'Search',
                          params: { search: this.searchItem }
@@ -331,6 +334,18 @@ export default {
                 }
 
             }
+        },
+        makeSearch(){
+            if (this.yourSearch == null) {
+                this.searchError='Nothing to search'
+            } else {
+                    this.setSearchItem(this.yourSearch)
+                    this.yourSearch=null
+                    this.$router.push({
+                        name:'Search',
+                         params: { search: this.yourSearch }
+                    }).catch(()=>{});
+                }
         },
 
         setLocale(language) {

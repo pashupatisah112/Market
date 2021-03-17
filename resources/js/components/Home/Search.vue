@@ -133,6 +133,14 @@ export default {
                     this.results = res.data;
                 })
                 .catch(err => console.log(err.response));
+        },
+        getRating(item) {
+            let rate = 0
+            for (var i = 0; i < item.rating.length; i++) {
+                rate = rate + parseInt(item.rating[i].rating)
+
+            }
+            return rate / item.rating.length
         }
     }
 };

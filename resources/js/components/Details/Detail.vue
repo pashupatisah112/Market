@@ -27,11 +27,11 @@
                         <h4>{{$t('words.general.rs')}}. {{product.price}}</h4>
                         <p class="body-2">short description</p>
                         <v-form v-model="valid" ref="form">
-                            <div style="width:300px" class="mx-auto">
+                            <div style="width:300px" class="mx-auto" v-if="product.size.length>0">
                                 <p class="float-left mr-7">{{$t('words.detail.size')}}</p>
                                 <v-select v-model="cartSize" :rules="[validRules.required]" :items="product.size" item-text="size" item-value="id" :label="$t(placeSize())" dense outlined></v-select>
                             </div>
-                            <div style="width:300px" class="mx-auto">
+                            <div style="width:300px" class="mx-auto" v-if="product.color.length>0">
                                 <p class="float-left mr-6">{{$t('words.detail.color')}}</p>
                                 <v-select v-model="cartColor" :rules="[validRules.required]" :items="product.color" :label="$t(placeColor())" item-text="color_name" item-value="id" dense outlined></v-select>
                             </div>
