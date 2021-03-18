@@ -172,6 +172,8 @@ Route::post('getProductDetails','User\ProductController@getProductDetails');
 Route::post('register', 'AuthController@register');
 Route::post('socialLogin', 'AuthController@socialLogin');
 Route::post('sendConfirmEmail', 'AuthController@sendConfirmEmail');
+Route::post('sendPasswordResetCode', 'AuthController@sendPasswordResetCode');
+Route::post('resetPassword', 'AuthController@resetPassword');
 Route::post('customer-login', 'AuthController@customerLogin');
 Route::post('admin-login', 'AuthController@adminLogin');
 Route::get('verify', 'AuthController@verify');

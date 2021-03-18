@@ -11,6 +11,7 @@ use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ConfirmEmail;
+use App\Mail\PasswordResetMail;
 
 
 
@@ -103,5 +104,17 @@ class AuthController extends Controller
                 return response()->json(['token'=>$token,'auth_user'=>$auth_user],203);
         
         }
+    }
+    public function sendPasswordResetCode(Request $request)
+    {
+            Mail::to($request->email)->send(new PasswordResetMail($request->code));
+    }
+    public function resetPassword(Request $request){
+        $pwd=User::where('email',$request->email)->first();
+        $pwd->password=Hash::make($request->newPassword);
+        $token=Str::random(80);
+        $pwd->api_token=$token;
+        $pwd->save();
+        return response()->json(['token'=>$token,'auth_user'=>$pwd]);
     }
 }

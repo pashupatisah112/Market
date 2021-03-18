@@ -3,6 +3,7 @@ export default {
     state: {
        loginDialog:false,
        termsDialog:false,
+       forgotPasswordDialog:false,
        token:false,
        auth:[]
     },
@@ -12,6 +13,12 @@ export default {
         },
         unsetLoginDialog(state){
             state.loginDialog=false
+        },
+        setForgotPasswordDialog(state){
+            state.forgotPasswordDialog=true
+        },
+        unsetForgotPasswordDialog(state){
+            state.forgotPasswordDialog=false
         },
         setAuth(state,item){
             state.auth=item

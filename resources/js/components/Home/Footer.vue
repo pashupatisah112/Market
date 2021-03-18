@@ -75,7 +75,7 @@ import {
 export default {
     data() {
         return {
-            valid: "true",
+            valid: true,
             newsletter: '',
         }
     },

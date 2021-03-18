@@ -194,22 +194,31 @@ export default {
 
             },
             auth: {
+                email:"Email",
+                password:"Password",
+                fullName:"Full Name",
                 customerLogin: "Customer Login",
                 rememberMe: "Remember Me",
-                createAccount: "Create Your Account",
                 forgotPassword: "Forgot Password?",
                 clickHere: "Click Here",
                 loginGoogle: "Login Using Google",
                 loginFacebook: "Login With Facebook",
                 getCode: "Get Code",
                 registerPhone: "Register using phone number",
-                loginAccount: "Login to your account",
                 createAccount: "Create Account",
                 enterCode: "Enter 6 digit code sent to ",
                 submitCode: "Submit Code",
                 resendCode: "Resend Code",
                 loginAccount: "Login to your Account",
-                agreeTerms: "Agree to terms and conditions"
+                terms: "Terms and Conditions ",
+                agree:"Agree to",
+                newPassword:"New password",
+                confirmNew:"Confirm new password",
+                resetPassword:"Reset password",
+                enterEmail:"Enter your email to get reset code",
+                verifyCode:"Verify your code sent to your email",
+                confirmChange:"Confirm Change"
+
             },
             header: {
                 contact: "9815790619",
@@ -341,6 +350,9 @@ export default {
                 buyNow:"अहिले खरिद गर"
             },
             auth: {
+                email:"ईमेल",
+                password:"पासवर्ड",
+                fullName:"पुरा नाम",
                 customerLogin: "ग्राहक लगइन",
                 rememberMe: "मलाई सम्झनुहोस्",
                 createAccount: "तपाईँका खाता बनाउनुहोस्",
@@ -357,7 +369,14 @@ export default {
                 submitCode: "कोड बुझाउनुहोस्",
                 resendCode: "कोड पुन: पठाउनुहोस्",
                 loginAccount: "तपाईको खातामा लगईन गर्नुहोस्",
-                agreeTerms: "नियम र सर्तहरूमा सहमत गर्नुहोस्"
+                terms: "नियम र सर्तहरू ",
+                agree:"सहमत गर्नुहोस्",
+                newPassword:"नया पासवर्ड",
+                confirmNew:"नयाँ पासवर्ड निश्चित गर्नुहोस्",
+                resetPassword:"पासवर्ड रिसेट",
+                enterEmail:"रिसेट कोड प्राप्त गर्न तपाईको ईमेल प्रविष्ट गर्नुहोस्",
+                verifyCode:"तपाईको ईमेलमा पठाइएको कोड प्रमाणित गर्नुहोस्",
+                confirmChange:"परिवर्तन निश्चित गर्नुहोस्"
             },
             header: {
                 contact: "9815790619",
@@ -376,7 +395,7 @@ export default {
                 account: "खाता",
                 myCart:"मेरो कार्ट",
                 purchaseHistory:"खरीदको इतिहास",
-                logout:"खरीदको इतिहास"
+                logout:"बाहिर निस्कनुस"
             },
             detail: {
                 addToCart: "कार्टमा हाल",
