@@ -13,6 +13,7 @@ import Carousel from "./components/AdminComponents/PromoComponent/Carousel";
 import Orders from "./components/AdminComponents/OrderComponent/Orders";
 import Comment from "./components/AdminComponents/CommentComponent/Comment";
 import Invoice from './components/AdminComponents/OrderComponent/Invoice';
+import Payment from './components/AdminComponents/Payment/Payment';
 
 //User
 import Main from "./components/Index";
@@ -81,6 +82,11 @@ const routes = [
                 path: "comments",
                 name: "Comments",
                 component: Comment
+            },
+            {
+                path: "payment-gateways",
+                name: "Payment",
+                component: Payment
             },
            
         ],

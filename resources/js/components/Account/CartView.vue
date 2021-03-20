@@ -48,8 +48,8 @@
                                         </v-list-item>
                                     </v-list>
                                 </td>
-                                <td>{{item.color.color_name}}</td>
-                                <td>{{item.size.size}}</td>
+                                <td><span v-if="item.color">{{item.color.color_name}}</span><span v-else>-</span></td>
+                                <td><span v-if="item.size">{{item.size.size}}</span><span v-else>-</span></td>
                                 <td>{{item.product[0].price}}</td>
                                 <td>
                                     {{item.amount}}
@@ -66,27 +66,27 @@
                         {{$t('words.general.cartTotal')}}
                     </v-card-title>
 
-                     <v-card-text>
+                    <v-card-text>
                         {{$t('words.general.subTotal')}}: {{$t('words.filter.rs')}}. {{total}}
                     </v-card-text>
 
                     <v-divider class="mx-5"></v-divider>
-                    
+
                     <v-card-text>
                         <v-form v-model="valid" ref="form">
-                             <p>{{$t('words.general.deliveryAddress')}}:</p>
+                            <p>{{$t('words.general.deliveryAddress')}}:</p>
                             <v-select dense :items="addresses" :placeholder="$t(placeChoose())" outlined :rules="[validRules.required]" class="mt-n3" @change="setupDeliveryCharge"></v-select>
-                            
+
                             <p>{{$t('words.general.location')}}:</p>
                             <v-text-field :placeholder="$t(placeLocation())" v-model="location" outlined dense :rules="[validRules.required]" class="mt-n3"></v-text-field>
-                            
+
                             <p>{{$t('words.general.contactNum')}}:</p>
                             <v-text-field :placeholder="$t(placeContact())" v-model="contact" outlined dense :rules="[validRules.required,validRules.length10]" class="mt-n3"></v-text-field>
                             <p>{{$t('words.general.deliveryCharge')}}: {{delivery_charge}}</p>
                         </v-form>
 
                         <v-divider></v-divider>
-                    
+
                         <p class="font-weight-bold">{{$t('words.general.total')}}: {{net_total}}</p>
 
                         <v-divider></v-divider>
@@ -109,10 +109,7 @@
                 <v-card-text>
                     <v-form v-model="valid" ref="form">
                         <v-radio-group v-model="paymentGroup" :rules="[validRules.required]">
-                            <v-radio label="E-sewa" value="esewa"></v-radio>
-                            <v-radio label="Khalti" value="khalti"></v-radio>
-                            <v-radio label="Fonepay" value="fonepay"></v-radio>
-                            <v-radio label="Cash On Delivery" value="cod"></v-radio>
+                            <v-radio v-for="item in payment" :key="item.id" :label="getLabel(item)" :value="getValue(item)"></v-radio>
                         </v-radio-group>
                     </v-form>
                 </v-card-text>
@@ -149,7 +146,7 @@ export default {
             total: '',
             count: 1,
             addresses: ['Inside Kathmandu Valley', 'Outside Kathmandu Valley'],
-            payment: ['Esewa', 'Khalti', 'Fonepay', 'Cash on delivery'],
+            payment: [],
             paymentDialog: false,
             paymentGroup: '',
             khaltiConfig: {
@@ -157,17 +154,20 @@ export default {
                 "productIdentity": "12345678",
                 "productName": "product",
                 "productUrl": "http://gameofthrones.wikia.com/wiki/Dragons",
-                "amount": 1000,
+                "amount": this.net_total,
                 "eventHandler": {
                     onSuccess(payload) {
-                        axios.post('api/verifyKhaltiPayment',{
-                            'token':payload.token,
-                            'amount':payload.amount
-                        })
-                        .then(res=>{
-
-                        })
-                        .catch(err=>console.log(err.response))
+                        axios.post('api/verifyKhaltiPayment', {
+                                'token': payload.token,
+                                'amount': payload.amount
+                            })
+                            this.$toast.success({
+                                    title: "Payment",
+                                    message: "Payment success. You will get your order soon."
+                                })
+                            this.$router.push({
+                                    path: 'history-view'
+                                })
                     },
                     onError(error) {
                         console.log(error);
@@ -186,8 +186,8 @@ export default {
     computed: {
         ...mapState({
             validRules: state => state.validation.validRules,
-            cartlist:state=>state.product.cartlist,
-            auth:state=>state.authentication.auth
+            cartlist: state => state.product.cartlist,
+            auth: state => state.authentication.auth
         })
     },
 
@@ -208,7 +208,12 @@ export default {
         },
         confirmOrder() {
             if (this.$refs.form.validate()) {
-                this.paymentDialog = true
+                axios.get('api/payment')
+                    .then(res => {
+                        this.payment = res.data
+                        this.paymentDialog = true
+                    }).catch(err => console.log(err.response))
+
             }
         },
         setupDeliveryCharge(e) {
@@ -221,24 +226,60 @@ export default {
         },
         buy() {
             if (this.$refs.form.validate()) {
-                if(this.paymentGroup=='Khalti'){
-                    this.onKhaltiClick()
-                }
-                else if(this.paymentGroup=='Cash on delivery'){
+                if (this.paymentGroup.gateway_name == 'Khalti') {
+                    if(this.onKhaltiClick()){
+                        console.log('paid')
+                    }
                     
+                } else if (this.paymentGroup.gateway_name == 'Cash On Delivery') {
+                    this.$toast.success({
+                        title: "Order",
+                        message: "You have successfully ordered your item.Thank you for shopping with us."
+                    })
+                } else {
+                    console.log('failed')
                 }
-                db.collection("notification").add({
-                    user_name:this.auth.name,
-                    type:'order',
-                    item_num: this.cartlist.length,
-                    created_at:new Date(),
-                    read_at:null,
-                })
-                .then(
-                )
-                .catch(function (error) {
-                    console.error("Error adding document: ", error);
-                });
+                
+                //SAVES ORDER
+                // axios.post('api/makeOrder', {
+                //     'user_id': this.auth.id,
+                //     'address': this.location,
+                //     'phone': this.contact,
+                //     'delivery_charge': this.delivery_charge,
+                //     'delivery_status': 'Pending',
+                //     'payment_gateway_id': this.paymentGroup.id,
+                // }).then(res => {
+                //     for (var i=0;i<this.carts.length; i++) {
+                //         //SAVE SALE
+                //         axios.post('api/makeSale', {
+                //                 'order_id':res.data.id,
+                //                 'sales': this.carts[i]
+                //             }).then(res => {
+                                
+                //             })
+                //             .catch(err => console.log(err.response))
+                //     }
+                // }).catch(err => console.log(err.response))
+                
+                // //FORM RESET
+                // this.$refs.form.reset()
+                // this.paymentDialog = false
+
+                // //SAVES TO FIREBASE FOR NOTIFICATION
+                // db.collection("notification").add({
+                //         user_name: this.auth.name,
+                //         type: 'order',
+                //         item_num: this.cartlist.length,
+                //         created_at: new Date(),
+                //         read_at: null,
+
+                //     })
+                //     .then(() => {
+
+                //     })
+                //     .catch(function (error) {
+                //         console.error("Error adding document: ", error);
+                //     });
             }
         },
         onKhaltiClick() {
@@ -246,17 +287,24 @@ export default {
             const khaltiCheckout = this.$refs.khaltiCheckout
             //khaltiCheckout.onClick()
             checkout.show({
-                amount: 1000
+                amount: this.net_total
             });
         },
-        placeChoose(){
+
+        placeChoose() {
             return 'words.general.pleaseChoose'
         },
-        placeLocation(){
+        placeLocation() {
             return 'words.general.actualLocation'
         },
-        placeContact(){
+        placeContact() {
             return 'words.general.yourNumber'
+        },
+        getLabel(item) {
+            return item.gateway_name
+        },
+        getValue(item) {
+            return item
         }
     }
 }

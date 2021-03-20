@@ -23,7 +23,7 @@
                         </v-list-item-content>
                     </v-list-item>
 
-                    <v-list-item dense>
+                    <v-list-item dense @click="viewHistory()">
                         <v-list-item-content>
                             <v-list-item-subtitle @click="viewHistory">
                                 <v-icon class="mr-2">mdi-history</v-icon>{{ $t('words.header.purchaseHistory') }}

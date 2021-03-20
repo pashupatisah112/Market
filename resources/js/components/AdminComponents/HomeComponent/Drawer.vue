@@ -62,6 +62,11 @@ export default {
                     icon: 'mdi-account-group',
                     to: '/padmin/comments'
                 },
+                {
+                    title: 'Payment Gateways',
+                    icon: 'mdi-bitcoin',
+                    to: '/padmin/payment-gateways'
+                },
 
             ],
             color: 'primary',

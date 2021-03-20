@@ -82,7 +82,6 @@ export default {
             Axios.get('api/getCartListItem')
             .then(res=>{
                 state.cartlistItem=res.data
-                console.log('store-cartlistitem;',state.cartlistItem)
             })
             .catch(err=>console.log(err.response))
         },

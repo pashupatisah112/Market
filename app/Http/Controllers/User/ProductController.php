@@ -201,7 +201,7 @@ class ProductController extends Controller
          return response()->json($product);
     }
     public function getPurchaseHistory(){
-        $orders=Order::where('user_id',Auth::id())->where('delivery_status','Delivered')->get();
+        $orders=Order::where('user_id',Auth::id())->get();
         $order_id=[];
         foreach($orders as $order){
             array_push($order_id,$order->id);
@@ -214,6 +214,31 @@ class ProductController extends Controller
         return response()->json($product);
     }
     public function makeOrder(Request $request){
-        
+        $ordCount=DB::table('orders')->count();
+        $ordCount=$ordCount+1;
+        $order_id='ord'.$ordCount;
+
+        $order=new Order;
+        $order->user_id=$request->user_id;
+        $order->address=$request->address;
+        $order->phone=$request->phone;
+        $order->delivery_charge=$request->delivery_charge;
+        $order->delivery_status=$request->delivery_status;
+        $order->orderId=$order_id;
+        $order->payment_gateway_id=$request->payment_gateway_id;
+        $order->save();
+         
+        return response()->json($order);
+    }
+    public function recordSales(Request $request)
+    {
+           $sale=new Sale;
+            $sale->product_id=$request->sales->id;
+            $sale->order_id=$request->order_id;
+            $sale->quantity= $request->sales->amount;
+            $sale->size_id=$request->sales->size_id;
+            $sale->color_id=$request->sales->color_id;
+            $sale->total=$request->sales->total;
+            $sale->save();
     }
 }

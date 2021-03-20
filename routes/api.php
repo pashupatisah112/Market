@@ -73,6 +73,12 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'Admin'],function(){
     Route::post('changeDeliveryStatus','OrderController@changeDeliveryStatus');
     Route::post('deleteOrder','OrderController@deleteOrder');
 
+    //payment
+    Route::get('payment','PaymentController@index');
+    Route::post('payment','PaymentController@store');
+    Route::put('payment/{payment}','PaymentController@update');
+    Route::delete('payment/{payment}','PaymentController@store');
+
     //analytics
     Route::get('getDailyData','AnalyticsController@getDailyData');
     Route::get('getDisplayData','AnalyticsController@getDisplayData');
@@ -112,6 +118,7 @@ Route::group(['middleware'=>['auth:api'],'namespace'=>'User'],function(){
 
     //order
     Route::post('makeOrder','ProductController@makeOrder');
+    Route::post('recordSales','ProductController@recordSales');
 
 });
  //comments
