@@ -28,6 +28,8 @@ import Cart from "./components/Account/CartView";
 import PurchaseHistory from "./components/Account/History";
 import About from "./components/Other/About";
 import Contact from "./components/Other/Contact";
+import Policy from './components/Other/Policy';
+import Terms from './components/Other/Terms';
 import Search from './components/Home/Search';
 import NotFound from './components/Account/404';
 
@@ -167,12 +169,20 @@ const routes = [
                 name: "About",
                 component: About
             },
-            
-            
             {
                 path: "/contact",
                 name: "Contact",
                 component: Contact
+            },
+            {
+                path: "/policy",
+                name: "Policy",
+                component: Policy
+            },
+            {
+                path: "/terms",
+                name: "Terms",
+                component: Terms
             },
             {
                 path: "/test",

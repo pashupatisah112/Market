@@ -60,6 +60,15 @@ var firebaseConfig = {
   var db = firebase.firestore();
   window.db = db; //global connection
 
+  import * as VueGoogleMaps from 'vue2-google-maps';
+  
+Vue.use(VueGoogleMaps, {
+    load: {
+      key: 'AIzaSyDH1bvRtFtJVO2Z3FAookABuzeDGGwDpoE',
+      libraries: 'places',
+    }
+  });
+
 new Vue({
     el: "#app",
     i18n,

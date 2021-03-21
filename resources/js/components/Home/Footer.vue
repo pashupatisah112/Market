@@ -12,12 +12,12 @@
                 <h4 class="white--text mt-">{{ $t('words.footer.usefulLinks') }}</h4>
                 <v-row>
                     <v-col cols="6" class="footer-color">
-                        <p class="caption">{{ $t('words.footer.about') }}</p>
-                        <p class="caption">{{ $t('words.footer.contact') }}</p>
+                        <p class="caption line-hover" @click="goToAbout">{{ $t('words.footer.about') }}</p>
+                        <!-- <p class="caption line-hover" @click="goToContact">{{ $t('words.footer.contact') }}</p> -->
                     </v-col>
                     <v-col cols="6" class="footer-color">
-                        <p class="caption">{{ $t('words.footer.terms') }}</p>
-                        <p class="caption">{{ $t('words.footer.privacyPolicy') }}</p>
+                        <p class="caption line-hover" @click="goToTerms">{{ $t('words.footer.terms') }}</p>
+                        <p class="caption line-hover" @click="goToPolicy">{{ $t('words.footer.privacyPolicy') }}</p>
                     </v-col>
                 </v-row>
             </v-col>
@@ -91,17 +91,38 @@ export default {
                         email: this.newsletter,
                     })
                     .then(() => {
-                        this.newsletter=''
+                        this.newsletter = ''
                         this.$toast.success({
-                        title: "Newsletter",
-                        message: "Thanks you for subscribing our newsletter."
-                    });
+                            title: "Newsletter",
+                            message: "Thanks you for subscribing our newsletter."
+                        });
                     })
                     .catch((error) => {
                         console.error("Error writing document: ", error);
                     });
             }
+        },
+        goToAbout() {
+            this.$router.push({
+                path: "about"
+            })
+        },
+        goToContact() {
+            this.$router.push({
+                path: "contact"
+            })
+        },
+        goToTerms() {
+            this.$router.push({
+                path: "terms"
+            })
+        },
+        goToPolicy() {
+            this.$router.push({
+                path: "policy"
+            })
         }
-    }
+
+}
 }
 </script>
