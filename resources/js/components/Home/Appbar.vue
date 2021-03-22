@@ -1,7 +1,7 @@
 <template>
 <div>
     <v-container fluid>
-        <v-row style="background-color:rgba(0, 0, 0, 0.87)" justify="center">
+        <v-row style="background-color:#009E9A" justify="center">
 
             <v-btn text dark small class="text-lowercase mx-sm-auto">
                 <v-icon dense size="18" color="white" class="mr-1">mdi-email</v-icon>
@@ -50,12 +50,13 @@
         </v-row>
 
         <v-row class="mt-3">
-            <v-toolbar extended dense short max-height="50" elevation="0" class="mb-1">
+            <v-toolbar extende max-height="70" elevation="0" class="mb-1">
                 <div class="hidden-lg-and-up mr-n10">
                     <v-menu offset-y>
                         <template v-slot:activator="{ on, attrs }">
-                            <v-btn icon v-bind="attrs" v-on="on" large>
-                                <v-icon> mdi-format-list-bulleted-square</v-icon>
+                            <v-btn v-bind="attrs" v-on="on" text class="text-capitalize my-4">
+                                <v-icon> mdi-menu</v-icon>
+                                Menu
                             </v-btn>
                         </template>
                         <v-list>
@@ -106,9 +107,8 @@
                         </v-list>
                     </v-menu>
                 </div>
-
-                <v-img src="../images/logo.png" max-width="200" height="50"></v-img>
-
+                 <v-img src="../images/logo.png" max-height="60" max-width="115" class="ma-5"></v-img>
+                
                 <div class="hidden-md-and-down">
                     <v-btn text class="text-capitalize" @click="goHome">
                         {{ $t('words.header.home') }}
@@ -189,7 +189,7 @@
                 <!--end cart component-->
             </v-toolbar>
         </v-row>
-        <v-row class="hidden-lg-and-up px-5">
+        <v-row class="hidden-lg-and-up px-5 mt-5">
             <v-expand-x-transition>
                 <v-text-field rounded filled dense :placeholder="$t(place())" v-model="yourSearch" :error-messages="searchError">
 

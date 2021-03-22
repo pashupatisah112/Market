@@ -23,6 +23,9 @@
                                 <th class="text-left">
                                     Quantity
                                 </th>
+                                <th class="text-left">
+                                    Status
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -40,11 +43,14 @@
                                         </v-list-item>
                                     </v-list>
                                 </td>
-                                <td>{{item.color.color_name}}</td>
-                                <td>{{item.size.size}}</td>
+                                <td><span v-if="item.color">{{item.color.color_name}}</span><span v-else>-</span></td>
+                                <td><span v-if="item.size">{{item.size.size}}</span><span v-else>-</span></td>
                                 <td>{{item.product.price}}</td>
                                 <td>
                                     {{item.quantity}}
+                                </td>
+                                <td>
+                                    {{item.order.delivery_status}}
                                 </td>
     
                             </tr>

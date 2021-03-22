@@ -1,6 +1,6 @@
 <template>
 <div>
-    <v-container fluid style="background-color:#333333">
+    <v-container fluid style="background-color:#009E9A">
         <v-row justify="center">
             <v-col cols="12" lg="4" md="6" sm="6" class="footer-color">
                 <p class="font-weight-bolder">LOGO</p>

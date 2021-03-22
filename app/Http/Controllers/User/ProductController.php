@@ -206,7 +206,7 @@ class ProductController extends Controller
         foreach($orders as $order){
             array_push($order_id,$order->id);
         }
-        $sales=Sale::whereIn('order_id',$order_id)->with('product')->with('color')->with('size')->get();
+        $sales=Sale::whereIn('order_id',$order_id)->with('order:id,delivery_status')->with('product')->with('color')->with('size')->get();
         return response()->json($sales);
     }
     public function getSearch(Request $request){
