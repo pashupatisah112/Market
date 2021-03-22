@@ -3,8 +3,9 @@
     
     <carousel></carousel>
     <latest></latest>
-    <topSelling></topSelling>
-    <productOffers></productOffers>
+    <recommend></recommend>
+    <!-- <topSelling></topSelling> -->
+    <!-- <productOffers></productOffers> -->
 </div>
 </template>
 
@@ -12,13 +13,14 @@
 import Carousel from '../Home/Carousel';
 import Latest from '../Home/LatestProducts';
 import TopSelling from '../Home/TopProducts';
-import ProductOffers from '../Home/ProductOffers';
+import Recommend from '../Home/Recommended';
+// import ProductOffers from '../Home/ProductOffers';
 export default {
     components: {
         Carousel,
         Latest,
-        TopSelling,
-        ProductOffers,
+        Recommend,
+        TopSelling
     },
     data() {
         return {

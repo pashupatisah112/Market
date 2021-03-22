@@ -25,6 +25,11 @@ class ProductController extends Controller
         $product=Product::select(['id','title','price','image','product_code'])->with('rating:product_id,rating')->limit(6)->get();
         return response()->json($product);
     }
+    public function getRecommended()
+    {
+        $product=Product::select(['id','title','price','image','product_code'])->with('rating:product_id,rating')->inRandomOrder()->limit(18)->get();
+        return response()->json($product);
+    }
     public function getCategories()
     {
         $category=Category::with('subcategory')->get();

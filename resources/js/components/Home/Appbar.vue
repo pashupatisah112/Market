@@ -132,7 +132,7 @@
                         </v-card>
                     </v-menu>
 
-                    <v-btn text class="text-capitalize" to="/top-sellers">
+                    <!-- <v-btn text class="text-capitalize" to="/top-sellers">
                         {{ $t('words.header.topSelling') }}
                     </v-btn>
 
@@ -142,7 +142,7 @@
 
                     <v-btn text class="text-capitalize" to="/offers">
                         {{ $t('words.header.offers') }}
-                    </v-btn>
+                    </v-btn> -->
 
                     <v-btn text class="text-capitalize" to="/sale">
                         {{ $t('words.header.sale') }}

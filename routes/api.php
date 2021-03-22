@@ -138,6 +138,9 @@ Route::post('getRatings','User\ProductController@getRatings');
 Route::get('getFeatured','User\ProductController@getFeatured');
 Route::post('getSimilarFeatured','User\ProductController@getSimilarFeatured');
 
+//recommended
+Route::get('recommendedProducts','User\ProductController@getRecommended');
+
 //collections
 Route::get('getCollection','User\ProductController@getCollection');
 

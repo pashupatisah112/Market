@@ -190,7 +190,8 @@ export default {
                 thanksNote:"Thank you for shopping with us.",
                 paymentMethod:"Choose Payment Method",
                 cancel:"Cancel",
-                buyNow:"Buy Now"
+                buyNow:"Buy Now",
+                recommendedProducts:"Recommended"
 
             },
             auth: {
@@ -347,7 +348,8 @@ export default {
                 thanksNote:"हामीसँग किनमेल गर्नु भएकोमा धन्यवाद।",
                 paymentMethod:"भुक्तानी विधि छनौट गर्नुहोस्",
                 cancel:"रद्द गर्नुहोस्",
-                buyNow:"अहिले खरिद गर"
+                buyNow:"अहिले खरिद गर",
+                recommendedProducts:"सिफारिस गरिएका उत्पादनहरू"
             },
             auth: {
                 email:"ईमेल",
