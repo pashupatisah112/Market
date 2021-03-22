@@ -77,7 +77,7 @@ class ProductController extends Controller
     }
     public function update(Request $request, $id)
     {
-        $product=Product::find($id);
+         $product=Product::find($id);
         $product->title=$request->title;
         $product->price=$request->price;
         $product->product_code=$request->code;
@@ -89,37 +89,37 @@ class ProductController extends Controller
         
         $product->save();
 
-        DB::table('product_size')->where('product_id',$id)->delete();
-        DB::table('color_product')->where('product_id',$id)->delete();
+        DB::table('product_sizes')->where('product_id',$id)->delete();
+        DB::table('color_products')->where('product_id',$id)->delete();
         DB::table('tags')->where('product_id',$id)->delete();
         
-        $colors=json_decode($request->color_name);
-        foreach($colors as $color){
-            $color=new ColorProduct;
-            $color->product_id=$product->id;
-            $color->color_id=$color;
-            $color->save();
-        }
-        $sizes=json_decode($request->size);
-        foreach($sizes as $size){
+        $sizes=$request->size;
+
+        for($x=0;$x < count($sizes);$x++){
             $size=new ProductSize;
             $size->product_id=$product->id;
-            $size->size_id=$size;
+            $size->size_id=$sizes[$x];
             $size->save();
         }
-        // $product->color()->sync($request->color_name);
-        // $product->size()->sync($request->size);
+        $colors=$request->color_name;
+        for($x=0; $x < count($colors);$x++){
+            $color=new ColorProduct;
+            $color->product_id=$product->id;
+            $color->color_id=$colors[$x];
+            $color->save();
+        }
+
         $tags=$request->tag_name;
-        foreach($tags as $tag){
-            $ta=new Tag;
-            $ta->tag_name=$tag;
-            $ta->product_id=$product->id;
-            $ta->save();
+        for($x=0; $x < count($tags);$x++){
+            $tag=new Tag;
+            $tag->product_id=$product->id;
+            $tag->tag_name=$tags[$x];
+            $tag->save();
         }
 
         $prod=Product::where('id',$id)->with('category')->with('subCategory')->with('company')->with('productType')->with('color')->with('size')->with('tag')->with('photo')->first();
 
-        return response()->json($request);
+        return response()->json($prod);
         }
     public function delete($id)
     {

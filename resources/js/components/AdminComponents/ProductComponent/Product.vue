@@ -608,8 +608,8 @@ export default {
                             'subCategory_id': this.editedItem.sub_category.id,
                             'company_id': this.editedItem.company.id,
                             'description': this.editedItem.description,
-                            'color_name': JSON.stringify(this.editedItem.selectedColor),
-                            'size': JSON.stringify(this.editedItem.selectedSize),
+                            'color_name': this.editedItem.selectedColor,
+                            'size': this.editedItem.selectedSize,
                             'tag_name': this.enterSelectedTag
                         })
                         .then(res => {

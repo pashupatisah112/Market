@@ -16,11 +16,11 @@ class Product extends Model
     }
     public function color()
     {
-        return $this->belongsToMany('App\Color','color_product');
+        return $this->belongsToMany('App\Color','color_products');
     }
     public function size()
     {
-        return $this->belongsToMany('App\Size','product_size');
+        return $this->belongsToMany('App\Size','product_sizes');
     }
     public function tag()
     {
