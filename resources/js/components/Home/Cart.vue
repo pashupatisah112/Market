@@ -75,7 +75,6 @@ export default {
     },
     created() {
         this.getCart()
-        console.log(this.cartlist.length)
     },
     methods: {
         ...mapMutations(['getCartList', 'removeFromCartlist','pullFromCartListItem']),
@@ -93,7 +92,6 @@ export default {
                 .then(res => {
                     this.getCartList(res.data.product)
                     this.cartTotal = res.data.total
-                    console.log(this.getCartList)
                     if (res.data.product.length < 1) {
                         this.noCartText = 'No cart items added.'
                     }

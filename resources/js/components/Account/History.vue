@@ -77,7 +77,6 @@ export default {
             axios.post('api/getPurchaseHistory')
             .then(res=>{
                 this.history=res.data
-                console.log(res.data)
             })
             .catch(err=>console.log(err.response))
         },

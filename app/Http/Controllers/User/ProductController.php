@@ -16,6 +16,7 @@ use App\Order;
 use App\Sale;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Cart;
 
 class ProductController extends Controller
 {
@@ -227,18 +228,20 @@ class ProductController extends Controller
         $order->orderId=$order_id;
         $order->payment_gateway_id=$request->payment_gateway_id;
         $order->save();
+
+        Cart::where('user_id',$request->user_id)->delete();
          
         return response()->json($order);
     }
     public function recordSales(Request $request)
     {
            $sale=new Sale;
-            $sale->product_id=$request->sales->id;
+            $sale->product_id=$request->sales['product'][0]['id'];
             $sale->order_id=$request->order_id;
-            $sale->quantity= $request->sales->amount;
-            $sale->size_id=$request->sales->size_id;
-            $sale->color_id=$request->sales->color_id;
-            $sale->total=$request->sales->total;
+            $sale->quantity= $request->sales['amount'];
+            $sale->size_id=$request->sales['size_id'];
+            $sale->color_id=$request->sales['color_id'];
+            $sale->total=$request->sales['total'];
             $sale->save();
     }
 }

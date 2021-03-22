@@ -1,9 +1,9 @@
 <template>
 <div>
     <v-container>
-        <vue-khalti v-bind="khaltiConfig">
+        <!-- <vue-khalti v-bind="khaltiConfig">
             <div @click="onKhaltiClick">khalti</div>
-        </vue-khalti>
+        </vue-khalti> -->
         <v-row justify="center">
             <p class="text-h4">{{$t('words.general.yourCart')}}</p>
         </v-row>
@@ -116,10 +116,11 @@
                 <v-card-actions>
                     <v-btn rounded @click="paymentDialog=false" dark>{{$t('words.general.cancel')}}</v-btn>
                     <v-spacer></v-spacer>
-                    <v-btn rounded dark @click="buy">{{$t('words.general.buyNow')}}</v-btn>
+                    <v-btn rounded dark @click="buy" :loading="loading">{{$t('words.general.buyNow')}}</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <!-- end payment dialog -->
     </v-container>
 </div>
 </template>
@@ -136,6 +137,7 @@ export default {
         VueKhalti
     },
     data() {
+        var self = this;
         return {
             valid: true,
             net_total: 0,
@@ -148,6 +150,7 @@ export default {
             addresses: ['Inside Kathmandu Valley', 'Outside Kathmandu Valley'],
             payment: [],
             paymentDialog: false,
+            loading:false,
             paymentGroup: '',
             khaltiConfig: {
                 "publicKey": "test_public_key_6371fd2fd0134e82a764511e20fd933f",
@@ -157,17 +160,14 @@ export default {
                 "amount": this.net_total,
                 "eventHandler": {
                     onSuccess(payload) {
+                        console.log('paid')
                         axios.post('api/verifyKhaltiPayment', {
-                                'token': payload.token,
-                                'amount': payload.amount
-                            })
-                            this.$toast.success({
-                                    title: "Payment",
-                                    message: "Payment success. You will get your order soon."
-                                })
-                            this.$router.push({
-                                    path: 'history-view'
-                                })
+                            'token': payload.token,
+                            'amount': payload.amount
+                        }).then(res => {
+                            self.ordered() //yahabata direct method call hudaina so eso gareko
+                        })
+
                     },
                     onError(error) {
                         console.log(error);
@@ -208,11 +208,19 @@ export default {
         },
         confirmOrder() {
             if (this.$refs.form.validate()) {
-                axios.get('api/payment')
+                if(this.carts.length>0){
+                     axios.get('api/payment')
                     .then(res => {
                         this.payment = res.data
                         this.paymentDialog = true
                     }).catch(err => console.log(err.response))
+                }else{
+                    this.$toast.error({
+                                    title: "Order",
+                                    message: "No items in your cart to order."
+                                });
+                }
+               
 
             }
         },
@@ -225,72 +233,80 @@ export default {
             this.net_total = this.delivery_charge + this.total
         },
         buy() {
+            this.loading=true
             if (this.$refs.form.validate()) {
                 if (this.paymentGroup.gateway_name == 'Khalti') {
-                    if(this.onKhaltiClick()){
-                        console.log('paid')
-                    }
-                    
+                    this.onKhaltiClick()
+
                 } else if (this.paymentGroup.gateway_name == 'Cash On Delivery') {
-                    this.$toast.success({
-                        title: "Order",
-                        message: "You have successfully ordered your item.Thank you for shopping with us."
-                    })
+                    this.ordered()
                 } else {
                     console.log('failed')
                 }
-                
-                //SAVES ORDER
-                // axios.post('api/makeOrder', {
-                //     'user_id': this.auth.id,
-                //     'address': this.location,
-                //     'phone': this.contact,
-                //     'delivery_charge': this.delivery_charge,
-                //     'delivery_status': 'Pending',
-                //     'payment_gateway_id': this.paymentGroup.id,
-                // }).then(res => {
-                //     for (var i=0;i<this.carts.length; i++) {
-                //         //SAVE SALE
-                //         axios.post('api/makeSale', {
-                //                 'order_id':res.data.id,
-                //                 'sales': this.carts[i]
-                //             }).then(res => {
-                                
-                //             })
-                //             .catch(err => console.log(err.response))
-                //     }
-                // }).catch(err => console.log(err.response))
-                
-                // //FORM RESET
-                // this.$refs.form.reset()
-                // this.paymentDialog = false
 
-                // //SAVES TO FIREBASE FOR NOTIFICATION
-                // db.collection("notification").add({
-                //         user_name: this.auth.name,
-                //         type: 'order',
-                //         item_num: this.cartlist.length,
-                //         created_at: new Date(),
-                //         read_at: null,
-
-                //     })
-                //     .then(() => {
-
-                //     })
-                //     .catch(function (error) {
-                //         console.error("Error adding document: ", error);
-                //     });
             }
         },
         onKhaltiClick() {
             let checkout = new KhaltiCheckout(this.khaltiConfig);
             const khaltiCheckout = this.$refs.khaltiCheckout
-            //khaltiCheckout.onClick()
             checkout.show({
                 amount: this.net_total
             });
         },
+        ordered() {
+            //SAVES ORDER
+            axios.post('api/makeOrder', {
+                'user_id': this.auth.id,
+                'address': this.location,
+                'phone': this.contact,
+                'delivery_charge': this.delivery_charge,
+                'delivery_status': 'Pending',
+                'payment_gateway_id': this.paymentGroup.id,
+            }).then(res => {
+                console.log(res.data.id)
+                for (var i = 0; i < this.carts.length; i++) {
+                    //SAVE SALE
+                    axios.post('api/recordSales', {
+                            'order_id': res.data.id,
+                            'sales': this.carts[i]
+                        }).then(res => {
+                            //FORM RESET
+                            this.getOrderNotification()
+                            this.$refs.form.reset()
+                            this.paymentDialog = false
+                            this.loading=false
+                            this.$router.push({
+                                name: 'History'
+                            })
+                            this.$toast.success({
+                                    title: "Order",
+                                    message: "You have successfully ordered your item."
+                                });
+                        })
+                        .catch(err => console.log(err.response))
+                }
+            }).catch(err => console.log(err.response))
 
+            
+
+        },
+        getOrderNotification(){
+            //SAVES TO FIREBASE FOR NOTIFICATION
+            db.collection("notification").add({
+                    user_name: this.auth.name,
+                    type: 'order',
+                    item_num: this.cartlist.length,
+                    created_at: new Date(),
+                    read_at: null,
+
+                })
+                .then(() => {
+
+                })
+                .catch(function (error) {
+                    console.error("Error adding document: ", error);
+                });
+        },
         placeChoose() {
             return 'words.general.pleaseChoose'
         },
