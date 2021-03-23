@@ -33,6 +33,8 @@ import Terms from './components/Other/Terms';
 import Search from './components/Home/Search';
 import NotFound from './components/Account/404';
 
+import Soon from './components/Soon';
+
 import Test from './components/Home/Test';
 
 const routes = [
@@ -122,7 +124,14 @@ const routes = [
         name: "Invoice",
         component: Invoice
     },
-    
+    {
+        path: "/home",
+        component: Soon
+    },
+    {
+        path:'/',
+        redirect:'/home'
+    },
     {
         path: "/",
         component: Main,

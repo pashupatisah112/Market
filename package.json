@@ -27,6 +27,7 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "@chenfengyuan/vue-countdown": "^1.1.5",
         "chart.js": "^2.9.4",
         "cxlt-vue2-toastr": "^1.1.1",
         "epic-spinners": "^1.1.0",
